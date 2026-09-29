@@ -549,6 +549,7 @@
 
 </div>
 
+<script src="config.js"></script>
 
 <script>
 
@@ -666,7 +667,7 @@
 
       const response =
         await fetch(
-          'https://nimbo-back.onrender.com/api/diagnostics',
+          '${NIMBO_API_URL}/api/diagnostics',
           {
             method: 'POST',
 
