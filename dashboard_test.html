@@ -179,7 +179,11 @@
     }
 
     .upsell{
-      background:linear-gradient(135deg,rgba(92,225,230,.08),rgba(92,134,255,.08));
+      background:linear-gradient(
+        135deg,
+        rgba(92,225,230,.08),
+        rgba(92,134,255,.08)
+      );
       border:1px solid var(--line);
       border-radius:14px;
       padding:24px 26px;
@@ -304,10 +308,41 @@
       font-size:13px;
     }
 
+    body.light{
+      --bg:#F4F7FC;
+      --panel:#FFFFFF;
+      --ink:#162039;
+      --ink-soft:#65728D;
+      --line:#DCE3F0;
+    }
+
+    body.light .help::after{
+      background:#FFFFFF;
+      box-shadow:0 10px 30px rgba(20,35,65,.12);
+    }
+
+    @media(max-width:600px){
+
+      body{
+        padding:20px;
+      }
+
+      .panel{
+        padding:22px 20px;
+      }
+
+      .upsell{
+        padding:22px 20px;
+      }
+
+      .code-row{
+        max-width:100%;
+      }
+    }
+
   </style>
 
 </head>
-
 
 <body>
 
@@ -317,7 +352,11 @@
 
     <div class="brand">
 
-      <svg width="22" height="22" viewBox="0 0 64 64">
+      <svg
+              width="22"
+              height="22"
+              viewBox="0 0 64 64"
+      >
 
         <defs>
 
@@ -335,8 +374,10 @@
             />
 
             <feMerge>
+
               <feMergeNode in="blur"/>
               <feMergeNode in="SourceGraphic"/>
+
             </feMerge>
 
           </filter>
@@ -378,8 +419,8 @@
       </svg>
 
       <span class="brand-word">
-          NIM<span class="accent">B</span>O
-        </span>
+        NIM<span class="accent">B</span>O
+      </span>
 
     </div>
 
@@ -387,7 +428,7 @@
             class="theme-toggle"
             id="themeToggle"
             type="button"
-            onclick="cambiarTema()"
+            onclick="toggleTheme()"
             title="Modo claro / oscuro"
     >
       ☀︎
@@ -396,7 +437,7 @@
   </div>
 
 
-  <div id="contenido">
+  <div id="content">
 
     <p class="loading">
       Cargando tus datos...
@@ -406,13 +447,14 @@
 
 </div>
 
+
 <script src="config.js"></script>
 
 <script>
 
   //region Theme
 
-  function cambiarTema() {
+  function toggleTheme() {
 
     document.body.classList.toggle('light');
 
@@ -454,7 +496,7 @@
 
       const response =
         await fetch(
-          '${NIMBO_API_URL}/api/diagnostics/${id}' +
+          `${NIMBO_API_URL}/api/diagnostics/` +
           encodeURIComponent(
             diagnosticId
           )
@@ -505,10 +547,11 @@
   function showError(message) {
 
     document.getElementById(
-      'contenido'
+      'content'
     ).innerHTML =
+
       '<p class="loading" style="color:var(--bad);">' +
-      message +
+        message +
       '</p>';
   }
 
@@ -520,33 +563,51 @@
   function scoreColor(score) {
 
     const stops = [
+
       {
-        position: 0,
-        color: [255, 107, 107]
+        position:0,
+        color:[255,107,107]
       },
+
       {
-        position: 50,
-        color: [255, 193, 99]
+        position:50,
+        color:[255,193,99]
       },
+
       {
-        position: 100,
-        color: [95, 227, 163]
+        position:100,
+        color:[95,227,163]
       }
+
     ];
 
 
+    const safeScore =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          Number(score) || 0
+        )
+      );
+
+
     const index =
-      score <= 50 ? 0 : 1;
+      safeScore <= 50
+        ? 0
+        : 1;
+
 
     const start =
       stops[index];
+
 
     const end =
       stops[index + 1];
 
 
     const ratio =
-      (score - start.position) /
+      (safeScore - start.position) /
       (end.position - start.position);
 
 
@@ -590,17 +651,21 @@
 
   function getScoreStatus(score) {
 
+    const numericScore =
+      Number(score) || 0;
+
+
     const text =
-      score >= 75
+      numericScore >= 75
         ? 'Bien'
-        : score >= 50
+        : numericScore >= 50
           ? 'Mejorable'
           : 'Insuficiente';
 
 
     return {
       text,
-      color: scoreColor(score)
+      color:scoreColor(numericScore)
     };
   }
 
@@ -635,11 +700,13 @@
   function getWeakestArea(scores) {
 
     const areas = [
+
       'expenses',
       'saving',
       'investment',
       'emergency',
       'debt'
+
     ];
 
 
@@ -651,10 +718,12 @@
       function(area) {
 
         if (
-          scores[area] <
-          scores[weakest]
+          Number(scores[area]) <
+          Number(scores[weakest])
         ) {
-          weakest = area;
+
+          weakest =
+            area;
         }
       }
     );
@@ -670,7 +739,10 @@
 
   function render(data) {
 
-    if (!data || !data.scores) {
+    if (
+      !data ||
+      !data.scores
+    ) {
 
       showError(
         'No hemos encontrado ese resultado.'
@@ -685,7 +757,9 @@
 
 
     const totalScore =
-      Number(scores.total) || 0;
+      Math.round(
+        Number(scores.total) || 0
+      );
 
 
     const status =
@@ -700,15 +774,20 @@
       );
 
 
-    let introduction = '';
+    let introduction =
+      '';
 
 
-    if (totalScore >= 75) {
+    if (
+      totalScore >= 75
+    ) {
 
       introduction =
         'Tu economía tiene una base sólida. ';
 
-    } else if (totalScore >= 50) {
+    } else if (
+      totalScore >= 50
+    ) {
 
       introduction =
         'Tu economía va razonablemente bien. ';
@@ -724,75 +803,90 @@
 
       [
         'Gastos',
-        Number(scores.expenses) || 0
+        Math.round(
+          Number(scores.expenses) || 0
+        )
       ],
 
       [
         'Ahorro',
-        Number(scores.saving) || 0
+        Math.round(
+          Number(scores.saving) || 0
+        )
       ],
 
       [
         'Inversión',
-        Number(scores.investment) || 0
+        Math.round(
+          Number(scores.investment) || 0
+        )
       ],
 
       [
         'Fondo de emergencia',
-        Number(scores.emergency) || 0
+        Math.round(
+          Number(scores.emergency) || 0
+        )
       ],
 
       [
         'Deudas',
-        Number(scores.debt) || 0
+        Math.round(
+          Number(scores.debt) || 0
+        )
       ]
+
     ];
 
 
     const rows =
       areas
-        .map(function(area) {
+        .map(
+          function(area) {
 
-          const currentStatus =
-            getScoreStatus(
-              area[1]
-            );
+            const currentStatus =
+              getScoreStatus(
+                area[1]
+              );
 
 
-          return (
-            '<tr>' +
+            return (
 
-              '<td>' +
+              '<tr>' +
 
-                '<span ' +
-                  'class="status-dot" ' +
-                  'style="background:' +
-                  currentStatus.color +
+                '<td>' +
+
+                  '<span ' +
+                    'class="status-dot" ' +
+                    'style="background:' +
+                    currentStatus.color +
                   '">' +
-                '</span>' +
+                  '</span>' +
 
-                area[0] +
+                  area[0] +
 
-              '</td>' +
+                '</td>' +
 
-              '<td ' +
-                'class="num" ' +
-                'style="color:' +
-                currentStatus.color +
+                '<td ' +
+                  'class="num" ' +
+                  'style="color:' +
+                  currentStatus.color +
                 '">' +
 
-                area[1] +
+                  area[1] +
 
-              '</td>' +
+                '</td>' +
 
-            '</tr>'
-          );
-        })
+              '</tr>'
+
+            );
+          }
+        )
         .join('');
 
 
     document.getElementById(
-      'contenido'
+      'content'
     ).innerHTML =
 
       '<div class="score-card">' +
@@ -803,7 +897,9 @@
 
         '<div>' +
 
-          '<div class="score-status">' +
+          '<div class="score-status" style="color:' +
+            status.color +
+          '">' +
             status.text +
           '</div>' +
 
@@ -833,7 +929,11 @@
 
         '<table>' +
 
-          rows +
+          '<tbody>' +
+
+            rows +
+
+          '</tbody>' +
 
         '</table>' +
 
@@ -853,47 +953,71 @@
         '<ul>' +
 
           '<li>Plan de acción enfocado en tu punto más débil</li>' +
+
           '<li>Un movimiento financiero concreto cada semana</li>' +
+
           '<li>Seguimiento claro de tu evolución</li>' +
 
         '</ul>' +
 
-        <a href="register.html" class="cta">
-          Crear mi cuenta →
-        </a>
+        '<a href="register.html" class="cta">' +
 
-        <div class="cta-note">
-          ¿Ya tienes cuenta?
-          <a href="login.html" style="color:var(--cyan);">
-            Iniciar sesión
-          </a>
-        </div>
+          'Crear mi cuenta →' +
+
+        '</a>' +
 
         '<div class="cta-note">' +
+
+          '¿Ya tienes cuenta? ' +
+
+          '<a href="login.html" style="color:var(--cyan);">' +
+
+            'Iniciar sesión' +
+
+          '</a>' +
+
+        '</div>' +
+
+        '<div class="cta-note">' +
+
           '9.99 € al año' +
+
         '</div>' +
 
         '<div class="code-wrap">' +
 
           '<div class="code-label">' +
+
             '¿Tienes un código?' +
+
           '</div>' +
 
           '<div class="code-row">' +
 
             '<input ' +
+
               'class="code-input" ' +
+
               'type="text" ' +
+
               'placeholder="Código" ' +
-              'id="codigo"' +
+
+              'id="codigo" ' +
+
             '>' +
 
             '<button ' +
+
               'class="code-btn" ' +
+
               'type="button" ' +
+
               'onclick="applyCode()"' +
+
             '>' +
+
               'Aplicar' +
+
             '</button>' +
 
           '</div>' +
@@ -901,6 +1025,7 @@
         '</div>' +
 
       '</div>';
+
   }
 
   //endregion
@@ -912,12 +1037,15 @@
 
     const code =
       document
-        .getElementById('codigo')
+        .getElementById(
+          'codigo'
+        )
         .value
         .trim();
 
 
     if (!code) {
+
       return;
     }
 
