@@ -409,15 +409,62 @@
       --brand-ink:#EAF2FF;
     }
 
+
+    /* ---------------------------------------------------------
+       Sidebar stays permanently dark
+    --------------------------------------------------------- */
+
     body.light .sidebar {
+      background:#10182B;
+
+      border-color:#1E2B45;
+
+      color:#EAF2FF;
+
       box-shadow:
-        8px 0 30px rgba(38,83,145,.05);
+        8px 0 30px rgba(0,0,0,.10);
     }
+
+
+    body.light .sidebar .nav-item {
+      color:#7C8CB3;
+    }
+
+
+    body.light .sidebar .nav-item:hover,
+    body.light .sidebar .nav-item.active {
+      background:rgba(92,225,230,.08);
+
+      color:#EAF2FF;
+    }
+
+
+    body.light .sidebar .sidebar-bottom {
+      border-color:#1E2B45;
+    }
+
+
+    body.light .sidebar .user-name {
+      color:#EAF2FF;
+    }
+
+
+    body.light .sidebar .user-plan,
+    body.light .sidebar .logout {
+      color:#7C8CB3;
+    }
+
+
+    body.light .sidebar .logout:hover {
+      color:#5CE1E6;
+    }
+
 
     body.light .card {
       box-shadow:
         0 14px 36px rgba(38,83,145,.10);
     }
+
 
     body.light .theme-toggle {
       border-color:rgba(234,242,255,.18);

@@ -32,7 +32,6 @@
       --warn:#FFC163;
       --bad:#FF6B6B;
 
-      /* Identidad permanente de Nimbo */
       --brand-ink:#EAF2FF;
     }
 
@@ -132,6 +131,8 @@
       gap:9px;
 
       padding:0;
+
+      text-decoration:none;
     }
 
 
@@ -654,10 +655,6 @@
     }
 
 
-    /*
-     * La zona superior permanece oscura.
-     */
-
     body.light .wrap::before {
       background:#0A0F1C;
     }
@@ -874,9 +871,20 @@
 
   //region Theme
 
-  function toggleTheme() {
+  function applyTheme() {
 
-    document.body.classList.toggle('light');
+    const savedTheme =
+      localStorage.getItem('nimboTheme');
+
+    const isLight =
+      savedTheme === 'light';
+
+
+    document.body.classList.toggle(
+      'light',
+      isLight
+    );
+
 
     const button =
       document.getElementById(
@@ -884,10 +892,57 @@
       );
 
 
-    button.innerHTML =
-      document.body.classList.contains('light')
-        ? '☾'
-        : '☀︎';
+    if (button) {
+
+      button.innerHTML =
+        isLight
+          ? '☾'
+          : '☀︎';
+
+    }
+
+  }
+
+
+  function toggleTheme() {
+
+    const isLight =
+      document.body.classList.contains('light');
+
+
+    const newTheme =
+      isLight
+        ? 'dark'
+        : 'light';
+
+
+    document.body.classList.toggle(
+      'light',
+      newTheme === 'light'
+    );
+
+
+    localStorage.setItem(
+      'nimboTheme',
+      newTheme
+    );
+
+
+    const button =
+      document.getElementById(
+        'themeToggle'
+      );
+
+
+    if (button) {
+
+      button.innerHTML =
+        newTheme === 'light'
+          ? '☾'
+          : '☀︎';
+
+    }
+
   }
 
   //endregion
@@ -1494,6 +1549,8 @@
 
 
   //region Init
+
+  applyTheme();
 
   loadDiagnostic();
 
