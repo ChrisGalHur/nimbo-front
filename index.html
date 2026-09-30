@@ -3,154 +3,511 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-    >
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-    <title>Nimbo · Finanzas con estructura</title>
+<title>Nimbo · Finanzas con estructura</title>
 
-    <link
-            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
-            rel="stylesheet"
-    >
+<link
+  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+  rel="stylesheet"
+>
 
-    <style>
 
-        :root {
-          --bg:#0A0F1C;
-          --panel:#10182B;
-          --ink:#EAF2FF;
-          --ink-soft:#7C8CB3;
-          --line:#1E2B45;
-          --cyan:#5CE1E6;
-          --blue:#5C86FF;
-        }
+<style>
 
-        * {
-          box-sizing:border-box;
-        }
+/* =========================================================
+   VARIABLES
+========================================================= */
 
-        body {
-          margin:0;
-          min-height:100vh;
-          background:var(--bg);
-          color:var(--ink);
-          font-family:'Inter',sans-serif;
-        }
+:root {
+  --bg:#0A0F1C;
+  --panel:#10182B;
+  --input:#0F1526;
 
-        .wrap {
-          max-width:900px;
-          margin:0 auto;
-          padding:32px;
-        }
+  --ink:#EAF2FF;
+  --ink-soft:#7C8CB3;
+  --line:#1E2B45;
 
-        .topbar {
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-        }
+  --cyan:#5CE1E6;
+  --blue:#5C86FF;
 
-        .brand {
-          font-family:'Space Grotesk',sans-serif;
-          font-weight:700;
-          font-size:18px;
-          letter-spacing:.1em;
-        }
+  --brand-ink:#EAF2FF;
+}
 
-        .accent {
-          color:var(--cyan);
-        }
 
-        .login {
-          color:var(--ink-soft);
-          text-decoration:none;
-          font-size:13px;
-        }
+/* =========================================================
+   BASE
+========================================================= */
 
-        .login:hover {
-          color:var(--cyan);
-        }
+* {
+  box-sizing:border-box;
+}
 
-        .hero {
-          max-width:700px;
-          padding:120px 0 90px;
-        }
 
-        .eyebrow {
-          color:var(--cyan);
-          font-family:'IBM Plex Mono',monospace;
-          font-size:11px;
-          letter-spacing:.1em;
-          text-transform:uppercase;
-          margin-bottom:16px;
-        }
+html {
+  min-height:100%;
+}
 
-        h1 {
-          font-family:'Space Grotesk',sans-serif;
-          font-size:52px;
-          line-height:1.05;
-          margin:0 0 22px;
-          letter-spacing:-.03em;
-        }
 
-        .hero p {
-          max-width:620px;
-          color:var(--ink-soft);
-          font-size:17px;
-          line-height:1.65;
-          margin:0 0 32px;
-        }
+body {
+  margin:0;
+  min-height:100vh;
 
-        .actions {
-          display:flex;
-          gap:12px;
-          flex-wrap:wrap;
-        }
+  background:var(--bg);
+  color:var(--ink);
 
-        .button {
-          display:inline-block;
-          padding:14px 18px;
-          border-radius:11px;
-          text-decoration:none;
-          font-size:14px;
-          font-weight:700;
-        }
+  font-family:'Inter',sans-serif;
+  font-size:14px;
 
-        .primary {
-          background:var(--cyan);
-          color:#0A0F1C;
-        }
+  transition:
+    background .25s ease,
+    color .25s ease;
+}
 
-        .secondary {
-          border:1px solid var(--line);
-          color:var(--ink);
-          background:var(--panel);
-        }
 
-        .secondary:hover {
-          border-color:var(--cyan);
-        }
+/* =========================================================
+   WRAPPER
+========================================================= */
 
-        @media(max-width:600px) {
+.wrap {
+  max-width:900px;
+  min-height:100vh;
 
-          .wrap {
-            padding:20px;
-          }
+  margin:0 auto;
+  padding:32px;
 
-          .hero {
-            padding:90px 0 60px;
-          }
+  position:relative;
+}
 
-          h1 {
-            font-size:40px;
-          }
 
-        }
+/* ---------------------------------------------------------
+   Permanent top area
 
-    </style>
+   MISMA ALTURA QUE TEST.HTML: 140px
+--------------------------------------------------------- */
+
+.wrap::before {
+  content:"";
+
+  position:absolute;
+
+  z-index:-1;
+
+  top:-32px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:100vw;
+
+  height:140px;
+
+  background:#0A0F1C;
+
+  pointer-events:none;
+
+  transition:
+    background .25s ease;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.topbar {
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:32px;
+}
+
+
+/* =========================================================
+   NIMBO BRAND
+========================================================= */
+
+.brand {
+  display:flex;
+
+  align-items:center;
+
+  gap:9px;
+
+  padding:0;
+}
+
+
+.brand-mark {
+  width:28px;
+  height:28px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+
+.brand-mark svg {
+  display:block;
+
+  width:28px;
+  height:28px;
+}
+
+
+.brand-word {
+  font-family:'Space Grotesk',sans-serif;
+
+  font-weight:700;
+
+  font-size:16px;
+
+  letter-spacing:.1em;
+
+  color:var(--brand-ink);
+}
+
+
+.brand-word .accent {
+  color:#5CE1E6;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.topbar-right {
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+}
+
+
+.login {
+  color:#AAB8D4;
+
+  text-decoration:none;
+
+  font-size:13px;
+  font-weight:500;
+
+  transition:
+    color .2s ease;
+}
+
+
+.login:hover {
+  color:var(--cyan);
+}
+
+
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
+
+.theme-toggle {
+  width:34px;
+  height:34px;
+
+  padding:0;
+
+  border:1px solid rgba(234,242,255,.18);
+
+  border-radius:9px;
+
+  background:rgba(255,255,255,.04);
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  color:#EAF2FF;
+
+  font-size:17px;
+
+  line-height:1;
+
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    color .2s ease,
+    transform .2s ease;
+}
+
+
+.theme-toggle:hover {
+  border-color:#5CE1E6;
+
+  background:rgba(92,225,230,.08);
+
+  color:#5CE1E6;
+
+  transform:scale(1.03);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+  max-width:700px;
+
+  padding:100px 0 90px;
+}
+
+
+.eyebrow {
+  color:var(--cyan);
+
+  font-family:'IBM Plex Mono',monospace;
+
+  font-size:11px;
+
+  letter-spacing:.1em;
+
+  text-transform:uppercase;
+
+  margin-bottom:16px;
+}
+
+
+h1 {
+  font-family:'Space Grotesk',sans-serif;
+
+  font-size:52px;
+
+  line-height:1.05;
+
+  margin:0 0 22px;
+
+  letter-spacing:-.03em;
+}
+
+
+.hero p {
+  max-width:620px;
+
+  color:var(--ink-soft);
+
+  font-size:17px;
+
+  line-height:1.65;
+
+  margin:0 0 32px;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+  display:flex;
+
+  gap:12px;
+
+  flex-wrap:wrap;
+}
+
+
+.button {
+  display:inline-flex;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:14px 18px;
+
+  border-radius:11px;
+
+  text-decoration:none;
+
+  font-size:14px;
+
+  font-weight:700;
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+}
+
+
+.button:hover {
+  transform:translateY(-1px);
+}
+
+
+.primary {
+  background:var(--cyan);
+
+  color:#0A0F1C;
+}
+
+
+.primary:hover {
+  background:#72E8EC;
+}
+
+
+.secondary {
+  border:1px solid var(--line);
+
+  color:var(--ink);
+
+  background:var(--panel);
+}
+
+
+.secondary:hover {
+  border-color:var(--cyan);
+}
+
+
+/* =========================================================
+   LIGHT MODE
+========================================================= */
+
+body.light {
+  --bg:#EAF4FF;
+  --panel:#DCEBFF;
+  --input:#F4F8FF;
+
+  --ink:#162039;
+  --ink-soft:#5D7194;
+  --line:#BED1EE;
+
+  --brand-ink:#EAF2FF;
+}
+
+
+/*
+ * La zona superior permanece oscura,
+ * igual que en test.html.
+ */
+
+body.light .wrap::before {
+  background:#0A0F1C;
+}
+
+
+body.light .brand-word {
+  color:#EAF2FF;
+}
+
+
+body.light .brand-word .accent {
+  color:#5CE1E6;
+}
+
+
+body.light .login {
+  color:#AAB8D4;
+}
+
+
+body.light .theme-toggle {
+  border-color:rgba(234,242,255,.18);
+
+  background:rgba(255,255,255,.04);
+
+  color:#EAF2FF;
+}
+
+
+body.light .secondary {
+  box-shadow:
+    0 10px 30px rgba(38,83,145,.06);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px) {
+
+  body {
+    padding:20px;
+  }
+
+
+  .wrap {
+    padding:20px;
+  }
+
+
+  /*
+   * MISMA ALTURA: 140px
+   */
+
+  .wrap::before {
+    top:-20px;
+
+    height:140px;
+  }
+
+
+  .topbar {
+    margin-bottom:20px;
+  }
+
+
+  .topbar-right {
+    gap:8px;
+  }
+
+
+  .login {
+    font-size:12px;
+  }
+
+
+  .hero {
+    padding:80px 0 60px;
+  }
+
+
+  h1 {
+    font-size:40px;
+  }
+
+
+  .hero p {
+    font-size:15px;
+  }
+
+
+  .actions {
+    flex-direction:column;
+  }
+
+
+  .button {
+    width:100%;
+  }
+
+}
+
+</style>
 
 </head>
 
@@ -159,59 +516,268 @@
 
 <div class="wrap">
 
-    <header class="topbar">
 
-        <div class="brand">
-            NIM<span class="accent">B</span>O
-        </div>
+  <!-- =====================================================
+       TOP BAR
+  ====================================================== -->
 
-        <a
-                class="login"
-                href="login.html"
+  <header class="topbar">
+
+
+    <!-- Nimbo brand -->
+
+    <div class="brand">
+
+      <div class="brand-mark">
+
+        <svg
+          viewBox="0 0 64 64"
+          aria-hidden="true"
         >
-            Iniciar sesión
-        </a>
 
-    </header>
+          <defs>
 
-
-    <main class="hero">
-
-        <div class="eyebrow">
-            Finanzas con estructura
-        </div>
-
-        <h1>
-            Entiende dónde estás.
-            Decide hacia dónde ir.
-        </h1>
-
-        <p>
-            Nimbo analiza tu situación financiera y te ayuda a convertirla en un plan claro.
-        </p>
-
-
-        <div class="actions">
-
-            <a
-                    class="button primary"
-                    href="test.html"
+            <filter
+              id="logoGlow"
+              x="-60%"
+              y="-60%"
+              width="220%"
+              height="220%"
             >
-                Hacer mi diagnóstico →
-            </a>
 
-            <a
-                    class="button secondary"
-                    href="register.html"
-            >
-                Crear cuenta
-            </a>
+              <feGaussianBlur
+                stdDeviation="1.4"
+                result="blur"
+              />
 
-        </div>
+              <feMerge>
 
-    </main>
+                <feMergeNode in="blur" />
+
+                <feMergeNode in="SourceGraphic" />
+
+              </feMerge>
+
+            </filter>
+
+          </defs>
+
+
+          <circle
+            cx="32"
+            cy="32"
+            r="10"
+
+            fill="none"
+
+            stroke="#5CE1E6"
+
+            stroke-width="2.6"
+
+            filter="url(#logoGlow)"
+          />
+
+
+          <circle
+            cx="32"
+            cy="32"
+            r="18"
+
+            fill="none"
+
+            stroke="#5C86FF"
+
+            stroke-width="2"
+
+            filter="url(#logoGlow)"
+
+            opacity=".85"
+          />
+
+
+          <circle
+            cx="32"
+            cy="32"
+            r="26"
+
+            fill="none"
+
+            stroke="#5C86FF"
+
+            stroke-width="1.4"
+
+            filter="url(#logoGlow)"
+
+            opacity=".45"
+          />
+
+        </svg>
+
+      </div>
+
+
+      <span class="brand-word">
+        NIM<span class="accent">B</span>O
+      </span>
+
+    </div>
+
+
+    <!-- Right side -->
+
+    <div class="topbar-right">
+
+      <a
+        class="login"
+        href="login.html"
+      >
+        Iniciar sesión
+      </a>
+
+
+      <button
+        class="theme-toggle"
+        id="themeToggle"
+        type="button"
+        aria-label="Cambiar tema"
+        onclick="toggleTheme()"
+      >
+        ☀︎
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       HERO
+  ====================================================== -->
+
+  <main class="hero">
+
+
+    <div class="eyebrow">
+      Finanzas con estructura
+    </div>
+
+
+    <h1>
+      Entiende dónde estás.<br>
+      Decide hacia dónde ir.
+    </h1>
+
+
+    <p>
+      Nimbo analiza tu situación financiera y te ayuda
+      a convertirla en un plan claro.
+    </p>
+
+
+    <div class="actions">
+
+      <a
+        class="button primary"
+        href="test.html"
+      >
+        Hacer mi diagnóstico →
+      </a>
+
+
+      <a
+        class="button secondary"
+        href="register.html"
+      >
+        Crear cuenta
+      </a>
+
+    </div>
+
+  </main>
 
 </div>
+
+
+<script>
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function applyTheme() {
+
+  const savedTheme =
+    localStorage.getItem('nimboTheme');
+
+  const isLight =
+    savedTheme === 'light';
+
+  document.body.classList.toggle(
+    'light',
+    isLight
+  );
+
+
+  const button =
+    document.getElementById('themeToggle');
+
+
+  if (button) {
+
+    button.innerHTML =
+      isLight ? '☾' : '☀︎';
+
+  }
+
+}
+
+
+function toggleTheme() {
+
+  const isLight =
+    document.body.classList.contains('light');
+
+
+  const newTheme =
+    isLight ? 'dark' : 'light';
+
+
+  document.body.classList.toggle(
+    'light',
+    newTheme === 'light'
+  );
+
+
+  localStorage.setItem(
+    'nimboTheme',
+    newTheme
+  );
+
+
+  const button =
+    document.getElementById('themeToggle');
+
+
+  if (button) {
+
+    button.innerHTML =
+      newTheme === 'light'
+        ? '☾'
+        : '☀︎';
+
+  }
+
+}
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+applyTheme();
+
+</script>
+
 
 </body>
 

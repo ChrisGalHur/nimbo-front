@@ -19,101 +19,277 @@
 
   <style>
 
+    /* =========================================================
+       VARIABLES
+    ========================================================= */
+
     :root {
       --bg:#0A0F1C;
       --panel:#10182B;
+      --input:#0F1526;
+
       --ink:#EAF2FF;
       --ink-soft:#7C8CB3;
       --line:#1E2B45;
+
       --cyan:#5CE1E6;
       --blue:#5C86FF;
+
       --good:#5FE3A3;
+      --warn:#FFC163;
       --bad:#FF6B6B;
+
+      --brand-ink:#EAF2FF;
     }
+
+
+    /* =========================================================
+       BASE
+    ========================================================= */
 
     * {
       box-sizing:border-box;
     }
 
+    html {
+      min-height:100%;
+    }
+
     body {
       margin:0;
       min-height:100vh;
+
       background:var(--bg);
       color:var(--ink);
+
       font-family:'Inter',sans-serif;
-      display:flex;
+      font-size:14px;
+
+      transition:
+        background .25s ease,
+        color .25s ease;
     }
+
+
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
 
     .sidebar {
       width:230px;
       min-height:100vh;
+
       border-right:1px solid var(--line);
+
       background:var(--panel);
+
       padding:24px 16px;
+
       display:flex;
       flex-direction:column;
+
+      transition:
+        background .25s ease,
+        border-color .25s ease;
     }
+
+
+    /* =========================================================
+       BRAND
+    ========================================================= */
 
     .brand {
-      font-family:'Space Grotesk',sans-serif;
-      font-weight:700;
-      font-size:17px;
-      letter-spacing:.1em;
+      display:flex;
+      align-items:center;
+
+      gap:9px;
+
       padding:0 10px;
+
       margin-bottom:32px;
+
+      text-decoration:none;
+
+      width:max-content;
     }
 
-    .accent {
+    .brand-mark {
+      width:28px;
+      height:28px;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      flex-shrink:0;
+    }
+
+    .brand-mark svg {
+      display:block;
+
+      width:28px;
+      height:28px;
+    }
+
+    .brand-word {
+      font-family:'Space Grotesk',sans-serif;
+
+      font-weight:700;
+
+      font-size:16px;
+
+      letter-spacing:.1em;
+
+      color:var(--brand-ink);
+    }
+
+    .brand-word .accent {
       color:var(--cyan);
     }
 
+
+    /* =========================================================
+       THEME TOGGLE
+    ========================================================= */
+
+    .theme-toggle {
+      width:34px;
+      height:34px;
+
+      padding:0;
+
+      border:1px solid rgba(234,242,255,.18);
+      border-radius:9px;
+
+      background:rgba(255,255,255,.04);
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      cursor:pointer;
+
+      color:#EAF2FF;
+
+      font-size:17px;
+      line-height:1;
+
+      transition:
+        border-color .2s ease,
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color:var(--cyan);
+
+      background:rgba(92,225,230,.08);
+
+      color:var(--cyan);
+
+      transform:scale(1.03);
+    }
+
+
+    /* =========================================================
+       SIDEBAR HEADER
+    ========================================================= */
+
+    .sidebar-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      margin-bottom:32px;
+    }
+
+    .sidebar-header .brand {
+      margin-bottom:0;
+    }
+
+
+    /* =========================================================
+       NAVIGATION
+    ========================================================= */
+
     .navigation {
       display:flex;
+
       flex-direction:column;
+
       gap:6px;
     }
 
     .nav-item {
       display:block;
+
       padding:11px 12px;
+
       border-radius:9px;
+
       color:var(--ink-soft);
+
       text-decoration:none;
+
       font-size:13px;
-      transition:background .2s ease,color .2s ease;
+
+      transition:
+        background .2s ease,
+        color .2s ease;
     }
 
     .nav-item:hover,
     .nav-item.active {
       background:rgba(92,225,230,.08);
+
       color:var(--ink);
     }
 
+
+    /* =========================================================
+       SIDEBAR BOTTOM
+    ========================================================= */
+
     .sidebar-bottom {
       margin-top:auto;
+
       padding:12px 10px 0;
+
       border-top:1px solid var(--line);
+
+      transition:border-color .25s ease;
     }
 
     .user-name {
       font-size:13px;
+
       margin-bottom:10px;
     }
 
     .user-plan {
       color:var(--ink-soft);
+
       font-size:11px;
+
       margin-bottom:14px;
+
       font-family:'IBM Plex Mono',monospace;
     }
 
     .logout {
       color:var(--ink-soft);
+
       background:none;
+
       border:0;
+
       padding:0;
+
       cursor:pointer;
+
       font:inherit;
+
       font-size:12px;
     }
 
@@ -121,55 +297,140 @@
       color:var(--cyan);
     }
 
+
+    /* =========================================================
+       CONTENT
+    ========================================================= */
+
     .content {
       flex:1;
+
       padding:40px;
+
+      transition:background .25s ease;
     }
 
     .content-inner {
       max-width:900px;
+
       margin:0 auto;
     }
 
+
+    /* =========================================================
+       HEADINGS
+    ========================================================= */
+
     .eyebrow {
       color:var(--cyan);
+
       font-family:'IBM Plex Mono',monospace;
+
       font-size:11px;
+
       text-transform:uppercase;
+
       letter-spacing:.08em;
+
       margin-bottom:10px;
     }
 
     h1 {
       font-family:'Space Grotesk',sans-serif;
+
       margin:0 0 10px;
+
       font-size:30px;
+
+      letter-spacing:-.02em;
     }
 
     .intro {
       color:var(--ink-soft);
+
       margin:0 0 30px;
+
       line-height:1.6;
     }
 
+
+    /* =========================================================
+       CARD
+    ========================================================= */
+
     .card {
       background:var(--panel);
+
       border:1px solid var(--line);
+
       border-radius:14px;
+
       padding:24px;
+
+      box-shadow:
+        0 12px 36px rgba(0,0,0,.08);
+
+      transition:
+        background .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
     }
 
     .card h2 {
       font-family:'Space Grotesk',sans-serif;
+
       font-size:18px;
+
       margin:0 0 8px;
     }
 
     .card p {
       color:var(--ink-soft);
+
       line-height:1.5;
+
       margin:0;
     }
+
+
+    /* =========================================================
+       LIGHT MODE
+    ========================================================= */
+
+    body.light {
+      --bg:#EAF4FF;
+      --panel:#DCEBFF;
+      --input:#F4F8FF;
+
+      --ink:#162039;
+      --ink-soft:#5D7194;
+      --line:#BED1EE;
+
+      --brand-ink:#EAF2FF;
+    }
+
+    body.light .sidebar {
+      box-shadow:
+        8px 0 30px rgba(38,83,145,.05);
+    }
+
+    body.light .card {
+      box-shadow:
+        0 14px 36px rgba(38,83,145,.10);
+    }
+
+    body.light .theme-toggle {
+      border-color:rgba(234,242,255,.18);
+
+      background:rgba(255,255,255,.04);
+
+      color:#EAF2FF;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
 
     @media(max-width:700px) {
 
@@ -179,9 +440,18 @@
 
       .sidebar {
         width:100%;
+
         min-height:auto;
+
         border-right:0;
+
         border-bottom:1px solid var(--line);
+
+        padding:20px;
+      }
+
+      .sidebar-header {
+        margin-bottom:24px;
       }
 
       .sidebar-bottom {
@@ -190,6 +460,10 @@
 
       .content {
         padding:24px 20px;
+      }
+
+      h1 {
+        font-size:26px;
       }
 
     }
@@ -201,16 +475,131 @@
 
 <body>
 
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
 <aside class="sidebar">
 
-  <div class="brand">
-    NIM<span class="accent">B</span>O
+
+  <!-- =======================================================
+       SIDEBAR HEADER
+  ======================================================== -->
+
+  <div class="sidebar-header">
+
+    <a
+            class="brand"
+            href="index.html"
+            aria-label="Nimbo"
+    >
+
+      <div class="brand-mark">
+
+        <svg
+                viewBox="0 0 64 64"
+                aria-hidden="true"
+        >
+
+          <defs>
+
+            <filter
+                    id="logoGlow"
+                    x="-60%"
+                    y="-60%"
+                    width="220%"
+                    height="220%"
+            >
+
+              <feGaussianBlur
+                      stdDeviation="1.4"
+                      result="blur"
+              />
+
+              <feMerge>
+
+                <feMergeNode in="blur" />
+
+                <feMergeNode in="SourceGraphic" />
+
+              </feMerge>
+
+            </filter>
+
+          </defs>
+
+
+          <circle
+                  cx="32"
+                  cy="32"
+                  r="10"
+                  fill="none"
+                  stroke="#5CE1E6"
+                  stroke-width="2.6"
+                  filter="url(#logoGlow)"
+          />
+
+          <circle
+                  cx="32"
+                  cy="32"
+                  r="18"
+                  fill="none"
+                  stroke="#5C86FF"
+                  stroke-width="2"
+                  filter="url(#logoGlow)"
+                  opacity=".85"
+          />
+
+          <circle
+                  cx="32"
+                  cy="32"
+                  r="26"
+                  fill="none"
+                  stroke="#5C86FF"
+                  stroke-width="1.4"
+                  filter="url(#logoGlow)"
+                  opacity=".45"
+          />
+
+        </svg>
+
+      </div>
+
+
+      <span class="brand-word">
+        NIM<span class="accent">B</span>O
+      </span>
+
+    </a>
+
+
+    <button
+            class="theme-toggle"
+            id="themeToggle"
+            type="button"
+            aria-label="Cambiar tema"
+            onclick="toggleTheme()"
+    >
+      ☀︎
+    </button>
+
   </div>
+
+
+  <!-- =======================================================
+       NAVIGATION
+  ======================================================== -->
 
   <nav
           id="navigation"
           class="navigation"
   ></nav>
+
+
+  <!-- =======================================================
+       USER
+  ======================================================== -->
 
   <div class="sidebar-bottom">
 
@@ -236,6 +625,10 @@
 
 </aside>
 
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
 
 <main class="content">
 
@@ -269,11 +662,82 @@
 
 </main>
 
+
 <script src="config.js"></script>
+
 
 <script>
 
-  //region Authentication
+  /* =========================================================
+     THEME
+  ========================================================= */
+
+  function applyTheme() {
+
+    const savedTheme =
+      localStorage.getItem('nimboTheme');
+
+    const isLight =
+      savedTheme === 'light';
+
+    document.body.classList.toggle(
+      'light',
+      isLight
+    );
+
+    const button =
+      document.getElementById('themeToggle');
+
+    if (button) {
+
+      button.innerHTML =
+        isLight
+          ? '☾'
+          : '☀︎';
+
+    }
+
+  }
+
+
+  function toggleTheme() {
+
+    const isLight =
+      document.body.classList.contains('light');
+
+    const newTheme =
+      isLight
+        ? 'dark'
+        : 'light';
+
+    document.body.classList.toggle(
+      'light',
+      newTheme === 'light'
+    );
+
+    localStorage.setItem(
+      'nimboTheme',
+      newTheme
+    );
+
+    const button =
+      document.getElementById('themeToggle');
+
+    if (button) {
+
+      button.innerHTML =
+        newTheme === 'light'
+          ? '☾'
+          : '☀︎';
+
+    }
+
+  }
+
+
+  /* =========================================================
+     AUTHENTICATION
+  ========================================================= */
 
   const storedUser =
     localStorage.getItem(
@@ -320,12 +784,13 @@
 
     window.location.href =
       'index.html';
+
   }
 
-  //endregion
 
-
-  //region Navigation
+  /* =========================================================
+     NAVIGATION
+  ========================================================= */
 
   const navigationItems = [
 
@@ -384,12 +849,19 @@
       navigation.appendChild(
         link
       );
+
     }
   );
 
-  //endregion
+
+  /* =========================================================
+     INIT
+  ========================================================= */
+
+  applyTheme();
 
 </script>
+
 
 </body>
 

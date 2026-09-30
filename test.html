@@ -31,337 +31,716 @@
       --good:#5FE3A3;
       --warn:#FFC163;
       --bad:#FF6B6B;
+
+      /* Identidad permanente de Nimbo */
+      --brand-ink:#EAF2FF;
     }
+
 
     * {
       box-sizing:border-box;
     }
 
+
+    html {
+      min-height:100%;
+    }
+
+
     body {
       margin:0;
+
       background:var(--bg);
       color:var(--ink);
+
       font-family:'Inter',sans-serif;
       font-size:14px;
+
       padding:32px;
-      transition:background .25s ease,color .25s ease;
+
+      transition:
+        background .25s ease,
+        color .25s ease;
     }
+
+
+    /* ---------------------------------------------------------
+       Main layout
+       --------------------------------------------------------- */
 
     .wrap {
       max-width:600px;
       margin:0 auto;
+
+      position:relative;
     }
+
+
+    /* ---------------------------------------------------------
+       Permanent top area
+       --------------------------------------------------------- */
+
+    .wrap::before {
+      content:"";
+
+      position:absolute;
+
+      z-index:-1;
+
+      top:-32px;
+
+      left:50%;
+
+      transform:translateX(-50%);
+
+      width:100vw;
+
+      height:140px;
+
+      background:#0A0F1C;
+
+      pointer-events:none;
+
+      transition:
+        background .25s ease;
+    }
+
+
+    /* ---------------------------------------------------------
+       Header
+       --------------------------------------------------------- */
 
     .topbar {
       display:flex;
+
       justify-content:space-between;
       align-items:center;
+
       margin-bottom:32px;
     }
 
+
+    /* ---------------------------------------------------------
+       Nimbo brand
+       --------------------------------------------------------- */
+
     .brand {
       display:flex;
+
       align-items:center;
+
       gap:9px;
+
+      padding:0;
     }
+
+
+    .brand-mark {
+      width:28px;
+      height:28px;
+
+      display:flex;
+
+      align-items:center;
+      justify-content:center;
+
+      flex-shrink:0;
+    }
+
+
+    .brand-mark svg {
+      display:block;
+
+      width:28px;
+      height:28px;
+    }
+
 
     .brand-word {
       font-family:'Space Grotesk',sans-serif;
+
       font-weight:700;
+
       font-size:16px;
+
       letter-spacing:.1em;
+
+      color:var(--brand-ink);
     }
 
+
     .brand-word .accent {
-      color:var(--cyan);
-      text-shadow:0 0 4px rgba(92,225,230,.5);
+      color:#5CE1E6;
     }
+
+
+    /* ---------------------------------------------------------
+       Theme toggle
+       --------------------------------------------------------- */
 
     .theme-toggle {
       width:34px;
       height:34px;
+
+      padding:0;
+
+      border:1px solid rgba(234,242,255,.18);
+
       border-radius:9px;
-      border:1px solid var(--line);
-      background:var(--panel);
+
+      background:rgba(255,255,255,.04);
+
       display:flex;
+
       align-items:center;
       justify-content:center;
+
       cursor:pointer;
-      color:var(--ink-soft);
-      font-size:16px;
-      transition:border-color .2s ease,color .2s ease,background .2s ease;
+
+      color:#EAF2FF;
+
+      font-size:17px;
+
+      line-height:1;
+
+      transition:
+        border-color .2s ease,
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
     }
 
+
     .theme-toggle:hover {
-      border-color:var(--cyan);
-      color:var(--cyan);
+      border-color:#5CE1E6;
+
+      background:rgba(92,225,230,.08);
+
+      color:#5CE1E6;
+
+      transform:scale(1.03);
     }
+
+
+    /* ---------------------------------------------------------
+       Main panel
+       --------------------------------------------------------- */
 
     .panel {
       background:var(--panel);
+
       border:1px solid var(--line);
+
       border-radius:14px;
+
       padding:26px 28px;
-      margin-bottom:22px;
+
+      margin-bottom:18px;
+
+      box-shadow:
+        0 12px 36px rgba(0,0,0,.08);
     }
+
 
     .panel h2 {
       font-family:'Space Grotesk',sans-serif;
+
       font-size:20px;
+
       font-weight:600;
+
       margin:0 0 26px;
     }
 
+
+    /* ---------------------------------------------------------
+       Form
+       --------------------------------------------------------- */
+
     label {
       display:block;
+
       margin-bottom:22px;
+
       font-size:13.5px;
+
       color:var(--ink-soft);
     }
 
+
     .label-row {
       display:flex;
+
       align-items:center;
+
       gap:7px;
+
       margin-bottom:9px;
     }
+
 
     .label-text {
       color:var(--ink-soft);
     }
 
+
+    /* ---------------------------------------------------------
+       Help tooltip
+       --------------------------------------------------------- */
+
     .help {
       position:relative;
+
       display:inline-flex;
+
       align-items:center;
       justify-content:center;
+
       width:18px;
       height:18px;
+
       border:1px solid var(--line);
+
       border-radius:50%;
+
       color:var(--ink-soft);
+
       font-family:'IBM Plex Mono',monospace;
+
       font-size:11px;
+
       font-weight:600;
+
       cursor:help;
-      transition:border-color .2s ease,color .2s ease,background .2s ease;
+
+      transition:
+        border-color .2s ease,
+        color .2s ease,
+        background .2s ease;
     }
+
 
     .help:hover {
       border-color:var(--cyan);
+
       color:var(--cyan);
+
       background:rgba(92,225,230,.06);
     }
 
+
     .help::after {
       content:attr(data-tooltip);
+
       position:absolute;
+
       z-index:20;
+
       left:0;
+
       bottom:calc(100% + 9px);
+
       width:230px;
+
       padding:10px 12px;
+
       background:#0D1424;
+
       border:1px solid var(--line);
+
       border-radius:9px;
+
       color:var(--ink-soft);
+
       font-family:'Inter',sans-serif;
+
       font-size:12px;
+
       font-weight:400;
+
       line-height:1.45;
+
       text-align:left;
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
+
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.35);
+
       opacity:0;
+
       visibility:hidden;
+
       transform:translateY(4px);
-      transition:opacity .15s ease,transform .15s ease,visibility .15s ease;
+
+      transition:
+        opacity .15s ease,
+        transform .15s ease,
+        visibility .15s ease;
+
       pointer-events:none;
     }
 
+
     .help:hover::after {
       opacity:1;
+
       visibility:visible;
+
       transform:translateY(0);
     }
 
+
+    /* ---------------------------------------------------------
+       Inputs
+       --------------------------------------------------------- */
+
     input {
       width:100%;
+
       padding:12px 14px;
+
       border-radius:10px;
+
       border:1px solid var(--line);
+
       background:var(--input);
+
       color:var(--ink);
+
       font-size:14px;
+
       font-family:'Inter',sans-serif;
+
       outline:none;
-      transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;
+
+      transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
     }
+
 
     input::placeholder {
       color:#4F5E80;
     }
 
+
     input:focus {
       border-color:var(--cyan);
+
       background:var(--panel);
-      box-shadow:0 0 0 3px rgba(92,225,230,.08);
+
+      box-shadow:
+        0 0 0 3px rgba(92,225,230,.08);
     }
+
+
+    /* ---------------------------------------------------------
+       Primary button
+       --------------------------------------------------------- */
 
     .cta {
       display:block;
+
       width:100%;
+
       background:var(--cyan);
+
       color:#0A0F1C;
+
       border:none;
+
       border-radius:12px;
+
       padding:15px;
+
       font-size:15px;
+
       font-weight:700;
+
       font-family:'Inter',sans-serif;
+
       cursor:pointer;
+
       text-align:center;
-      box-shadow:0 0 24px rgba(92,225,230,.35);
+
+      box-shadow:
+        0 0 24px rgba(92,225,230,.28);
+
       margin-top:4px;
-      transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;
+
+      transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        filter .15s ease;
     }
+
 
     .cta:hover {
       transform:translateY(-1px);
-      box-shadow:0 0 30px rgba(92,225,230,.45);
+
+      box-shadow:
+        0 0 30px rgba(92,225,230,.40);
+
       filter:brightness(1.04);
     }
+
 
     .cta:active {
       transform:translateY(0);
     }
 
+
     .cta:disabled {
       opacity:.7;
+
       cursor:wait;
+
       transform:none;
     }
 
-    #resultado {
-      margin-top:20px;
-      font-size:13.5px;
+
+    /* ---------------------------------------------------------
+       Free diagnostic note
+       --------------------------------------------------------- */
+
+    .free-note {
+      margin:11px 0 0;
+
+      text-align:center;
+
+      font-size:12px;
+
       color:var(--ink-soft);
+    }
+
+
+    #result {
+      margin-top:14px;
+
+      font-size:13.5px;
+
+      color:var(--ink-soft);
+
       line-height:1.5;
+
       text-align:center;
     }
+
 
     .error {
       color:var(--bad);
     }
 
+
+    /* ---------------------------------------------------------
+       Light theme
+       --------------------------------------------------------- */
+
     body.light {
-      --bg:#F4F7FC;
-      --panel:#FFFFFF;
-      --input:#F7F9FD;
+      --bg:#EAF4FF;
+
+      --panel:#DCEBFF;
+
+      --input:#F4F8FF;
+
       --ink:#162039;
-      --ink-soft:#65728D;
-      --line:#DCE3F0;
+
+      --ink-soft:#5D7194;
+
+      --line:#BED1EE;
     }
+
+
+    /*
+     * La zona superior permanece oscura.
+     */
+
+    body.light .wrap::before {
+      background:#0A0F1C;
+    }
+
+
+    body.light .brand-word {
+      color:#EAF2FF;
+    }
+
+
+    body.light .brand-word .accent {
+      color:#5CE1E6;
+    }
+
+
+    body.light .theme-toggle {
+      border-color:rgba(234,242,255,.18);
+
+      background:rgba(255,255,255,.04);
+
+      color:#EAF2FF;
+    }
+
+
+    body.light .panel {
+      box-shadow:
+        0 14px 36px rgba(38,83,145,.10);
+    }
+
 
     body.light .help::after {
-      background:#FFFFFF;
-      box-shadow:0 10px 30px rgba(20,35,65,.12);
+      background:#F4F8FF;
+
+      box-shadow:
+        0 10px 30px rgba(20,35,65,.12);
     }
 
+
+    body.light input:focus {
+      background:#FFFFFF;
+    }
+
+
+    /* ---------------------------------------------------------
+       Responsive
+       --------------------------------------------------------- */
+
     @media(max-width:600px) {
+
       body {
         padding:20px;
       }
+
+
+      .wrap::before {
+        top:-20px;
+
+        height:140px;
+      }
+
 
       .panel {
         padding:22px 20px;
       }
 
+
       .help::after {
         width:200px;
       }
+
     }
 
   </style>
 
 </head>
 
+
 <body>
 
 <div class="wrap">
 
+
+  <!-- Header -->
+
   <div class="topbar">
+
+
+    <!-- Nimbo brand -->
 
     <div class="brand">
 
-      <svg
-              width="24"
-              height="24"
-              viewBox="0 0 64 64"
-      >
+      <div class="brand-mark">
 
-        <defs>
+        <svg
+                viewBox="0 0 64 64"
+                aria-hidden="true"
+        >
 
-          <filter
-                  id="g"
-                  x="-60%"
-                  y="-60%"
-                  width="220%"
-                  height="220%"
-          >
+          <defs>
 
-            <feGaussianBlur
-                    stdDeviation="2"
-                    result="blur"
-            />
+            <filter
+                    id="logoGlow"
+                    x="-60%"
+                    y="-60%"
+                    width="220%"
+                    height="220%"
+            >
 
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
+              <feGaussianBlur
+                      stdDeviation="1.4"
+                      result="blur"
+              />
 
-          </filter>
+              <feMerge>
 
-        </defs>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
 
-        <circle
-                cx="32"
-                cy="32"
-                r="10"
-                fill="none"
-                stroke="#5CE1E6"
-                stroke-width="2.6"
-                filter="url(#g)"
-        />
+              </feMerge>
 
-        <circle
-                cx="32"
-                cy="32"
-                r="18"
-                fill="none"
-                stroke="#5C86FF"
-                stroke-width="2"
-                filter="url(#g)"
-                opacity=".85"
-        />
+            </filter>
 
-        <circle
-                cx="32"
-                cy="32"
-                r="26"
-                fill="none"
-                stroke="#5C86FF"
-                stroke-width="1.4"
-                filter="url(#g)"
-                opacity=".45"
-        />
+          </defs>
 
-      </svg>
+
+          <circle
+                  cx="32"
+                  cy="32"
+                  r="10"
+
+                  fill="none"
+
+                  stroke="#5CE1E6"
+
+                  stroke-width="2.6"
+
+                  filter="url(#logoGlow)"
+          />
+
+
+          <circle
+                  cx="32"
+                  cy="32"
+                  r="18"
+
+                  fill="none"
+
+                  stroke="#5C86FF"
+
+                  stroke-width="2"
+
+                  filter="url(#logoGlow)"
+
+                  opacity=".85"
+          />
+
+
+          <circle
+                  cx="32"
+                  cy="32"
+                  r="26"
+
+                  fill="none"
+
+                  stroke="#5C86FF"
+
+                  stroke-width="1.4"
+
+                  filter="url(#logoGlow)"
+
+                  opacity=".45"
+          />
+
+        </svg>
+
+      </div>
+
 
       <span class="brand-word">
-          NIM<span class="accent">B</span>O
-        </span>
+        NIM<span class="accent">B</span>O
+      </span>
 
     </div>
+
+
+    <!-- Theme -->
 
     <button
             class="theme-toggle"
@@ -376,27 +755,35 @@
   </div>
 
 
+  <!-- Diagnostic form -->
+
   <div class="panel">
+
 
     <h2>
       Tu diagnóstico financiero
     </h2>
 
 
+    <!-- Income -->
+
     <label>
 
       <div class="label-row">
-          <span class="label-text">
-            Ingresos mensuales
-          </span>
+
+        <span class="label-text">
+          Ingresos mensuales
+        </span>
 
         <span
                 class="help"
                 data-tooltip="Introduce la cantidad aproximada que recibes cada mes después de impuestos."
         >
-            ?
-          </span>
+          ?
+        </span>
+
       </div>
+
 
       <input
               type="number"
@@ -408,20 +795,25 @@
     </label>
 
 
+    <!-- Expenses -->
+
     <label>
 
       <div class="label-row">
-          <span class="label-text">
-            Gastos mensuales
-          </span>
+
+        <span class="label-text">
+          Gastos mensuales
+        </span>
 
         <span
                 class="help"
                 data-tooltip="Incluye tus gastos habituales del mes: vivienda, alimentación, transporte, ocio y suministros."
         >
-            ?
-          </span>
+          ?
+        </span>
+
       </div>
+
 
       <input
               type="number"
@@ -433,20 +825,25 @@
     </label>
 
 
+    <!-- Monthly saving -->
+
     <label>
 
       <div class="label-row">
-          <span class="label-text">
-            Ahorro mensual
-          </span>
+
+        <span class="label-text">
+          Ahorro mensual
+        </span>
 
         <span
                 class="help"
                 data-tooltip="Indica cuánto dinero consigues apartar cada mes para tus ahorros, sin contar lo que inviertes."
         >
-            ?
-          </span>
+          ?
+        </span>
+
       </div>
+
 
       <input
               type="number"
@@ -458,20 +855,25 @@
     </label>
 
 
+    <!-- Monthly investment -->
+
     <label>
 
       <div class="label-row">
-          <span class="label-text">
-            Inversión mensual
-          </span>
+
+        <span class="label-text">
+          Inversión mensual
+        </span>
 
         <span
                 class="help"
                 data-tooltip="Introduce la cantidad que destinas cada mes a inversiones como fondos, acciones o ETF."
         >
-            ?
-          </span>
+          ?
+        </span>
+
       </div>
+
 
       <input
               type="number"
@@ -483,20 +885,25 @@
     </label>
 
 
+    <!-- Debt -->
+
     <label>
 
       <div class="label-row">
-          <span class="label-text">
-            Deuda total
-          </span>
+
+        <span class="label-text">
+          Deuda total
+        </span>
 
         <span
                 class="help"
                 data-tooltip="Introduce el importe pendiente de préstamos, créditos o tarjetas. La hipoteca se analizará por separado."
         >
-            ?
-          </span>
+          ?
+        </span>
+
       </div>
+
 
       <input
               type="number"
@@ -508,20 +915,25 @@
     </label>
 
 
+    <!-- Emergency fund -->
+
     <label>
 
       <div class="label-row">
-          <span class="label-text">
-            Fondo de emergencia
-          </span>
+
+        <span class="label-text">
+          Fondo de emergencia
+        </span>
 
         <span
                 class="help"
                 data-tooltip="Dinero reservado y disponible para cubrir imprevistos sin recurrir a deuda ni vender inversiones."
         >
-            ?
-          </span>
+          ?
+        </span>
+
       </div>
+
 
       <input
               type="number"
@@ -533,6 +945,8 @@
     </label>
 
 
+    <!-- Submit -->
+
     <button
             class="cta"
             id="calculateButton"
@@ -543,34 +957,95 @@
     </button>
 
 
+    <p class="free-note">
+      Diagnóstico gratuito · Sin compromiso
+    </p>
+
+
     <p id="result"></p>
 
   </div>
 
 </div>
 
+
 <script src="config.js"></script>
+
 
 <script>
 
   //region Theme
 
-  function toggleTheme() {
+function applyTheme() {
 
-    document.body.classList.toggle('light');
+const savedTheme =
+  localStorage.getItem('nimboTheme');
 
-    const button =
-      document.getElementById(
-        'themeToggle'
-      );
+const isLight =
+  savedTheme === 'light';
 
-    button.innerHTML =
-      document.body.classList.contains('light')
-        ? '☾'
-        : '☀︎';
-  }
 
-  //endregion
+document.body.classList.toggle(
+  'light',
+  isLight
+);
+
+
+const button =
+  document.getElementById(
+    'themeToggle'
+  );
+
+
+button.innerHTML =
+  isLight
+    ? '☾'
+    : '☀︎';
+}
+
+
+function toggleTheme() {
+
+const isLight =
+  document.body.classList.contains(
+    'light'
+  );
+
+
+const newTheme =
+  isLight
+    ? 'dark'
+    : 'light';
+
+
+document.body.classList.toggle(
+  'light',
+  newTheme === 'light'
+);
+
+
+localStorage.setItem(
+  'nimboTheme',
+  newTheme
+);
+
+
+const button =
+  document.getElementById(
+    'themeToggle'
+  );
+
+
+button.innerHTML =
+  newTheme === 'light'
+    ? '☾'
+    : '☀︎';
+}
+
+
+applyTheme();
+
+//endregion
 
 
   //region Diagnostic submission
@@ -620,6 +1095,7 @@
             'emergencyFund'
           ).value
         )
+
     };
 
 
@@ -627,6 +1103,7 @@
       document.getElementById(
         'calculateButton'
       );
+
 
     const result =
       document.getElementById(
@@ -659,7 +1136,10 @@
 
 
     button.disabled = true;
-    button.textContent = 'Calculando...';
+
+    button.textContent =
+      'Calculando...';
+
     result.innerHTML = '';
 
 
@@ -669,9 +1149,9 @@
         await fetch(
           `${NIMBO_API_URL}/api/diagnostics`,
           {
-            method: 'POST',
+            method:'POST',
 
-            headers: {
+            headers:{
               'Content-Type':
                 'application/json'
             },
@@ -711,9 +1191,11 @@
           resultData.id
         );
 
+
     } catch (error) {
 
       console.error(error);
+
 
       result.innerHTML =
         '<span class="error">' +
@@ -723,11 +1205,15 @@
         ) +
         '</span>';
 
+
       button.disabled = false;
+
 
       button.textContent =
         'Calcular mi puntuación →';
+
     }
+
   }
 
   //endregion

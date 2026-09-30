@@ -1,340 +1,833 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+<title>Nimbo · Iniciar sesión</title>
 
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-    >
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
-    <title>Nimbo · Iniciar sesión</title>
+<style>
 
-    <link
-            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
-            rel="stylesheet"
-    >
+/* =========================================================
+   VARIABLES
+========================================================= */
 
-    <style>
+:root {
+  --bg:#0A0F1C;
+  --panel:#10182B;
+  --input:#0F1526;
 
-        :root {
-            --bg:#0A0F1C;
-            --panel:#10182B;
-            --input:#0F1526;
-            --ink:#EAF2FF;
-            --ink-soft:#7C8CB3;
-            --line:#1E2B45;
-            --cyan:#5CE1E6;
-            --bad:#FF6B6B;
-        }
+  --ink:#EAF2FF;
+  --ink-soft:#7C8CB3;
+  --line:#1E2B45;
 
-        * {
-            box-sizing:border-box;
-        }
+  --cyan:#5CE1E6;
+  --blue:#5C86FF;
 
-        body {
-            margin:0;
-            min-height:100vh;
-            background:var(--bg);
-            color:var(--ink);
-            font-family:'Inter',sans-serif;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:24px;
-        }
+  --brand-ink:#EAF2FF;
 
-        .panel {
-            width:100%;
-            max-width:420px;
-            background:var(--panel);
-            border:1px solid var(--line);
-            border-radius:16px;
-            padding:30px;
-        }
+  --good:#5FE3A3;
+  --warn:#FFC163;
+  --bad:#FF6B6B;
+}
 
-        .brand {
-            display:flex;
-            align-items:center;
-            gap:9px;
-            margin-bottom:28px;
-        }
 
-        .brand-word {
-            font-family:'Space Grotesk',sans-serif;
-            font-weight:700;
-            font-size:17px;
-            letter-spacing:.1em;
-        }
+/* =========================================================
+   BASE
+========================================================= */
 
-        .accent {
-            color:var(--cyan);
-        }
+* {
+  box-sizing:border-box;
+}
 
-        h1 {
-            font-family:'Space Grotesk',sans-serif;
-            font-size:24px;
-            margin:0 0 8px;
-        }
+html {
+  min-height:100%;
+}
 
-        .intro {
-            color:var(--ink-soft);
-            line-height:1.5;
-            margin:0 0 26px;
-            font-size:14px;
-        }
+body {
+  margin:0;
+  min-height:100vh;
 
-        label {
-            display:block;
-            margin-bottom:18px;
-            color:var(--ink-soft);
-            font-size:13px;
-        }
+  background:var(--bg);
+  color:var(--ink);
 
-        input {
-            display:block;
-            width:100%;
-            margin-top:8px;
-            padding:12px 14px;
-            border-radius:10px;
-            border:1px solid var(--line);
-            background:var(--input);
-            color:var(--ink);
-            font:inherit;
-            outline:none;
-        }
+  font-family:'Inter',sans-serif;
+  font-size:14px;
 
-        input:focus {
-            border-color:var(--cyan);
-        }
+  padding:32px;
 
-        button {
-            width:100%;
-            border:0;
-            border-radius:12px;
-            padding:14px;
-            background:var(--cyan);
-            color:#0A0F1C;
-            font-weight:700;
-            font-size:15px;
-            cursor:pointer;
-        }
+  transition:
+    background .25s ease,
+    color .25s ease;
+}
 
-        button:disabled {
-            opacity:.7;
-            cursor:wait;
-        }
 
-        .message {
-            min-height:20px;
-            margin-top:16px;
-            text-align:center;
-            font-size:13px;
-        }
+/* =========================================================
+   WRAPPER
+========================================================= */
 
-        .error {
-            color:var(--bad);
-        }
+.wrap {
+  width:100%;
+  max-width:420px;
 
-        .links {
-            margin-top:22px;
-            text-align:center;
-            color:var(--ink-soft);
-            font-size:13px;
-        }
+  margin:0 auto;
 
-        a {
-            color:var(--cyan);
-            text-decoration:none;
-        }
+  position:relative;
+}
 
-    </style>
 
+/*
+  Dark upper area.
+
+  This keeps the branding area dark even
+  when the content switches to light mode.
+*/
+
+.wrap::before {
+  content:"";
+
+  position:absolute;
+  z-index:-1;
+
+  top:-32px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:100vw;
+  height:140px;
+
+  background:#0A0F1C;
+
+  pointer-events:none;
+
+  transition:background .25s ease;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:32px;
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand {
+  display:flex;
+  align-items:center;
+
+  gap:9px;
+
+  padding:0;
+
+  text-decoration:none;
+}
+
+.brand-mark {
+  width:28px;
+  height:28px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+.brand-mark svg {
+  display:block;
+
+  width:28px;
+  height:28px;
+}
+
+.brand-word {
+  font-family:'Space Grotesk',sans-serif;
+
+  font-weight:700;
+
+  font-size:16px;
+  letter-spacing:.1em;
+
+  color:var(--brand-ink);
+}
+
+.brand-word .accent {
+  color:#5CE1E6;
+}
+
+
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
+
+.theme-toggle {
+  width:34px;
+  height:34px;
+
+  padding:0;
+
+  border:1px solid rgba(234,242,255,.18);
+  border-radius:9px;
+
+  background:rgba(255,255,255,.04);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  color:#EAF2FF;
+
+  font-size:17px;
+  line-height:1;
+
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    color .2s ease,
+    transform .2s ease;
+}
+
+.theme-toggle:hover {
+  border-color:#5CE1E6;
+
+  background:rgba(92,225,230,.08);
+
+  color:#5CE1E6;
+
+  transform:scale(1.03);
+}
+
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.panel {
+  background:var(--panel);
+
+  border:1px solid var(--line);
+
+  border-radius:14px;
+
+  padding:30px 28px;
+
+  box-shadow:
+    0 12px 36px rgba(0,0,0,.08);
+
+  transition:
+    background .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+
+/* =========================================================
+   HEADINGS
+========================================================= */
+
+h1 {
+  font-family:'Space Grotesk',sans-serif;
+
+  font-size:26px;
+  line-height:1.15;
+
+  letter-spacing:-.02em;
+
+  margin:0 0 8px;
+}
+
+.subtitle {
+  color:var(--ink-soft);
+
+  font-size:13px;
+  line-height:1.5;
+
+  margin:0 0 26px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-group {
+  margin-bottom:16px;
+}
+
+label {
+  display:block;
+
+  margin-bottom:7px;
+
+  color:var(--ink-soft);
+
+  font-size:12px;
+  font-weight:600;
+}
+
+input {
+  width:100%;
+
+  padding:12px 13px;
+
+  border:1px solid var(--line);
+  border-radius:10px;
+
+  background:var(--input);
+
+  color:var(--ink);
+
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+
+  outline:none;
+
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+input::placeholder {
+  color:#596987;
+}
+
+input:focus {
+  border-color:var(--cyan);
+
+  box-shadow:
+    0 0 0 3px rgba(92,225,230,.08);
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.cta {
+  width:100%;
+
+  border:0;
+  border-radius:11px;
+
+  padding:13px 16px;
+
+  background:var(--cyan);
+
+  color:#0A0F1C;
+
+  font-family:'Inter',sans-serif;
+
+  font-size:14px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    opacity .2s ease;
+}
+
+.cta:hover {
+  background:#72E8EC;
+
+  transform:translateY(-1px);
+}
+
+.cta:disabled {
+  opacity:.55;
+
+  cursor:not-allowed;
+
+  transform:none;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error {
+  display:none;
+
+  margin-top:14px;
+
+  padding:11px 12px;
+
+  border-radius:9px;
+
+  border:1px solid rgba(255,107,107,.25);
+
+  background:rgba(255,107,107,.07);
+
+  color:#FF8D8D;
+
+  font-size:12px;
+  line-height:1.45;
+}
+
+
+/* =========================================================
+   FOOTER LINK
+========================================================= */
+
+.register {
+  text-align:center;
+
+  margin-top:20px;
+
+  color:var(--ink-soft);
+
+  font-size:13px;
+}
+
+.register a {
+  color:var(--cyan);
+
+  text-decoration:none;
+
+  font-weight:600;
+}
+
+.register a:hover {
+  text-decoration:underline;
+}
+
+
+/* =========================================================
+   LIGHT MODE
+========================================================= */
+
+body.light {
+  --bg:#EAF4FF;
+  --panel:#DCEBFF;
+  --input:#F4F8FF;
+
+  --ink:#162039;
+  --ink-soft:#5D7194;
+  --line:#BED1EE;
+
+  --brand-ink:#EAF2FF;
+}
+
+
+/*
+  Keep the upper branding area dark.
+*/
+
+body.light .wrap::before {
+  background:#0A0F1C;
+}
+
+body.light .brand-word {
+  color:#EAF2FF;
+}
+
+body.light .brand-word .accent {
+  color:#5CE1E6;
+}
+
+body.light .theme-toggle {
+  border-color:rgba(234,242,255,.18);
+
+  background:rgba(255,255,255,.04);
+
+  color:#EAF2FF;
+}
+
+body.light .panel {
+  box-shadow:
+    0 14px 36px rgba(38,83,145,.10);
+}
+
+body.light input:focus {
+  background:#FFFFFF;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px) {
+
+  body {
+    padding:20px;
+  }
+
+  .wrap::before {
+    top:-20px;
+    height:140px;
+  }
+
+  .panel {
+    padding:24px 20px;
+  }
+
+  h1 {
+    font-size:24px;
+  }
+}
+
+</style>
 </head>
 
 
 <body>
 
-<div class="panel">
+<div class="wrap">
 
-    <div class="brand">
-        <span class="brand-word">
-            NIM<span class="accent">B</span>O
-        </span>
-    </div>
+  <!-- =====================================================
+       TOP BAR
+  ====================================================== -->
 
-    <h1>Iniciar sesión</h1>
+  <header class="topbar">
 
-    <p class="intro">
-        Accede a tu espacio personal de Nimbo.
+    <a
+      class="brand"
+      href="index.html"
+      aria-label="Nimbo"
+    >
+
+      <div class="brand-mark">
+
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+
+          <defs>
+
+            <filter
+              id="logoGlow"
+              x="-60%"
+              y="-60%"
+              width="220%"
+              height="220%"
+            >
+
+              <feGaussianBlur
+                stdDeviation="1.4"
+                result="blur"
+              />
+
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+
+            </filter>
+
+          </defs>
+
+
+          <circle
+            cx="32"
+            cy="32"
+            r="10"
+            fill="none"
+            stroke="#5CE1E6"
+            stroke-width="2.6"
+            filter="url(#logoGlow)"
+          />
+
+          <circle
+            cx="32"
+            cy="32"
+            r="18"
+            fill="none"
+            stroke="#5C86FF"
+            stroke-width="2"
+            filter="url(#logoGlow)"
+            opacity=".85"
+          />
+
+          <circle
+            cx="32"
+            cy="32"
+            r="26"
+            fill="none"
+            stroke="#5C86FF"
+            stroke-width="1.4"
+            filter="url(#logoGlow)"
+            opacity=".45"
+          />
+
+        </svg>
+
+      </div>
+
+
+      <span class="brand-word">
+        NIM<span class="accent">B</span>O
+      </span>
+
+    </a>
+
+
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Cambiar tema"
+      onclick="toggleTheme()"
+    >
+      ☀︎
+    </button>
+
+  </header>
+
+
+  <!-- =====================================================
+       LOGIN PANEL
+  ====================================================== -->
+
+  <main class="panel">
+
+    <h1>
+      Iniciar sesión
+    </h1>
+
+    <p class="subtitle">
+      Accede a tu espacio personal de Nimbo.
     </p>
+
 
     <form id="loginForm">
 
-        <label>
-            Email
+      <div class="form-group">
 
-            <input
-                    id="email"
-                    type="email"
-                    autocomplete="email"
-                    required
-            >
+        <label for="email">
+          Email
         </label>
 
-        <label>
-            Contraseña
-
-            <input
-                    id="password"
-                    type="password"
-                    autocomplete="current-password"
-                    required
-            >
-        </label>
-
-        <button
-                id="submitButton"
-                type="submit"
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="tu@email.com"
+          autocomplete="email"
+          required
         >
-            Iniciar sesión
-        </button>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="password">
+          Contraseña
+        </label>
+
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Tu contraseña"
+          autocomplete="current-password"
+          required
+        >
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="cta"
+        id="loginButton"
+      >
+        Iniciar sesión
+      </button>
+
+
+      <div
+        class="error"
+        id="errorMessage"
+      ></div>
 
     </form>
 
-    <div
-            id="message"
-            class="message"
-    ></div>
 
-    <div class="links">
-        ¿No tienes cuenta?
-        <a href="register.html">
-            Crear cuenta
-        </a>
+    <div class="register">
+
+      ¿Todavía no tienes cuenta?
+
+      <a href="register.html">
+        Crear cuenta
+      </a>
+
     </div>
+
+  </main>
 
 </div>
 
 
-<script src="config.js"></script>
-
 <script>
 
-    //region Login
+/* =========================================================
+   THEME
+========================================================= */
 
-    document
-        .getElementById('loginForm')
-        .addEventListener(
-            'submit',
-            async function(event) {
+function applyTheme() {
 
-                event.preventDefault();
+  const savedTheme =
+    localStorage.getItem('nimboTheme');
 
-                const email =
-                    document
-                        .getElementById('email')
-                        .value
-                        .trim();
+  const isLight =
+    savedTheme === 'light';
 
-                const password =
-                    document
-                        .getElementById('password')
-                        .value;
+  document.body.classList.toggle(
+    'light',
+    isLight
+  );
 
+  const button =
+    document.getElementById('themeToggle');
 
-                const button =
-                    document.getElementById(
-                        'submitButton'
-                    );
-
-                const message =
-                    document.getElementById(
-                        'message'
-                    );
+  if (button) {
+    button.innerHTML =
+      isLight ? '☾' : '☀︎';
+  }
+}
 
 
-                button.disabled = true;
+function toggleTheme() {
 
-                button.textContent =
-                    'Entrando...';
+  const isLight =
+    document.body.classList.contains('light');
 
-                message.innerHTML = '';
+  const newTheme =
+    isLight ? 'dark' : 'light';
 
+  document.body.classList.toggle(
+    'light',
+    newTheme === 'light'
+  );
 
-                try {
+  localStorage.setItem(
+    'nimboTheme',
+    newTheme
+  );
 
-                    const response =
-                        await fetch(
-                            `${NIMBO_API_URL}/api/auth/login`,
-                            {
-                                method:'POST',
+  const button =
+    document.getElementById('themeToggle');
 
-                                headers:{
-                                    'Content-Type':
-                                        'application/json'
-                                },
-
-                                body:
-                                    JSON.stringify({
-                                        email,
-                                        password
-                                    })
-                            }
-                        );
+  if (button) {
+    button.innerHTML =
+      newTheme === 'light' ? '☾' : '☀︎';
+  }
+}
 
 
-                    const result =
-                        await response.json();
+/* =========================================================
+   LOGIN
+========================================================= */
+
+document
+  .getElementById('loginForm')
+  .addEventListener('submit', async function(event) {
+
+    event.preventDefault();
+
+    const email =
+      document.getElementById('email').value.trim();
+
+    const password =
+      document.getElementById('password').value;
+
+    const button =
+      document.getElementById('loginButton');
+
+    const errorMessage =
+      document.getElementById('errorMessage');
 
 
-                    if (
-                        !response.ok ||
-                        !result.ok
-                    ) {
+    errorMessage.style.display = 'none';
+    errorMessage.textContent = '';
 
-                        throw new Error(
-                            result.error ||
-                            'No se ha podido iniciar sesión.'
-                        );
-                    }
+    button.disabled = true;
+    button.textContent = 'Iniciando sesión...';
 
 
-                    localStorage.setItem(
-                        'nimboUser',
-                        JSON.stringify(
-                            result.user
-                        )
-                    );
+    try {
+
+      const response = await fetch(
+        `${NIMBO_API_URL}/api/auth/login`,
+        {
+          method:'POST',
+
+          headers:{
+            'Content-Type':'application/json'
+          },
+
+          body:JSON.stringify({
+            email,
+            password
+          })
+        }
+      );
 
 
-                    window.location.href =
-                        'dashboard.html';
+      const result =
+        await response.json();
 
-                } catch (error) {
 
-                    console.error(error);
+      if (!response.ok || !result.ok) {
 
-                    message.innerHTML =
-                        '<span class="error">' +
-                        error.message +
-                        '</span>';
-
-                    button.disabled = false;
-
-                    button.textContent =
-                        'Iniciar sesión';
-                }
-
-            }
+        throw new Error(
+          result.message ||
+          'No se ha podido iniciar sesión.'
         );
+      }
 
-    //endregion
+
+      localStorage.setItem(
+        'nimboUser',
+        JSON.stringify(result.user)
+      );
+
+
+      window.location.href =
+        'dashboard.html';
+
+
+    } catch (error) {
+
+      errorMessage.textContent =
+        error.message ||
+        'Ha ocurrido un error. Inténtalo de nuevo.';
+
+      errorMessage.style.display = 'block';
+
+      button.disabled = false;
+      button.textContent = 'Iniciar sesión';
+
+    }
+
+  });
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+applyTheme();
 
 </script>
 
 </body>
-
 </html>

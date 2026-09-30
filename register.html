@@ -19,129 +19,561 @@
 
     <style>
 
+        /* =========================================================
+           VARIABLES
+        ========================================================= */
+
         :root {
             --bg:#0A0F1C;
             --panel:#10182B;
             --input:#0F1526;
+
             --ink:#EAF2FF;
             --ink-soft:#7C8CB3;
             --line:#1E2B45;
+
             --cyan:#5CE1E6;
+            --blue:#5C86FF;
+
             --bad:#FF6B6B;
+
+            --brand-ink:#EAF2FF;
         }
+
+
+        /* =========================================================
+           BASE
+        ========================================================= */
 
         * {
             box-sizing:border-box;
         }
 
+
+        html {
+            min-height:100%;
+        }
+
+
         body {
             margin:0;
+
             min-height:100vh;
+
             background:var(--bg);
             color:var(--ink);
+
             font-family:'Inter',sans-serif;
+            font-size:14px;
+
+            padding:32px;
+
+            transition:
+                background .25s ease,
+                color .25s ease;
+        }
+
+
+        /* =========================================================
+           WRAPPER
+        ========================================================= */
+
+        .wrap {
+            max-width:600px;
+
+            min-height:100vh;
+
+            margin:0 auto;
+
+            position:relative;
+        }
+
+
+        /* ---------------------------------------------------------
+           Permanent top area
+
+           MISMA ALTURA QUE INDEX.HTML Y TEST.HTML: 140px
+        --------------------------------------------------------- */
+
+        .wrap::before {
+            content:"";
+
+            position:absolute;
+
+            z-index:-1;
+
+            top:-32px;
+
+            left:50%;
+
+            transform:translateX(-50%);
+
+            width:100vw;
+
+            height:140px;
+
+            background:#0A0F1C;
+
+            pointer-events:none;
+
+            transition:
+                background .25s ease;
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        .topbar {
             display:flex;
+
+            justify-content:space-between;
+            align-items:center;
+
+            margin-bottom:32px;
+        }
+
+
+        /* =========================================================
+           NIMBO BRAND
+        ========================================================= */
+
+        .brand {
+            display:flex;
+
+            align-items:center;
+
+            gap:9px;
+
+            padding:0;
+
+            text-decoration:none;
+        }
+
+
+        .brand-mark {
+            width:28px;
+            height:28px;
+
+            display:flex;
+
             align-items:center;
             justify-content:center;
-            padding:24px;
+
+            flex-shrink:0;
         }
+
+
+        .brand-mark svg {
+            display:block;
+
+            width:28px;
+            height:28px;
+        }
+
+
+        .brand-word {
+            font-family:'Space Grotesk',sans-serif;
+
+            font-weight:700;
+
+            font-size:16px;
+
+            letter-spacing:.1em;
+
+            color:var(--brand-ink);
+        }
+
+
+        .brand-word .accent {
+            color:#5CE1E6;
+        }
+
+
+        /* =========================================================
+           THEME TOGGLE
+        ========================================================= */
+
+        .theme-toggle {
+            width:34px;
+            height:34px;
+
+            padding:0;
+
+            border:1px solid rgba(234,242,255,.18);
+
+            border-radius:9px;
+
+            background:rgba(255,255,255,.04);
+
+            display:flex;
+
+            align-items:center;
+            justify-content:center;
+
+            cursor:pointer;
+
+            color:#EAF2FF;
+
+            font-size:17px;
+
+            line-height:1;
+
+            transition:
+                border-color .2s ease,
+                background .2s ease,
+                color .2s ease,
+                transform .2s ease;
+        }
+
+
+        .theme-toggle:hover {
+            border-color:#5CE1E6;
+
+            background:rgba(92,225,230,.08);
+
+            color:#5CE1E6;
+
+            transform:scale(1.03);
+        }
+
+
+        /* =========================================================
+           REGISTER PANEL
+        ========================================================= */
 
         .panel {
             width:100%;
-            max-width:420px;
+
             background:var(--panel);
+
             border:1px solid var(--line);
-            border-radius:16px;
-            padding:30px;
+
+            border-radius:14px;
+
+            padding:28px;
+
+            box-shadow:
+                0 12px 36px rgba(0,0,0,.08);
+
+            transition:
+                background .25s ease,
+                border-color .25s ease,
+                box-shadow .25s ease;
         }
 
-        .brand {
-            font-family:'Space Grotesk',sans-serif;
-            font-weight:700;
-            font-size:17px;
-            letter-spacing:.1em;
+
+        .panel-header {
             margin-bottom:28px;
         }
 
-        .accent {
-            color:var(--cyan);
-        }
 
         h1 {
             font-family:'Space Grotesk',sans-serif;
-            font-size:24px;
-            margin:0 0 8px;
+
+            font-size:25px;
+
+            line-height:1.15;
+
+            letter-spacing:-.02em;
+
+            margin:0 0 9px;
         }
+
 
         .intro {
             color:var(--ink-soft);
-            line-height:1.5;
-            margin:0 0 26px;
+
+            line-height:1.55;
+
+            margin:0;
+
             font-size:14px;
         }
 
+
+        /* =========================================================
+           FORM
+        ========================================================= */
+
+        form {
+            margin:0;
+        }
+
+
         label {
             display:block;
+
             margin-bottom:18px;
+
             color:var(--ink-soft);
+
             font-size:13px;
+
+            font-weight:500;
         }
+
 
         input {
             display:block;
+
             width:100%;
+
             margin-top:8px;
+
             padding:12px 14px;
+
             border-radius:10px;
+
             border:1px solid var(--line);
+
             background:var(--input);
+
             color:var(--ink);
-            font:inherit;
+
+            font-family:'Inter',sans-serif;
+
+            font-size:14px;
+
             outline:none;
+
+            transition:
+                border-color .2s ease,
+                background .2s ease,
+                box-shadow .2s ease;
         }
+
+
+        input::placeholder {
+            color:#4F5E80;
+        }
+
 
         input:focus {
             border-color:var(--cyan);
+
+            background:var(--panel);
+
+            box-shadow:
+                0 0 0 3px rgba(92,225,230,.08);
         }
 
-        button {
+
+        /* =========================================================
+           SUBMIT BUTTON
+        ========================================================= */
+
+        button[type="submit"] {
             width:100%;
+
             border:0;
+
             border-radius:12px;
-            padding:14px;
+
+            padding:15px;
+
+            margin-top:3px;
+
             background:var(--cyan);
+
             color:#0A0F1C;
+
+            font-family:'Inter',sans-serif;
+
             font-weight:700;
+
             font-size:15px;
+
             cursor:pointer;
+
+            box-shadow:
+                0 0 24px rgba(92,225,230,.20);
+
+            transition:
+                transform .15s ease,
+                box-shadow .15s ease,
+                filter .15s ease;
         }
 
-        button:disabled {
-            opacity:.7;
-            cursor:wait;
+
+        button[type="submit"]:hover {
+            transform:translateY(-1px);
+
+            box-shadow:
+                0 0 30px rgba(92,225,230,.32);
+
+            filter:brightness(1.04);
         }
+
+
+        button[type="submit"]:active {
+            transform:translateY(0);
+        }
+
+
+        button[type="submit"]:disabled {
+            opacity:.7;
+
+            cursor:wait;
+
+            transform:none;
+        }
+
+
+        /* =========================================================
+           MESSAGE
+        ========================================================= */
 
         .message {
             min-height:20px;
+
             margin-top:16px;
+
             text-align:center;
+
             font-size:13px;
+
+            line-height:1.45;
         }
+
 
         .error {
             color:var(--bad);
         }
 
+
+        /* =========================================================
+           LINKS
+        ========================================================= */
+
         .links {
             margin-top:22px;
+
+            padding-top:20px;
+
+            border-top:1px solid var(--line);
+
             text-align:center;
+
             color:var(--ink-soft);
+
             font-size:13px;
         }
 
+
         a {
             color:var(--cyan);
+
             text-decoration:none;
+
+            transition:
+                color .2s ease;
+        }
+
+
+        a:hover {
+            color:#72E8EC;
+        }
+
+
+        /* =========================================================
+           LIGHT MODE
+        ========================================================= */
+
+        body.light {
+            --bg:#EAF4FF;
+
+            --panel:#DCEBFF;
+
+            --input:#F4F8FF;
+
+            --ink:#162039;
+
+            --ink-soft:#5D7194;
+
+            --line:#BED1EE;
+
+            --brand-ink:#EAF2FF;
+        }
+
+
+        /*
+         * La zona superior permanece oscura.
+         */
+
+        body.light .wrap::before {
+            background:#0A0F1C;
+        }
+
+
+        body.light .brand-word {
+            color:#EAF2FF;
+        }
+
+
+        body.light .brand-word .accent {
+            color:#5CE1E6;
+        }
+
+
+        body.light .theme-toggle {
+            border-color:rgba(234,242,255,.18);
+
+            background:rgba(255,255,255,.04);
+
+            color:#EAF2FF;
+        }
+
+
+        body.light .panel {
+            box-shadow:
+                0 14px 36px rgba(38,83,145,.10);
+        }
+
+
+        body.light input:focus {
+            background:#FFFFFF;
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media(max-width:600px) {
+
+            body {
+                padding:20px;
+            }
+
+
+            .wrap::before {
+                top:-20px;
+
+                height:140px;
+            }
+
+
+            .topbar {
+                margin-bottom:20px;
+            }
+
+
+            .panel {
+                padding:24px 20px;
+            }
+
+
+            h1 {
+                font-size:23px;
+            }
+
+
+            .intro {
+                font-size:13.5px;
+            }
+
         }
 
     </style>
@@ -151,95 +583,357 @@
 
 <body>
 
-<div class="panel">
+<div class="wrap">
 
-    <div class="brand">
-        NIM<span class="accent">B</span>O
-    </div>
 
-    <h1>Crear cuenta</h1>
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
 
-    <p class="intro">
-        Crea tu cuenta gratuita para acceder a tu espacio personal.
-    </p>
+    <header class="topbar">
 
-    <form id="registerForm">
 
-        <label>
-            Nombre
+        <!-- Nimbo brand -->
 
-            <input
-                    id="name"
-                    type="text"
-                    autocomplete="name"
-                    required
-            >
-        </label>
+        <a
+                class="brand"
+                href="index.html"
+                aria-label="Nimbo"
+        >
 
-        <label>
-            Email
+            <div class="brand-mark">
 
-            <input
-                    id="email"
-                    type="email"
-                    autocomplete="email"
-                    required
-            >
-        </label>
+                <svg
+                        viewBox="0 0 64 64"
+                        aria-hidden="true"
+                >
 
-        <label>
-            Contraseña
+                    <defs>
 
-            <input
-                    id="password"
-                    type="password"
-                    autocomplete="new-password"
-                    minlength="8"
-                    required
-            >
-        </label>
+                        <filter
+                                id="logoGlow"
+                                x="-60%"
+                                y="-60%"
+                                width="220%"
+                                height="220%"
+                        >
 
-        <label>
-            Repite la contraseña
+                            <feGaussianBlur
+                                    stdDeviation="1.4"
+                                    result="blur"
+                            />
 
-            <input
-                    id="confirmPassword"
-                    type="password"
-                    autocomplete="new-password"
-                    minlength="8"
-                    required
-            >
-        </label>
+                            <feMerge>
+
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+
+                            </feMerge>
+
+                        </filter>
+
+                    </defs>
+
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="10"
+
+                            fill="none"
+
+                            stroke="#5CE1E6"
+
+                            stroke-width="2.6"
+
+                            filter="url(#logoGlow)"
+                    />
+
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="18"
+
+                            fill="none"
+
+                            stroke="#5C86FF"
+
+                            stroke-width="2"
+
+                            filter="url(#logoGlow)"
+
+                            opacity=".85"
+                    />
+
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="26"
+
+                            fill="none"
+
+                            stroke="#5C86FF"
+
+                            stroke-width="1.4"
+
+                            filter="url(#logoGlow)"
+
+                            opacity=".45"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <span class="brand-word">
+                NIM<span class="accent">B</span>O
+            </span>
+
+        </a>
+
+
+        <!-- Theme -->
 
         <button
-                id="submitButton"
-                type="submit"
+                class="theme-toggle"
+                id="themeToggle"
+                onclick="toggleTheme()"
+                title="Cambiar tema"
+                aria-label="Cambiar tema"
+                type="button"
         >
-            Crear mi cuenta
+            ☀︎
         </button>
 
-    </form>
+    </header>
 
-    <div
-            id="message"
-            class="message"
-    ></div>
 
-    <div class="links">
-        ¿Ya tienes cuenta?
-        <a href="login.html">
-            Iniciar sesión
-        </a>
-    </div>
+    <!-- =====================================================
+         REGISTER PANEL
+    ====================================================== -->
+
+    <main class="panel">
+
+
+        <div class="panel-header">
+
+            <h1>
+                Crear cuenta
+            </h1>
+
+
+            <p class="intro">
+                Crea tu cuenta gratuita para acceder a tu espacio personal.
+            </p>
+
+        </div>
+
+
+        <form id="registerForm">
+
+
+            <!-- Name -->
+
+            <label>
+
+                Nombre
+
+                <input
+                        id="name"
+                        type="text"
+                        autocomplete="name"
+                        required
+                >
+
+            </label>
+
+
+            <!-- Email -->
+
+            <label>
+
+                Email
+
+                <input
+                        id="email"
+                        type="email"
+                        autocomplete="email"
+                        required
+                >
+
+            </label>
+
+
+            <!-- Password -->
+
+            <label>
+
+                Contraseña
+
+                <input
+                        id="password"
+                        type="password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                >
+
+            </label>
+
+
+            <!-- Confirm password -->
+
+            <label>
+
+                Repite la contraseña
+
+                <input
+                        id="confirmPassword"
+                        type="password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                >
+
+            </label>
+
+
+            <!-- Submit -->
+
+            <button
+                    id="submitButton"
+                    type="submit"
+            >
+                Crear mi cuenta
+            </button>
+
+        </form>
+
+
+        <div
+                id="message"
+                class="message"
+        ></div>
+
+
+        <div class="links">
+
+            ¿Ya tienes cuenta?
+
+            <a href="login.html">
+                Iniciar sesión
+            </a>
+
+        </div>
+
+    </main>
 
 </div>
 
 
 <script src="config.js"></script>
 
+
 <script>
 
-    //region Registration
+    /* =========================================================
+       THEME
+    ========================================================= */
+
+    function applyTheme() {
+
+        const savedTheme =
+            localStorage.getItem('nimboTheme');
+
+        const isLight =
+            savedTheme === 'light';
+
+
+        document.body.classList.toggle(
+            'light',
+            isLight
+        );
+
+
+        const button =
+            document.getElementById(
+                'themeToggle'
+            );
+
+
+        if (button) {
+
+            button.innerHTML =
+                isLight
+                    ? '☾'
+                    : '☀︎';
+
+        }
+
+    }
+
+
+    function toggleTheme() {
+
+        const isLight =
+            document.body.classList.contains(
+                'light'
+            );
+
+
+        const newTheme =
+            isLight
+                ? 'dark'
+                : 'light';
+
+
+        document.body.classList.toggle(
+            'light',
+            newTheme === 'light'
+        );
+
+
+        localStorage.setItem(
+            'nimboTheme',
+            newTheme
+        );
+
+
+        const button =
+            document.getElementById(
+                'themeToggle'
+            );
+
+
+        if (button) {
+
+            button.innerHTML =
+                newTheme === 'light'
+                    ? '☾'
+                    : '☀︎';
+
+        }
+
+    }
+
+
+    /* =========================================================
+       INIT THEME
+    ========================================================= */
+
+    applyTheme();
+
+
+    /* =========================================================
+       REGISTRATION
+       
+       IMPORTANTE:
+       Esta parte mantiene la comunicación original
+       con el backend.
+    ========================================================= */
 
     document
         .getElementById('registerForm')
@@ -295,6 +989,7 @@
 
 
                 button.disabled = true;
+
                 button.textContent =
                     'Creando cuenta...';
 
@@ -360,16 +1055,16 @@
                         error.message +
                         '</span>';
 
+
                     button.disabled = false;
 
                     button.textContent =
                         'Crear mi cuenta';
+
                 }
 
             }
         );
-
-    //endregion
 
 </script>
 
