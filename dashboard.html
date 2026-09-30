@@ -1,915 +1,1239 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nimbo · Inicio</title>
 
-  <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>Nimbo · Dashboard</title>
-
-  <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
-          rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
-
-    /* =========================================================
-       VARIABLES
-    ========================================================= */
-
     :root {
       --bg:#0A0F1C;
       --panel:#10182B;
       --input:#0F1526;
-
       --ink:#EAF2FF;
       --ink-soft:#7C8CB3;
       --line:#1E2B45;
-
       --cyan:#5CE1E6;
       --blue:#5C86FF;
-
       --good:#5FE3A3;
       --warn:#FFC163;
       --bad:#FF6B6B;
-
-      --brand-ink:#EAF2FF;
+      --sidebar-width:230px;
+      --sidebar-collapsed:72px;
     }
 
+    * { box-sizing:border-box; }
 
-    /* =========================================================
-       BASE
-    ========================================================= */
-
-    * {
-      box-sizing:border-box;
-    }
-
-    html {
-      min-height:100%;
-    }
+    html { min-height:100%; }
 
     body {
       margin:0;
       min-height:100vh;
-
       background:var(--bg);
       color:var(--ink);
-
       font-family:'Inter',sans-serif;
       font-size:14px;
-
-      transition:
-        background .25s ease,
-        color .25s ease;
+      transition: background .25s ease, color .25s ease;
     }
 
+    button { font:inherit; }
 
-    /* =========================================================
-       SIDEBAR
-    ========================================================= */
-
-    .sidebar {
-      width:230px;
+    .layout {
       min-height:100vh;
+      display:flex;
+    }
 
-      border-right:1px solid var(--line);
-
-      background:var(--panel);
-
-      padding:24px 16px;
-
+    /* SIDEBAR */
+    .sidebar {
+      position:fixed;
+      top:0; left:0; bottom:0;
+      width:var(--sidebar-width);
+      background:#10182B;
+      border-right:1px solid #1E2B45;
       display:flex;
       flex-direction:column;
-
-      transition:
-        background .25s ease,
-        border-color .25s ease;
+      padding:22px 12px 16px;
+      z-index:20;
+      transition: width .25s ease;
     }
 
+    .sidebar.collapsed { width:var(--sidebar-collapsed); }
 
-    /* =========================================================
-       BRAND
-    ========================================================= */
+    .brand-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      height:42px;
+      margin-bottom:30px;
+      padding:0 6px;
+    }
 
     .brand {
       display:flex;
       align-items:center;
-
       gap:9px;
-
-      padding:0 10px;
-
-      margin-bottom:32px;
-
+      padding:0;
       text-decoration:none;
-
-      width:max-content;
+      cursor:pointer;
     }
 
     .brand-mark {
-      width:28px;
-      height:28px;
-
+      width:28px; height:28px;
       display:flex;
       align-items:center;
       justify-content:center;
-
       flex-shrink:0;
     }
 
     .brand-mark svg {
       display:block;
-
-      width:28px;
-      height:28px;
+      width:28px; height:28px;
     }
 
     .brand-word {
       font-family:'Space Grotesk',sans-serif;
-
       font-weight:700;
-
       font-size:16px;
-
       letter-spacing:.1em;
-
-      color:var(--brand-ink);
+      color:#EAF2FF;
     }
 
-    .brand-word .accent {
-      color:var(--cyan);
-    }
+    .brand-word .accent { color:#5CE1E6; }
 
-
-    /* =========================================================
-       THEME TOGGLE
-    ========================================================= */
-
-    .theme-toggle {
-      width:34px;
-      height:34px;
-
+    .sidebar-toggle {
+      width:32px; height:32px;
       padding:0;
-
-      border:1px solid rgba(234,242,255,.18);
+      border:1px solid #1E2B45;
       border-radius:9px;
-
-      background:rgba(255,255,255,.04);
-
+      background:#0F1526;
       display:flex;
       align-items:center;
       justify-content:center;
-
       cursor:pointer;
+      color:#7C8CB3;
+      transition: border-color .2s ease, background .2s ease, color .2s ease;
+    }
 
+    .sidebar-toggle:hover {
+      border-color:#304364;
+      background:#131D32;
       color:#EAF2FF;
-
-      font-size:17px;
-      line-height:1;
-
-      transition:
-        border-color .2s ease,
-        background .2s ease,
-        color .2s ease,
-        transform .2s ease;
     }
 
-    .theme-toggle:hover {
-      border-color:var(--cyan);
-
-      background:rgba(92,225,230,.08);
-
-      color:var(--cyan);
-
-      transform:scale(1.03);
-    }
-
-
-    /* =========================================================
-       SIDEBAR HEADER
-    ========================================================= */
-
-    .sidebar-header {
+    /* NAV */
+    .nav {
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-
-      margin-bottom:32px;
-    }
-
-    .sidebar-header .brand {
-      margin-bottom:0;
-    }
-
-
-    /* =========================================================
-       NAVIGATION
-    ========================================================= */
-
-    .navigation {
-      display:flex;
-
       flex-direction:column;
-
-      gap:6px;
+      gap:5px;
     }
 
     .nav-item {
-      display:block;
-
-      padding:11px 12px;
-
-      border-radius:9px;
-
-      color:var(--ink-soft);
-
-      text-decoration:none;
-
-      font-size:13px;
-
-      transition:
-        background .2s ease,
-        color .2s ease;
+      position:relative;
+      width:100%;
+      height:44px;
+      display:flex;
+      align-items:center;
+      padding:0 12px;
+      border-radius:10px;
+      color:#7C8CB3;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:500;
+      user-select:none;
+      transition: background .2s ease, color .2s ease;
     }
 
-    .nav-item:hover,
+    .nav-item:hover {
+      background:rgba(92,225,230,.06);
+      color:#EAF2FF;
+    }
+
     .nav-item.active {
-      background:rgba(92,225,230,.08);
-
-      color:var(--ink);
+      background:rgba(92,225,230,.10);
+      color:#EAF2FF;
     }
 
+    .nav-icon {
+      width:20px;
+      min-width:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+    }
 
-    /* =========================================================
-       SIDEBAR BOTTOM
-    ========================================================= */
+    .nav-label { margin-left:12px; white-space:nowrap; }
 
+    .nav-lock {
+      margin-left:auto;
+      color:#7C8CB3;
+      font-size:12px;
+      opacity:.7;
+    }
+
+    .nav-lock svg { display:block; }
+
+    /* Tooltips cuando el menú está plegado */
+    .nav-item[data-tooltip]::after {
+      content:attr(data-tooltip);
+      position:absolute;
+      left:62px;
+      top:50%;
+      transform: translateY(-50%) translateX(-4px);
+      padding:8px 11px;
+      border:1px solid #263754;
+      border-radius:8px;
+      background:#10182B;
+      color:#EAF2FF;
+      font-family:'Inter',sans-serif;
+      font-size:12px;
+      font-weight:500;
+      white-space:nowrap;
+      box-shadow: 0 10px 28px rgba(0,0,0,.28);
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      z-index:100;
+      transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
+    }
+
+    .sidebar.collapsed .nav-item[data-tooltip]:hover::after {
+      opacity:1;
+      visibility:visible;
+      transform: translateY(-50%) translateX(0);
+    }
+
+    /* Sidebar collapsed */
+    .sidebar.collapsed .brand-row {
+      justify-content:center;
+      padding:0;
+    }
+
+    .sidebar.collapsed .brand-word { display:none; }
+    .sidebar.collapsed .sidebar-toggle { display:none; }
+
+    .sidebar.collapsed .nav-item {
+      width:48px;
+      height:44px;
+      margin:0 auto;
+      padding:0;
+      justify-content:center;
+    }
+
+    .sidebar.collapsed .nav-icon {
+      width:20px;
+      min-width:20px;
+      margin:0;
+    }
+
+    .sidebar.collapsed .nav-label,
+    .sidebar.collapsed .nav-lock { display:none; }
+
+    /* User */
     .sidebar-bottom {
       margin-top:auto;
+      padding-top:14px;
+      border-top:1px solid #1E2B45;
+    }
 
-      padding:12px 10px 0;
+    .user-button {
+      width:100%;
+      border:0;
+      background:transparent;
+      color:#EAF2FF;
+      display:flex;
+      align-items:center;
+      padding:8px 6px;
+      border-radius:10px;
+      cursor:pointer;
+      text-align:left;
+      transition: background .2s ease;
+    }
 
-      border-top:1px solid var(--line);
+    .user-button:hover { background:rgba(92,225,230,.06); }
 
-      transition:border-color .25s ease;
+    .user-avatar {
+      width:34px; height:34px;
+      flex:none;
+      border-radius:50%;
+      background:linear-gradient(135deg, #5CE1E6, #5C86FF);
+      color:#08101E;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:'Space Grotesk',sans-serif;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .user-info {
+      min-width:0;
+      margin-left:10px;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
     }
 
     .user-name {
       font-size:13px;
-
-      margin-bottom:10px;
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .user-plan {
-      color:var(--ink-soft);
-
       font-size:11px;
-
-      margin-bottom:14px;
-
-      font-family:'IBM Plex Mono',monospace;
+      color:#7C8CB3;
+      white-space:nowrap;
     }
 
-    .logout {
-      color:var(--ink-soft);
+    .user-arrow {
+      margin-left:auto;
+      color:#7C8CB3;
+      flex:none;
+    }
 
-      background:none;
+    .sidebar.collapsed .user-button {
+      justify-content:center;
+      padding:8px 0;
+    }
 
-      border:0;
+    .sidebar.collapsed .user-info,
+    .sidebar.collapsed .user-arrow { display:none; }
 
+    /* MAIN */
+    .main {
+      margin-left:var(--sidebar-width);
+      width:calc(100% - var(--sidebar-width));
+      min-height:100vh;
+      padding:30px 42px 30px;
+      transition: margin-left .25s ease, width .25s ease;
+    }
+
+    .sidebar.collapsed ~ .main {
+      margin-left:var(--sidebar-collapsed);
+      width:calc(100% - var(--sidebar-collapsed));
+    }
+
+    .content { width:100%; max-width:none; }
+
+    /* Theme toggle */
+    .theme-toggle {
+      position:fixed;
+      top:20px; right:22px;
+      width:34px; height:34px;
       padding:0;
-
+      border:1px solid rgba(234,242,255,.18);
+      border-radius:9px;
+      background:rgba(255,255,255,.04);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       cursor:pointer;
+      color:#EAF2FF;
+      font-size:17px;
+      line-height:1;
+      z-index:50;
+      transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
+    }
 
-      font:inherit;
+    .theme-toggle:hover {
+      border-color:#5CE1E6;
+      background:rgba(92,225,230,.08);
+      color:#5CE1E6;
+      transform:scale(1.03);
+    }
 
+    body.light .theme-toggle {
+      border-color:#9CB4D8;
+      background:#DCEBFF;
+      color:#162039;
+    }
+
+    body.light .theme-toggle:hover {
+      border-color:#5CE1E6;
+      background:#E6F1FF;
+      color:#162039;
+    }
+
+    /* Quote card */
+.page-header {
+  width:100%;
+  margin:10px 0 16px;
+  padding:21px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:none;
+}
+
+.quote {
+  width:100%;
+  margin:0;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:20px;
+  line-height:1.45;
+  font-weight:500;
+  letter-spacing:-.025em;
+  color:var(--ink);
+  text-align:left;
+}
+
+.quote-mark {
+  color:var(--cyan);
+  font-weight:600;
+}
+
+    /* KPI */
+    .kpi-grid {
+      display:grid;
+      grid-template-columns: repeat(4,minmax(0,1fr));
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .kpi {
+      min-height:120px;
+      padding:19px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:14px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .kpi-label {
+      color:var(--ink-soft);
+      font-size:12px;
+      font-weight:500;
+    }
+
+    .kpi-value {
+      margin-top:12px;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:25px;
+      font-weight:600;
+      letter-spacing:-.025em;
+    }
+
+    .kpi-meta {
+      margin-top:5px;
+      color:var(--ink-soft);
+      font-size:11px;
+    }
+
+    /* Dashboard grid */
+    .dashboard-grid {
+      display:grid;
+      grid-template-columns: minmax(0,2fr) minmax(300px,1fr);
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .panel {
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:21px;
+    }
+
+    .panel-header {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      margin-bottom:18px;
+    }
+
+    .panel-title {
+      margin:0;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:16px;
+      font-weight:600;
+    }
+
+    .panel-subtitle {
+      margin-top:4px;
+      color:var(--ink-soft);
+      font-size:11px;
+    }
+
+    /* Chart */
+    .chart {
+      height:260px;
+      position:relative;
+      border-radius:10px;
+      background: linear-gradient(to bottom, rgba(92,134,255,.035) 1px, transparent 1px);
+      background-size:100% 25%;
+    }
+
+    .chart svg {
+      width:100%;
+      height:100%;
+      overflow:visible;
+    }
+
+    .chart-label {
+      fill:#7C8CB3;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:10px;
+    }
+
+    .chart-line {
+      fill:none;
+      stroke:var(--cyan);
+      stroke-width:3;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .chart-area { fill:url(#chartGradient); }
+
+    .chart-point {
+      fill:var(--panel);
+      stroke:var(--cyan);
+      stroke-width:3;
+    }
+
+    /* Summary */
+    .summary-list {
+      display:flex;
+      flex-direction:column;
+      gap:0;
+    }
+
+    .summary-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      min-height:52px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .summary-row:last-child { border-bottom:0; }
+
+    .summary-name {
+      color:var(--ink-soft);
       font-size:12px;
     }
 
-    .logout:hover {
-      color:var(--cyan);
+    .summary-value {
+      color:var(--ink);
+      font-size:13px;
+      font-weight:600;
     }
 
+    .summary-value.good { color:var(--good); }
+    .summary-value.warn { color:var(--warn); }
 
-    /* =========================================================
-       CONTENT
-    ========================================================= */
-
-    .content {
-      flex:1;
-
-      padding:40px;
-
-      transition:background .25s ease;
+    /* Bottom grid */
+    .bottom-grid {
+      display:grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap:16px;
+      margin-bottom:16px;
     }
 
-    .content-inner {
-      max-width:900px;
-
-      margin:0 auto;
+    /* Objective */
+    .objective-card {
+      display:block;
+      color:inherit;
+      text-decoration:none;
+      min-height:190px;
+      cursor:pointer;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease;
     }
 
-
-    /* =========================================================
-       HEADINGS
-    ========================================================= */
-
-    .eyebrow {
-      color:var(--cyan);
-
-      font-family:'IBM Plex Mono',monospace;
-
-      font-size:11px;
-
-      text-transform:uppercase;
-
-      letter-spacing:.08em;
-
-      margin-bottom:10px;
+    .objective-card:hover {
+      border-color:#304364;
+      background:#121B30;
+      transform:translateY(-2px);
     }
 
-    h1 {
+    .objective-content {
+      min-height:145px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .objective-title {
+      margin-bottom:9px;
       font-family:'Space Grotesk',sans-serif;
-
-      margin:0 0 10px;
-
-      font-size:30px;
-
-      letter-spacing:-.02em;
+      font-size:22px;
+      font-weight:600;
     }
 
-    .intro {
+    .objective-description {
+      max-width:500px;
       color:var(--ink-soft);
-
-      margin:0 0 30px;
-
+      font-size:12px;
       line-height:1.6;
     }
 
+    .objective-action {
+      margin-top:17px;
+      color:var(--cyan);
+      font-family:'IBM Plex Mono',monospace;
+      font-size:10px;
+    }
 
-    /* =========================================================
-       CARD
-    ========================================================= */
+    /* Tasks */
+    .tasks-panel {
+      margin-bottom:16px;
+      padding:21px;
+    }
 
-    .card {
-      background:var(--panel);
+    .tasks-list {
+      display:grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
 
+    .task {
+      min-height:105px;
+      padding:16px;
       border:1px solid var(--line);
-
-      border-radius:14px;
-
-      padding:24px;
-
-      box-shadow:
-        0 12px 36px rgba(0,0,0,.08);
-
-      transition:
-        background .25s ease,
-        border-color .25s ease,
-        box-shadow .25s ease;
+      background:var(--input);
+      border-radius:11px;
+      display:flex;
+      flex-direction:column;
+      cursor:pointer;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease;
     }
 
-    .card h2 {
-      font-family:'Space Grotesk',sans-serif;
-
-      font-size:18px;
-
-      margin:0 0 8px;
+    .task:hover {
+      border-color:#304364;
+      background:#121B30;
+      transform:translateY(-1px);
     }
 
-    .card p {
+    .task-top {
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .task-check {
+      width:18px; height:18px;
+      border:1px solid #40516F;
+      border-radius:50%;
+      flex:none;
+    }
+
+    .task-title {
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .task-description {
+      margin-top:10px;
+      margin-left:28px;
       color:var(--ink-soft);
-
+      font-size:11px;
       line-height:1.5;
-
-      margin:0;
     }
 
+    .task-arrow {
+      margin-top:auto;
+      padding-top:12px;
+      color:var(--cyan);
+      font-family:'IBM Plex Mono',monospace;
+      font-size:10px;
+    }
 
-    /* =========================================================
-       LIGHT MODE
-    ========================================================= */
+    /* Note */
+    .dashboard-note {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:15px 18px;
+      border:1px solid var(--line);
+      background:rgba(16,24,43,.55);
+      border-radius:12px;
+    }
 
+    .dashboard-note span {
+      color:var(--ink-soft);
+      font-size:11px;
+    }
+
+    .dashboard-note strong {
+      color:var(--ink);
+      font-weight:500;
+    }
+
+    /* Donation */
+.donation {
+  margin-top:28px;
+  padding:20px 24px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:12px;
+  text-align:center;
+  color:var(--ink-soft);
+  font-size:11px;
+  line-height:1.6;
+}
+
+.donation-title {
+  margin-bottom:7px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  color:var(--ink-soft);
+  letter-spacing:.04em;
+}
+
+.donation-address {
+  color:var(--ink-soft);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;
+  word-break:break-all;
+  user-select:all;
+  opacity:.75;
+}
+
+    /* Light mode */
     body.light {
       --bg:#EAF4FF;
       --panel:#DCEBFF;
       --input:#F4F8FF;
-
       --ink:#162039;
       --ink-soft:#5D7194;
       --line:#BED1EE;
-
-      --brand-ink:#EAF2FF;
     }
 
+    body.light .main { background:#EAF4FF; }
 
-    /* ---------------------------------------------------------
-       Sidebar stays permanently dark
-    --------------------------------------------------------- */
+    body.light .brand-word { color:#EAF2FF; }
+    body.light .brand-word .accent { color:#5CE1E6; }
+    body.light .brand-mark svg { opacity:1; }
 
-    body.light .sidebar {
-      background:#10182B;
+    body.light .quote { color:#162039; }
 
-      border-color:#1E2B45;
-
-      color:#EAF2FF;
-
-      box-shadow:
-        8px 0 30px rgba(0,0,0,.10);
+    body.light .panel,
+    body.light .kpi {
+      box-shadow: 0 10px 30px rgba(38,83,145,.08);
     }
 
+    body.light .task {
+  background:#DCEBFF;
+}
 
-    body.light .sidebar .nav-item {
-      color:#7C8CB3;
+body.light .task:hover {
+  background:#FFFFFF;
+}
+
+body.light .objective-card:hover {
+  background:#FFFFFF;
+}
+
+    /* Mobile */
+    @media(max-width:1100px) {
+      .kpi-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .dashboard-grid { grid-template-columns:1fr; }
+      .tasks-list { grid-template-columns: repeat(2,minmax(0,1fr)); }
     }
 
+    @media(max-width:760px) {
+      .sidebar { width:var(--sidebar-collapsed); }
 
-    body.light .sidebar .nav-item:hover,
-    body.light .sidebar .nav-item.active {
-      background:rgba(92,225,230,.08);
+      .sidebar .brand-word,
+      .sidebar .sidebar-toggle,
+      .sidebar .nav-label,
+      .sidebar .nav-lock,
+      .sidebar .user-info,
+      .sidebar .user-arrow { display:none; }
 
-      color:#EAF2FF;
-    }
-
-
-    body.light .sidebar .sidebar-bottom {
-      border-color:#1E2B45;
-    }
-
-
-    body.light .sidebar .user-name {
-      color:#EAF2FF;
-    }
-
-
-    body.light .sidebar .user-plan,
-    body.light .sidebar .logout {
-      color:#7C8CB3;
-    }
-
-
-    body.light .sidebar .logout:hover {
-      color:#5CE1E6;
-    }
-
-
-    body.light .card {
-      box-shadow:
-        0 14px 36px rgba(38,83,145,.10);
-    }
-
-
-    body.light .theme-toggle {
-      border-color:rgba(234,242,255,.18);
-
-      background:rgba(255,255,255,.04);
-
-      color:#EAF2FF;
-    }
-
-
-    /* =========================================================
-       MOBILE
-    ========================================================= */
-
-    @media(max-width:700px) {
-
-      body {
-        display:block;
+      .sidebar .brand-row {
+        justify-content:center;
+        padding:0;
       }
 
-      .sidebar {
-        width:100%;
-
-        min-height:auto;
-
-        border-right:0;
-
-        border-bottom:1px solid var(--line);
-
-        padding:20px;
+      .sidebar .nav-item {
+        width:48px;
+        height:44px;
+        margin:0 auto;
+        padding:0;
+        justify-content:center;
       }
 
-      .sidebar-header {
-        margin-bottom:24px;
+      .sidebar .nav-icon {
+        width:20px;
+        min-width:20px;
+        margin:0;
       }
 
-      .sidebar-bottom {
-        margin-top:20px;
+      .sidebar .user-button {
+        justify-content:center;
+        padding:8px 0;
       }
 
-      .content {
-        padding:24px 20px;
+      .main,
+      .sidebar.collapsed ~ .main {
+        margin-left:var(--sidebar-collapsed);
+        width:calc(100% - var(--sidebar-collapsed));
+        padding:28px 20px 35px;
       }
 
-      h1 {
-        font-size:26px;
-      }
+      .theme-toggle { top:15px; right:15px; }
+      .quote { font-size:21px; }
+      .kpi-grid { grid-template-columns:1fr; }
+      .bottom-grid { grid-template-columns:1fr; }
+      .tasks-list { grid-template-columns:1fr; }
 
+      .dashboard-note {
+        flex-direction:column;
+        align-items:flex-start;
+        gap:7px;
+      }
     }
-
   </style>
-
 </head>
-
 
 <body>
 
+  <div class="layout">
 
-<!-- =========================================================
-     SIDEBAR
-========================================================= -->
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
 
-<aside class="sidebar">
+      <div class="brand-row">
+        <div class="brand" id="brandButton" onclick="handleBrandClick()" aria-label="Nimbo">
+          <div class="brand-mark">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <defs>
+                <filter id="logoGlow" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="1.4" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <circle cx="32" cy="32" r="10" fill="none" stroke="#5CE1E6" stroke-width="2.6" filter="url(#logoGlow)"/>
+              <circle cx="32" cy="32" r="18" fill="none" stroke="#5C86FF" stroke-width="2" filter="url(#logoGlow)" opacity=".85"/>
+              <circle cx="32" cy="32" r="26" fill="none" stroke="#5C86FF" stroke-width="1.4" filter="url(#logoGlow)" opacity=".45"/>
+            </svg>
+          </div>
+          <span class="brand-word">NIM<span class="accent">B</span>O</span>
+        </div>
 
-
-  <!-- =======================================================
-       SIDEBAR HEADER
-  ======================================================== -->
-
-  <div class="sidebar-header">
-
-    <a
-            class="brand"
-            href="index.html"
-            aria-label="Nimbo"
-    >
-
-      <div class="brand-mark">
-
-        <svg
-                viewBox="0 0 64 64"
-                aria-hidden="true"
-        >
-
-          <defs>
-
-            <filter
-                    id="logoGlow"
-                    x="-60%"
-                    y="-60%"
-                    width="220%"
-                    height="220%"
-            >
-
-              <feGaussianBlur
-                      stdDeviation="1.4"
-                      result="blur"
-              />
-
-              <feMerge>
-
-                <feMergeNode in="blur" />
-
-                <feMergeNode in="SourceGraphic" />
-
-              </feMerge>
-
-            </filter>
-
-          </defs>
-
-
-          <circle
-                  cx="32"
-                  cy="32"
-                  r="10"
-                  fill="none"
-                  stroke="#5CE1E6"
-                  stroke-width="2.6"
-                  filter="url(#logoGlow)"
-          />
-
-          <circle
-                  cx="32"
-                  cy="32"
-                  r="18"
-                  fill="none"
-                  stroke="#5C86FF"
-                  stroke-width="2"
-                  filter="url(#logoGlow)"
-                  opacity=".85"
-          />
-
-          <circle
-                  cx="32"
-                  cy="32"
-                  r="26"
-                  fill="none"
-                  stroke="#5C86FF"
-                  stroke-width="1.4"
-                  filter="url(#logoGlow)"
-                  opacity=".45"
-          />
-
-        </svg>
-
+        <button class="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Plegar menú">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
       </div>
 
+      <nav class="nav">
+        <div class="nav-item active" data-tooltip="Inicio" onclick="goTo('dashboard.html')">
+          <span class="nav-icon">⌂</span>
+          <span class="nav-label">Inicio</span>
+        </div>
 
-      <span class="brand-word">
-        NIM<span class="accent">B</span>O
-      </span>
+        <div class="nav-item" data-tooltip="Registro" onclick="goTo('registro.html')">
+          <span class="nav-icon">＋</span>
+          <span class="nav-label">Registro</span>
+        </div>
 
-    </a>
+        <div class="nav-item" data-tooltip="Gastos" onclick="lockedSection('Gastos')">
+          <span class="nav-icon">◫</span>
+          <span class="nav-label">Gastos</span>
+          <span class="nav-lock" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+              <rect x="4" y="10" width="16" height="10" rx="2"/>
+            </svg>
+          </span>
+        </div>
 
+        <div class="nav-item" data-tooltip="Ahorro / Huchas" onclick="lockedSection('Ahorro / Huchas')">
+          <span class="nav-icon">◌</span>
+          <span class="nav-label">Ahorro / Huchas</span>
+          <span class="nav-lock" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+              <rect x="4" y="10" width="16" height="10" rx="2"/>
+            </svg>
+          </span>
+        </div>
 
-    <button
-            class="theme-toggle"
-            id="themeToggle"
-            type="button"
-            aria-label="Cambiar tema"
-            onclick="toggleTheme()"
-    >
-      ☀︎
-    </button>
+        <div class="nav-item" data-tooltip="Inversión" onclick="lockedSection('Inversión')">
+          <span class="nav-icon">↗</span>
+          <span class="nav-label">Inversión</span>
+          <span class="nav-lock" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+              <rect x="4" y="10" width="16" height="10" rx="2"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="nav-item" data-tooltip="Objetivos" onclick="lockedSection('Objetivos')">
+          <span class="nav-icon">◎</span>
+          <span class="nav-label">Objetivos</span>
+          <span class="nav-lock" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+              <rect x="4" y="10" width="16" height="10" rx="2"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="nav-item" data-tooltip="Tareas" onclick="lockedSection('Tareas')">
+          <span class="nav-icon">✓</span>
+          <span class="nav-label">Tareas</span>
+          <span class="nav-lock" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+              <rect x="4" y="10" width="16" height="10" rx="2"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="nav-item" data-tooltip="Mi plan" onclick="lockedSection('Mi plan')">
+          <span class="nav-icon">▣</span>
+          <span class="nav-label">Mi plan</span>
+          <span class="nav-lock" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+              <rect x="4" y="10" width="16" height="10" rx="2"/>
+            </svg>
+          </span>
+        </div>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="user-button" type="button" onclick="openUserSettings()">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <span class="user-name" id="userName">Usuario</span>
+            <span class="user-plan" id="userPlan">Plan gratuito</span>
+          </div>
+          <svg class="user-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="content">
+
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema" onclick="toggleTheme()">
+          ☀︎
+        </button>
+
+        <header class="page-header">
+            <p class="quote">
+              <span class="quote-mark">“</span>
+              El mayor fallo con respecto al dinero es fiarse solamente de la nómina para financiar las necesidades de gasto a corto plazo, sin ahorros para crear un margen entre lo que piensas que son tus gastos y lo que podrían llegar a ser en el futuro.
+              <span class="quote-mark">”</span>
+            </p>
+          </header>
+
+        <section class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-label">Patrimonio total</div>
+            <div>
+              <div class="kpi-value">141,12 €</div>
+              <div class="kpi-meta">Último cierre: abr 2026</div>
+            </div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Variación mensual</div>
+            <div>
+              <div class="kpi-value">−3,80 €</div>
+              <div class="kpi-meta">mar 2026 → abr 2026</div>
+            </div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Ahorro + inversión</div>
+            <div>
+              <div class="kpi-value">141,12 €</div>
+              <div class="kpi-meta">Saldos registrados</div>
+            </div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Metas activas</div>
+            <div>
+              <div class="kpi-value">0</div>
+              <div class="kpi-meta">Crea tu primera meta</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="dashboard-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Evolución del patrimonio</h2>
+                <div class="panel-subtitle">Saldos totales registrados</div>
+              </div>
+            </div>
+
+            <div class="chart">
+              <svg viewBox="0 0 900 260" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#5CE1E6" stop-opacity=".18"/>
+                    <stop offset="100%" stop-color="#5CE1E6" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+
+                <line x1="40" y1="45" x2="860" y2="45" stroke="#1E2B45"/>
+                <line x1="40" y1="105" x2="860" y2="105" stroke="#1E2B45"/>
+                <line x1="40" y1="165" x2="860" y2="165" stroke="#1E2B45"/>
+                <line x1="40" y1="225" x2="860" y2="225" stroke="#1E2B45"/>
+
+                <path class="chart-area" d="M40 195 L300 175 L570 135 L860 155 L860 225 L40 225 Z"/>
+                <path class="chart-line" d="M40 195 L300 175 L570 135 L860 155"/>
+
+                <circle class="chart-point" cx="40" cy="195" r="5"/>
+                <circle class="chart-point" cx="300" cy="175" r="5"/>
+                <circle class="chart-point" cx="570" cy="135" r="5"/>
+                <circle class="chart-point" cx="860" cy="155" r="5"/>
+
+                <text class="chart-label" x="40" y="250">ene</text>
+                <text class="chart-label" x="290" y="250">feb</text>
+                <text class="chart-label" x="560" y="250">mar</text>
+                <text class="chart-label" x="850" y="250">abr</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Resumen financiero</h2>
+                <div class="panel-subtitle">Tu situación actual</div>
+              </div>
+            </div>
+
+            <div class="summary-list">
+              <div class="summary-row">
+                <span class="summary-name">Ahorro mensual</span>
+                <span class="summary-value good">0 €</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-name">Inversión mensual</span>
+                <span class="summary-value good">0 €</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-name">Fondo de emergencia</span>
+                <span class="summary-value warn">0 meses</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-name">Deuda</span>
+                <span class="summary-value">0 €</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-name">Metas</span>
+                <span class="summary-value">0 activas</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="bottom-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Distribución del patrimonio</h2>
+                <div class="panel-subtitle">Dónde está actualmente tu dinero</div>
+              </div>
+            </div>
+
+            <div class="summary-list">
+              <div class="summary-row">
+                <span class="summary-name">Efectivo / cuentas</span>
+                <span class="summary-value">0 €</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-name">Inversiones</span>
+                <span class="summary-value">141,12 €</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-name">Huchas</span>
+                <span class="summary-value">0 €</span>
+              </div>
+            </div>
+          </div>
+
+          <a class="panel objective-card" href="objetivos.html" aria-label="Ir a objetivos">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Próximo objetivo</h2>
+                <div class="panel-subtitle">El siguiente paso de tu planificación</div>
+              </div>
+            </div>
+
+            <div class="objective-content">
+              <div class="objective-title">Sin objetivo todavía</div>
+              <div class="objective-description">
+                Define una meta financiera para que Nimbo pueda ayudarte a saber cuánto necesitas ahorrar y cuánto tiempo puede llevarte conseguirla.
+              </div>
+              <div class="objective-action">Crear objetivo →</div>
+            </div>
+          </a>
+        </section>
+
+        <section class="panel tasks-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Tareas</h2>
+              <div class="panel-subtitle">Acciones que pueden mejorar tu situación financiera</div>
+            </div>
+          </div>
+
+          <div class="tasks-list">
+            <div class="task">
+              <div class="task-top">
+                <div class="task-check"></div>
+                <div class="task-title">Registra tu primer mes</div>
+              </div>
+              <div class="task-description">
+                Añade tus ingresos, gastos, ahorro e inversión para que Nimbo pueda empezar a analizar tu evolución.
+              </div>
+              <div class="task-arrow">Ir al registro →</div>
+            </div>
+
+            <div class="task">
+              <div class="task-top">
+                <div class="task-check"></div>
+                <div class="task-title">Crea un fondo de emergencia</div>
+              </div>
+              <div class="task-description">
+                Define cuánto necesitas mantener reservado para cubrir varios meses de gastos.
+              </div>
+              <div class="task-arrow">Configurar →</div>
+            </div>
+
+            <div class="task">
+              <div class="task-top">
+                <div class="task-check"></div>
+                <div class="task-title">Define una meta financiera</div>
+              </div>
+              <div class="task-description">
+                Establece qué quieres conseguir y deja que Nimbo te ayude a convertirlo en un objetivo concreto.
+              </div>
+              <div class="task-arrow">Crear objetivo →</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="donation">
+          <div class="donation-title">Apoya Nimbo · Donaciones BTC</div>
+          <div class="donation-address">PON_AQUI_TU_DIRECCION_BTC</div>
+        </div>
+
+      </div>
+    </main>
 
   </div>
 
+  <script src="config.js"></script>
 
-  <!-- =======================================================
-       NAVIGATION
-  ======================================================== -->
+  <script>
+    /* =========================================================
+       MODO DESARROLLO
+       true  = entra directamente al dashboard sin login
+       false = exige haber iniciado sesión
+    ========================================================= */
+    const DEV_MODE = true;
 
-  <nav
-          id="navigation"
-          class="navigation"
-  ></nav>
+    if (!DEV_MODE) {
+      const storedUser = localStorage.getItem('nimboUser');
 
+      if (!storedUser) {
+        window.location.href = 'login.html';
+      }
 
-  <!-- =======================================================
-       USER
-  ======================================================== -->
+      let user = null;
 
-  <div class="sidebar-bottom">
+      try {
+        user = JSON.parse(storedUser);
+      } catch (error) {
+        localStorage.removeItem('nimboUser');
+        window.location.href = 'login.html';
+      }
 
-    <div
-            id="userName"
-            class="user-name"
-    ></div>
-
-    <div
-            id="userPlan"
-            class="user-plan"
-    ></div>
-
-    <button
-            class="logout"
-            onclick="logout()"
-            type="button"
-    >
-      Cerrar sesión
-    </button>
-
-  </div>
-
-</aside>
-
-
-<!-- =========================================================
-     MAIN CONTENT
-========================================================= -->
-
-<main class="content">
-
-  <div class="content-inner">
-
-    <div class="eyebrow">
-      Nimbo
-    </div>
-
-    <h1 id="welcome">
-      Tu espacio financiero
-    </h1>
-
-    <p class="intro">
-      Desde aquí podrás consultar y trabajar tu situación financiera.
-    </p>
-
-    <div class="card">
-
-      <h2>
-        Inicio
-      </h2>
-
-      <p>
-        Esta es la página principal de tu dashboard. Aquí iremos construyendo progresivamente el resto de funcionalidades de Nimbo.
-      </p>
-
-    </div>
-
-  </div>
-
-</main>
-
-
-<script src="config.js"></script>
-
-
-<script>
-
-  /* =========================================================
-     THEME
-  ========================================================= */
-
-  function applyTheme() {
-
-    const savedTheme =
-      localStorage.getItem('nimboTheme');
-
-    const isLight =
-      savedTheme === 'light';
-
-    document.body.classList.toggle(
-      'light',
-      isLight
-    );
-
-    const button =
-      document.getElementById('themeToggle');
-
-    if (button) {
-
-      button.innerHTML =
-        isLight
-          ? '☾'
-          : '☀︎';
-
+      if (user) {
+        document.getElementById('userName').textContent = user.name || 'Usuario';
+        document.getElementById('userPlan').textContent = user.plan || 'Plan gratuito';
+        document.getElementById('userAvatar').textContent = (user.name || 'U').charAt(0).toUpperCase();
+      }
+    } else {
+      const user = { name:'Usuario', plan:'Plan gratuito' };
+      document.getElementById('userName').textContent = user.name;
+      document.getElementById('userPlan').textContent = user.plan;
+      document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
     }
 
-  }
+    /* THEME */
+    function applyTheme() {
+      const savedTheme = localStorage.getItem('nimboTheme');
+      const isLight = savedTheme === 'light';
+      document.body.classList.toggle('light', isLight);
 
-
-  function toggleTheme() {
-
-    const isLight =
-      document.body.classList.contains('light');
-
-    const newTheme =
-      isLight
-        ? 'dark'
-        : 'light';
-
-    document.body.classList.toggle(
-      'light',
-      newTheme === 'light'
-    );
-
-    localStorage.setItem(
-      'nimboTheme',
-      newTheme
-    );
-
-    const button =
-      document.getElementById('themeToggle');
-
-    if (button) {
-
-      button.innerHTML =
-        newTheme === 'light'
-          ? '☾'
-          : '☀︎';
-
+      const button = document.getElementById('themeToggle');
+      if (button) {
+        button.innerHTML = isLight ? '☾' : '☀︎';
+      }
     }
 
-  }
+    function toggleTheme() {
+      const isLight = document.body.classList.contains('light');
+      const newTheme = isLight ? 'dark' : 'light';
 
+      document.body.classList.toggle('light', newTheme === 'light');
+      localStorage.setItem('nimboTheme', newTheme);
 
-  /* =========================================================
-     AUTHENTICATION
-  ========================================================= */
-
-  const storedUser =
-    localStorage.getItem(
-      'nimboUser'
-    );
-
-
-  if (!storedUser) {
-
-    window.location.href =
-      'login.html';
-
-  }
-
-
-  const user =
-    JSON.parse(storedUser);
-
-
-  document.getElementById(
-    'userName'
-  ).textContent =
-    user.name;
-
-
-  document.getElementById(
-    'userPlan'
-  ).textContent =
-    user.plan;
-
-
-  document.getElementById(
-    'welcome'
-  ).textContent =
-    'Hola, ' +
-    user.name;
-
-
-  function logout() {
-
-    localStorage.removeItem(
-      'nimboUser'
-    );
-
-    window.location.href =
-      'index.html';
-
-  }
-
-
-  /* =========================================================
-     NAVIGATION
-  ========================================================= */
-
-  const navigationItems = [
-
-    {
-      id:'home',
-      label:'Inicio',
-      href:'dashboard.html',
-      locked:false
+      const button = document.getElementById('themeToggle');
+      if (button) {
+        button.innerHTML = newTheme === 'light' ? '☾' : '☀︎';
+      }
     }
 
-    // Add future features here:
-    //
-    // {
-    //   id:'expenses',
-    //   label:'Gastos',
-    //   href:'expenses.html',
-    //   locked:false
-    // },
-    //
-    // {
-    //   id:'investments',
-    //   label:'Inversión',
-    //   href:'investments.html',
-    //   locked:true
-    // }
-
-  ];
-
-
-  const navigation =
-    document.getElementById(
-      'navigation'
-    );
-
-
-  navigationItems.forEach(
-    function(item) {
-
-      const link =
-        document.createElement('a');
-
-      link.className =
-        'nav-item' +
-        (
-          item.id === 'home'
-            ? ' active'
-            : ''
-        );
-
-      link.href =
-        item.href;
-
-      link.textContent =
-        item.label;
-
-      navigation.appendChild(
-        link
-      );
-
+    /* LOGO / SIDEBAR */
+    function handleBrandClick() {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('collapsed')) {
+        sidebar.classList.remove('collapsed');
+        return;
+      }
+      window.location.href = 'index.html';
     }
-  );
 
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    }
 
-  /* =========================================================
-     INIT
-  ========================================================= */
+    /* NAVEGACIÓN */
+    function goTo(page) {
+      window.location.href = page;
+    }
 
-  applyTheme();
+    function lockedSection(section) {
+      alert(section + ' estará disponible próximamente.');
+    }
 
-</script>
+    function openUserSettings() {
+      alert('Aquí irá la configuración de tu cuenta.');
+    }
 
+    /* INIT */
+    applyTheme();
+  </script>
 
 </body>
-
 </html>
