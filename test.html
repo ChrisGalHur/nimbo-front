@@ -32,7 +32,6 @@
       --warn:#FFC163;
       --bad:#FF6B6B;
 
-      /* Identidad permanente de Nimbo */
       --brand-ink:#EAF2FF;
     }
 
@@ -132,6 +131,8 @@
       gap:9px;
 
       padding:0;
+
+      text-decoration:none;
     }
 
 
@@ -551,10 +552,6 @@
     }
 
 
-    /*
-     * La zona superior permanece oscura.
-     */
-
     body.light .wrap::before {
       background:#0A0F1C;
     }
@@ -644,7 +641,11 @@
 
     <!-- Nimbo brand -->
 
-    <div class="brand">
+    <a
+            class="brand"
+            href="index.html"
+            aria-label="Nimbo"
+    >
 
       <div class="brand-mark">
 
@@ -737,7 +738,7 @@
         NIM<span class="accent">B</span>O
       </span>
 
-    </div>
+    </a>
 
 
     <!-- Theme -->
