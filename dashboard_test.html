@@ -284,22 +284,92 @@
        Diagnosis
        --------------------------------------------------------- */
 
-    .diagnosis {
-      font-size:15px;
+       .diagnosis-panel {
+  background:var(--panel);
 
-      line-height:1.65;
+  border:1px solid var(--line);
 
-      color:var(--ink);
+  border-radius:14px;
 
-      margin:0 0 18px;
-    }
+  padding:24px 26px;
+
+  margin:0 0 18px;
+
+  box-shadow:
+    0 12px 36px rgba(0,0,0,.08);
+}
 
 
-    .diagnosis b {
-      color:var(--cyan);
+.diagnosis-title {
+  font-family:'Space Grotesk',sans-serif;
 
-      font-weight:700;
-    }
+  font-size:13px;
+
+  font-weight:700;
+
+  color:var(--ink-soft);
+
+  text-transform:uppercase;
+
+  letter-spacing:.05em;
+
+  margin:0 0 4px;
+}
+
+
+.diagnosis-subtitle {
+  font-size:12px;
+
+  color:var(--ink-soft);
+
+  margin:0 0 18px;
+
+  opacity:.8;
+}
+
+
+.diagnosis-item {
+  padding:15px 0;
+
+  border-top:1px solid var(--line);
+}
+
+
+.diagnosis-item:first-of-type {
+  border-top:none;
+
+  padding-top:0;
+}
+
+
+.diagnosis-label {
+  font-family:'Space Grotesk',sans-serif;
+
+  font-size:13px;
+
+  font-weight:600;
+
+  color:var(--cyan);
+
+  margin-bottom:6px;
+}
+
+
+.diagnosis-item p {
+  font-size:13.5px;
+
+  line-height:1.65;
+
+  color:var(--ink);
+
+  margin:0;
+}
+
+
+body.light .diagnosis-panel {
+  box-shadow:
+    0 14px 36px rgba(38,83,145,.10);
+}
 
 
     /* ---------------------------------------------------------
@@ -1129,394 +1199,354 @@
   //endregion
 
 
-  //region Score status
-
-  function getScoreStatus(score) {
-
-    const numericScore =
-      Number(score) || 0;
-
-
-    const text =
-      numericScore >= 75
-        ? 'Bien'
-        : numericScore >= 50
-          ? 'Mejorable'
-          : 'Insuficiente';
-
-
-    return {
-      text,
-      color:scoreColor(numericScore)
-    };
-  }
-
-  //endregion
-
-
-  //region Messages
-
-  const messages = {
-
-    expenses:
-      'tus <b>gastos</b> están restando más margen del necesario',
-
-    saving:
-      'tu <b>ahorro</b> todavía no es constante mes a mes',
-
-    investment:
-      'apenas estás empezando a <b>invertir</b>, y ahí se concentra la mayor oportunidad',
-
-    emergency:
-      'tu <b>fondo de emergencia</b> todavía no cubre un imprevisto serio',
-
-    debt:
-      'tus <b>deudas</b> están limitando lo que puedes destinar a construir patrimonio'
-
-  };
-
-  //endregion
-
-
-  //region Weakest area
-
-  function getWeakestArea(scores) {
-
-    const areas = [
-
-      'expenses',
-      'saving',
-      'investment',
-      'emergency',
-      'debt'
-
-    ];
-
-
-    let weakest =
-      areas[0];
-
-
-    areas.forEach(
-      function(area) {
-
-        if (
-          Number(scores[area]) <
-          Number(scores[weakest])
-        ) {
-
-          weakest =
-            area;
-        }
-
-      }
-    );
-
-
-    return weakest;
-  }
-
-  //endregion
-
-
   //region Render
 
   function render(data) {
 
-    if (
-      !data ||
-      !data.scores
-    ) {
+if (
+  !data ||
+  !data.scores ||
+  !data.diagnosis
+) {
 
-      showError(
-        'No hemos encontrado ese resultado.'
-      );
+  showError(
+    'No hemos encontrado ese resultado.'
+  );
 
-      return;
-    }
-
-
-    const scores =
-      data.scores;
+  return;
+}
 
 
-    const totalScore =
-      Math.round(
-        Number(scores.total) || 0
-      );
+const scores =
+  data.scores;
 
 
-    const status =
-      getScoreStatus(
-        totalScore
-      );
+const diagnosis =
+  data.diagnosis;
 
 
-    const weakestArea =
-      getWeakestArea(
-        scores
-      );
+const totalScore =
+  Math.round(
+    Number(scores.total) || 0
+  );
+
+  let diagnosisTitle =
+  'Situación financiera equilibrada';
 
 
-    let introduction =
-      '';
+if (diagnosis.status === 'positive') {
+
+  diagnosisTitle =
+    'Situación financiera positiva';
+
+} else if (
+  diagnosis.status === 'negative'
+) {
+
+  diagnosisTitle =
+    'Situación financiera vulnerable';
+}
 
 
-    if (
-      totalScore >= 75
-    ) {
+const areas = [
 
-      introduction =
-        'Tu economía tiene una base sólida. ';
+  [
+    'Gastos',
+    Math.round(
+      Number(scores.expenses) || 0
+    )
+  ],
 
-    } else if (
-      totalScore >= 50
-    ) {
+  [
+    'Fondo de emergencia',
+    Math.round(
+      Number(scores.emergency) || 0
+    )
+  ],
 
-      introduction =
-        'Tu economía va razonablemente bien. ';
+  [
+    'Inversión',
+    Math.round(
+      Number(scores.investment) || 0
+    )
+  ],
 
-    } else {
+  [
+    'Deudas',
+    Math.round(
+      Number(scores.debt) || 0
+    )
+  ]
 
-      introduction =
-        'Hay varios puntos que se pueden mejorar con claridad. ';
-    }
-
-
-    const areas = [
-
-      [
-        'Gastos',
-        Math.round(
-          Number(scores.expenses) || 0
-        )
-      ],
-
-      [
-        'Ahorro',
-        Math.round(
-          Number(scores.saving) || 0
-        )
-      ],
-
-      [
-        'Inversión',
-        Math.round(
-          Number(scores.investment) || 0
-        )
-      ],
-
-      [
-        'Fondo de emergencia',
-        Math.round(
-          Number(scores.emergency) || 0
-        )
-      ],
-
-      [
-        'Deudas',
-        Math.round(
-          Number(scores.debt) || 0
-        )
-      ]
-
-    ];
+];
 
 
-    const rows =
-      areas
-        .map(
-          function(area) {
+const rows =
+  areas
+    .map(
+      function(area) {
 
-            const currentStatus =
-              getScoreStatus(
-                area[1]
-              );
-
-
-            return (
-
-              '<tr>' +
-
-                '<td>' +
-
-                  '<span ' +
-                    'class="status-dot" ' +
-                    'style="background:' +
-                    currentStatus.color +
-                  '">' +
-                  '</span>' +
-
-                  area[0] +
-
-                '</td>' +
-
-                '<td ' +
-                  'class="num" ' +
-                  'style="color:' +
-                  currentStatus.color +
-                '">' +
-
-                  area[1] +
-
-                '</td>' +
-
-              '</tr>'
-
-            );
-
-          }
-        )
-        .join('');
+        const currentColor =
+          scoreColor(
+            area[1]
+          );
 
 
-    document.getElementById(
-      'content'
-    ).innerHTML =
+        return (
+
+          '<tr>' +
+
+            '<td>' +
+
+              '<span ' +
+                'class="status-dot" ' +
+                'style="background:' +
+                currentColor +
+              '">' +
+              '</span>' +
+
+              area[0] +
+
+            '</td>' +
+
+            '<td ' +
+              'class="num" ' +
+              'style="color:' +
+              currentColor +
+            '">' +
+
+              area[1] +
+
+            '</td>' +
+
+          '</tr>'
+
+        );
+
+      }
+    )
+    .join('');
 
 
-      '<div class="score-card">' +
+let diagnosisColor =
+  'var(--warn)';
 
-        '<span class="ring-num">' +
-          totalScore +
-        '</span>' +
 
-        '<div>' +
+if (
+  diagnosis.status === 'positive'
+) {
 
-          '<div class="score-status" style="color:' +
-            status.color +
-          '">' +
+  diagnosisColor =
+    'var(--good)';
 
-            status.text +
+} else if (
+  diagnosis.status === 'negative'
+) {
 
-          '</div>' +
+  diagnosisColor =
+    'var(--bad)';
 
-          '<div class="score-label">' +
-            'de 100 puntos' +
-          '</div>' +
+}
 
-        '</div>' +
+
+document.getElementById(
+  'content'
+).innerHTML =
+
+
+  '<div class="score-card">' +
+
+    '<span class="ring-num">' +
+      totalScore +
+    '</span>' +
+
+    '<div>' +
+
+      '<div ' +
+  'class="score-status" ' +
+  'style="color:' +
+    diagnosisColor +
+  '">' +
+
+  diagnosisTitle +
+
+'</div>' +
+
+      '<div class="score-label">' +
+        'de 100 puntos' +
+      '</div>' +
+
+    '</div>' +
+
+  '</div>' +
+
+
+  '<div class="diagnosis-panel">' +
+
+'<div class="diagnosis-title">' +
+  'Tu diagnóstico' +
+'</div>' +
+
+'<div class="diagnosis-subtitle">' +
+  'Qué significa tu resultado en cada área' +
+'</div>' +
+
+'<div class="diagnosis-item">' +
+
+  '<div class="diagnosis-label">' +
+    'Gastos' +
+  '</div>' +
+
+  '<p>' +
+    diagnosis.expensesMessage +
+  '</p>' +
+
+'</div>' +
+
+'<div class="diagnosis-item">' +
+
+  '<div class="diagnosis-label">' +
+    'Fondo de emergencia' +
+  '</div>' +
+
+  '<p>' +
+    diagnosis.emergencyMessage +
+  '</p>' +
+
+'</div>' +
+
+'<div class="diagnosis-item">' +
+
+  '<div class="diagnosis-label">' +
+    'Inversión' +
+  '</div>' +
+
+  '<p>' +
+    diagnosis.investmentMessage +
+  '</p>' +
+
+'</div>' +
+
+'<div class="diagnosis-item">' +
+
+  '<div class="diagnosis-label">' +
+    'Deudas' +
+  '</div>' +
+
+  '<p>' +
+    diagnosis.debtMessage +
+  '</p>' +
+
+'</div>' +
+
+'</div>' +
+
+  '<div class="panel">' +
+
+    '<h3>Tu desglose completo</h3>' +
+
+    '<table>' +
+
+      '<tbody>' +
+
+        rows +
+
+      '</tbody>' +
+
+    '</table>' +
+
+  '</div>' +
+
+
+  '<div class="upsell">' +
+
+    '<h3>Lo que Nimbo haría por ti</h3>' +
+
+    '<p>' +
+
+      'Un plan personalizado a partir de tu resultado, con un movimiento concreto cada semana y seguimiento de tu progreso mes a mes.' +
+
+    '</p>' +
+
+    '<ul>' +
+
+      '<li>Plan de acción enfocado en tu situación financiera</li>' +
+
+      '<li>Un movimiento financiero concreto cada semana</li>' +
+
+      '<li>Seguimiento claro de tu evolución</li>' +
+
+    '</ul>' +
+
+    '<a href="register.html" class="cta">' +
+
+      'Crear mi cuenta →' +
+
+    '</a>' +
+
+    '<div class="cta-note">' +
+
+      '¿Ya tienes cuenta? ' +
+
+      '<a href="login.html" style="color:var(--cyan);">' +
+
+        'Iniciar sesión' +
+
+      '</a>' +
+
+    '</div>' +
+
+    '<div class="cta-note">' +
+
+      '9.99 € al año' +
+
+    '</div>' +
+
+    '<div class="code-wrap">' +
+
+      '<div class="code-label">' +
+
+        '¿Tienes un código?' +
 
       '</div>' +
 
+      '<div class="code-row">' +
 
-      '<p class="diagnosis">' +
+        '<input ' +
 
-        introduction +
+          'class="code-input" ' +
 
-        messages[weakestArea] +
+          'type="text" ' +
 
-        '. Con un plan concreto y seguimiento semanal, esto se corrige en pocos meses — no con fuerza de voluntad, sino con estructura.' +
+          'placeholder="Código" ' +
 
-      '</p>' +
+          'id="codigo" ' +
 
+        '>' +
 
-      '<div class="panel">' +
+        '<button ' +
 
-        '<h3>Tu desglose completo</h3>' +
+          'class="code-btn" ' +
 
-        '<table>' +
+          'type="button" ' +
 
-          '<tbody>' +
+          'onclick="applyCode()"' +
 
-            rows +
+        '>' +
 
-          '</tbody>' +
+          'Aplicar' +
 
-        '</table>' +
+        '</button>' +
 
       '</div>' +
 
+    '</div>' +
 
-      '<div class="upsell">' +
+  '</div>';
 
-        '<h3>Lo que Nimbo haría por ti</h3>' +
+}
 
-        '<p>' +
-
-          'Un plan personalizado a partir de tu resultado, con un movimiento concreto cada semana y seguimiento de tu progreso mes a mes.' +
-
-        '</p>' +
-
-        '<ul>' +
-
-          '<li>Plan de acción enfocado en tu punto más débil</li>' +
-
-          '<li>Un movimiento financiero concreto cada semana</li>' +
-
-          '<li>Seguimiento claro de tu evolución</li>' +
-
-        '</ul>' +
-
-        '<a href="register.html" class="cta">' +
-
-          'Crear mi cuenta →' +
-
-        '</a>' +
-
-        '<div class="cta-note">' +
-
-          '¿Ya tienes cuenta? ' +
-
-          '<a href="login.html" style="color:var(--cyan);">' +
-
-            'Iniciar sesión' +
-
-          '</a>' +
-
-        '</div>' +
-
-        '<div class="cta-note">' +
-
-          '9.99 € al año' +
-
-        '</div>' +
-
-        '<div class="code-wrap">' +
-
-          '<div class="code-label">' +
-
-            '¿Tienes un código?' +
-
-          '</div>' +
-
-          '<div class="code-row">' +
-
-            '<input ' +
-
-              'class="code-input" ' +
-
-              'type="text" ' +
-
-              'placeholder="Código" ' +
-
-              'id="codigo" ' +
-
-            '>' +
-
-            '<button ' +
-
-              'class="code-btn" ' +
-
-              'type="button" ' +
-
-              'onclick="applyCode()"' +
-
-            '>' +
-
-              'Aplicar' +
-
-            '</button>' +
-
-          '</div>' +
-
-        '</div>' +
-
-      '</div>';
-
-  }
-
-  //endregion
+//endregion
 
 
   //region Promo code
