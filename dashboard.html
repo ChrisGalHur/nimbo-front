@@ -9,798 +9,1396 @@
 
   <style>
     :root {
-      --bg:#0A0F1C;
-      --panel:#10182B;
-      --input:#0F1526;
-      --ink:#EAF2FF;
-      --ink-soft:#7C8CB3;
-      --line:#1E2B45;
-      --cyan:#5CE1E6;
-      --blue:#5C86FF;
-      --good:#5FE3A3;
-      --warn:#FFC163;
-      --bad:#FF6B6B;
-      --sidebar-width:230px;
-      --sidebar-collapsed:72px;
+      --bg: #0A0F1C;
+      --panel: #10182B;
+      --input: #0F1526;
+      --ink: #EAF2FF;
+      --ink-soft: #7C8CB3;
+      --line: #1E2B45;
+      --cyan: #5CE1E6;
+      --blue: #5C86FF;
+      --good: #5FE3A3;
+      --warn: #FFC163;
+      --bad: #FF6B6B;
+      --sidebar-width: 230px;
+      --sidebar-collapsed: 72px;
     }
 
-    * { box-sizing:border-box; }
+    * { box-sizing: border-box; }
 
-    html { min-height:100%; }
+    html { min-height: 100%; }
 
     body {
-      margin:0;
-      min-height:100vh;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:'Inter',sans-serif;
-      font-size:14px;
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
       transition: background .25s ease, color .25s ease;
     }
 
-    button { font:inherit; }
+    button { font: inherit; }
 
     .layout {
-      min-height:100vh;
-      display:flex;
+      min-height: 100vh;
+      display: flex;
     }
 
-    /* SIDEBAR */
+    /* ========== SIDEBAR ========== */
     .sidebar {
-      position:fixed;
-      top:0; left:0; bottom:0;
-      width:var(--sidebar-width);
-      background:#10182B;
-      border-right:1px solid #1E2B45;
-      display:flex;
-      flex-direction:column;
-      padding:22px 12px 16px;
-      z-index:20;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: #10182B;
+      border-right: 1px solid #1E2B45;
+      display: flex;
+      flex-direction: column;
+      padding: 22px 12px 16px;
+      z-index: 20;
       transition: width .25s ease;
     }
 
-    .sidebar.collapsed { width:var(--sidebar-collapsed); }
+    .sidebar.collapsed { width: var(--sidebar-collapsed); }
 
     .brand-row {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      height:42px;
-      margin-bottom:30px;
-      padding:0 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 42px;
+      margin-bottom: 30px;
+      padding: 0 6px;
     }
 
     .brand {
-      display:flex;
-      align-items:center;
-      gap:9px;
-      padding:0;
-      text-decoration:none;
-      cursor:pointer;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .brand-mark {
-      width:28px; height:28px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .brand-mark svg {
-      display:block;
-      width:28px; height:28px;
+      display: block;
+      width: 28px;
+      height: 28px;
     }
 
     .brand-word {
-      font-family:'Space Grotesk',sans-serif;
-      font-weight:700;
-      font-size:16px;
-      letter-spacing:.1em;
-      color:#EAF2FF;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: .1em;
+      color: #EAF2FF;
     }
 
-    .brand-word .accent { color:#5CE1E6; }
+    .brand-word .accent { color: #5CE1E6; }
 
     .sidebar-toggle {
-      width:32px; height:32px;
-      padding:0;
-      border:1px solid #1E2B45;
-      border-radius:9px;
-      background:#0F1526;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      color:#7C8CB3;
-      transition: border-color .2s ease, background .2s ease, color .2s ease;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: none;
+      border-radius: 6px;
+      background: rgba(92, 134, 255, .14);
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(92, 225, 230, .18);
+      transition: box-shadow .2s ease, background .2s ease;
     }
 
     .sidebar-toggle:hover {
-      border-color:#304364;
-      background:#131D32;
-      color:#EAF2FF;
+      background: rgba(92, 134, 255, .22);
+      box-shadow: 0 0 12px rgba(92, 225, 230, .35);
+    }
+
+    /* Logo iluminado cuando la barra está recogida */
+    .sidebar.collapsed .brand-mark svg {
+      filter: drop-shadow(0 0 5px rgba(92, 225, 230, .45));
+      transition: filter .2s ease;
+    }
+
+    .sidebar.collapsed .brand:hover .brand-mark svg {
+      filter: drop-shadow(0 0 9px rgba(92, 225, 230, .75));
     }
 
     /* NAV */
     .nav {
-      display:flex;
-      flex-direction:column;
-      gap:5px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
 
     .nav-item {
-      position:relative;
-      width:100%;
-      height:44px;
-      display:flex;
-      align-items:center;
-      padding:0 12px;
-      border-radius:10px;
-      color:#7C8CB3;
-      cursor:pointer;
-      font-size:14px;
-      font-weight:500;
-      user-select:none;
+      position: relative;
+      width: 100%;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 10px;
+      color: #7C8CB3;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      user-select: none;
       transition: background .2s ease, color .2s ease;
     }
 
     .nav-item:hover {
-      background:rgba(92,225,230,.06);
-      color:#EAF2FF;
+      background: rgba(92, 225, 230, .06);
+      color: #EAF2FF;
     }
 
     .nav-item.active {
-      background:rgba(92,225,230,.10);
-      color:#EAF2FF;
+      background: rgba(92, 225, 230, .10);
+      color: #EAF2FF;
     }
 
     .nav-icon {
-      width:20px;
-      min-width:20px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:16px;
+      width: 20px;
+      min-width: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
     }
 
-    .nav-label { margin-left:12px; white-space:nowrap; }
+    .nav-label {
+      margin-left: 12px;
+      white-space: nowrap;
+    }
 
     .nav-lock {
-      margin-left:auto;
-      color:#7C8CB3;
-      font-size:12px;
-      opacity:.7;
+      margin-left: auto;
+      color: #5CE1E6;
+      opacity: .85;
+      filter: drop-shadow(0 0 3px rgba(92, 225, 230, .6)) drop-shadow(0 0 9px rgba(92, 134, 255, .35));
     }
 
-    .nav-lock svg { display:block; }
+    .nav-lock svg { display: block; }
+
+    /* Logo y nombre se iluminan al pasar el ratón (barra desplegada) */
+    .brand .brand-mark svg,
+    .brand .brand-word {
+      transition: filter .2s ease, text-shadow .2s ease;
+    }
+
+    .sidebar:not(.collapsed) .brand:hover .brand-mark svg {
+      filter: drop-shadow(0 0 7px rgba(92, 225, 230, .6));
+    }
+
+    .sidebar:not(.collapsed) .brand:hover .brand-word {
+      text-shadow: 0 0 6px rgba(92, 225, 230, .55), 0 0 16px rgba(92, 134, 255, .3);
+    }
 
     /* Tooltips cuando el menú está plegado */
     .nav-item[data-tooltip]::after {
-      content:attr(data-tooltip);
-      position:absolute;
-      left:62px;
-      top:50%;
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 62px;
+      top: 50%;
       transform: translateY(-50%) translateX(-4px);
-      padding:8px 11px;
-      border:1px solid #263754;
-      border-radius:8px;
-      background:#10182B;
-      color:#EAF2FF;
-      font-family:'Inter',sans-serif;
-      font-size:12px;
-      font-weight:500;
-      white-space:nowrap;
-      box-shadow: 0 10px 28px rgba(0,0,0,.28);
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
-      z-index:100;
+      padding: 8px 11px;
+      border: 1px solid #263754;
+      border-radius: 8px;
+      background: #10182B;
+      color: #EAF2FF;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      z-index: 100;
       transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
     }
 
     .sidebar.collapsed .nav-item[data-tooltip]:hover::after {
-      opacity:1;
-      visibility:visible;
+      opacity: 1;
+      visibility: visible;
       transform: translateY(-50%) translateX(0);
     }
 
     /* Sidebar collapsed */
     .sidebar.collapsed .brand-row {
-      justify-content:center;
-      padding:0;
+      justify-content: center;
+      padding: 0;
     }
 
-    .sidebar.collapsed .brand-word { display:none; }
-    .sidebar.collapsed .sidebar-toggle { display:none; }
+    .sidebar.collapsed .brand-word { display: none; }
+    .sidebar.collapsed .sidebar-toggle { display: none; }
 
     .sidebar.collapsed .nav-item {
-      width:48px;
-      height:44px;
-      margin:0 auto;
-      padding:0;
-      justify-content:center;
+      width: 48px;
+      height: 44px;
+      margin: 0 auto;
+      padding: 0;
+      justify-content: center;
     }
 
     .sidebar.collapsed .nav-icon {
-      width:20px;
-      min-width:20px;
-      margin:0;
+      width: 20px;
+      min-width: 20px;
+      margin: 0;
     }
 
     .sidebar.collapsed .nav-label,
-    .sidebar.collapsed .nav-lock { display:none; }
+    .sidebar.collapsed .nav-lock { display: none; }
 
     /* User */
     .sidebar-bottom {
-      margin-top:auto;
-      padding-top:14px;
-      border-top:1px solid #1E2B45;
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid #1E2B45;
     }
 
     .user-button {
-      width:100%;
-      border:0;
-      background:transparent;
-      color:#EAF2FF;
-      display:flex;
-      align-items:center;
-      padding:8px 6px;
-      border-radius:10px;
-      cursor:pointer;
-      text-align:left;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #EAF2FF;
+      display: flex;
+      align-items: center;
+      padding: 8px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: left;
       transition: background .2s ease;
     }
 
-    .user-button:hover { background:rgba(92,225,230,.06); }
+    .user-button:hover { background: rgba(92, 225, 230, .06); }
 
     .user-avatar {
-      width:34px; height:34px;
-      flex:none;
-      border-radius:50%;
-      background:linear-gradient(135deg, #5CE1E6, #5C86FF);
-      color:#08101E;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-family:'Space Grotesk',sans-serif;
-      font-weight:700;
-      font-size:14px;
+      width: 34px;
+      height: 34px;
+      flex: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #5CE1E6, #5C86FF);
+      color: #08101E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
     }
 
     .user-info {
-      min-width:0;
-      margin-left:10px;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
+      min-width: 0;
+      margin-left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .user-name {
-      font-size:13px;
-      font-weight:600;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .user-plan {
-      font-size:11px;
-      color:#7C8CB3;
-      white-space:nowrap;
+      font-size: 11px;
+      color: #7C8CB3;
+      white-space: nowrap;
     }
 
     .user-arrow {
-      margin-left:auto;
-      color:#7C8CB3;
-      flex:none;
+      margin-left: auto;
+      color: #7C8CB3;
+      flex: none;
     }
 
     .sidebar.collapsed .user-button {
-      justify-content:center;
-      padding:8px 0;
+      justify-content: center;
+      padding: 8px 0;
     }
 
     .sidebar.collapsed .user-info,
-    .sidebar.collapsed .user-arrow { display:none; }
+    .sidebar.collapsed .user-arrow { display: none; }
 
-    /* MAIN */
+    /* ========== MAIN ========== */
     .main {
-      margin-left:var(--sidebar-width);
-      width:calc(100% - var(--sidebar-width));
-      min-height:100vh;
-      padding:30px 42px 30px;
+      margin-left: var(--sidebar-width);
+      width: calc(100% - var(--sidebar-width));
+      min-height: 100vh;
+      padding: 30px 42px 30px;
       transition: margin-left .25s ease, width .25s ease;
     }
 
     .sidebar.collapsed ~ .main {
-      margin-left:var(--sidebar-collapsed);
-      width:calc(100% - var(--sidebar-collapsed));
+      margin-left: var(--sidebar-collapsed);
+      width: calc(100% - var(--sidebar-collapsed));
     }
 
-    .content { width:100%; max-width:none; }
+    .content { width: 100%; max-width: none; }
 
     /* Theme toggle */
     .theme-toggle {
-      position:fixed;
-      top:20px; right:22px;
-      width:34px; height:34px;
-      padding:0;
-      border:1px solid rgba(234,242,255,.18);
-      border-radius:9px;
-      background:rgba(255,255,255,.04);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      color:#EAF2FF;
-      font-size:17px;
-      line-height:1;
-      z-index:50;
+      position: fixed;
+      top: 20px;
+      right: 22px;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border: 1px solid rgba(234, 242, 255, .18);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, .04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #EAF2FF;
+      font-size: 17px;
+      line-height: 1;
+      z-index: 50;
       transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
     }
 
     .theme-toggle:hover {
-      border-color:#5CE1E6;
-      background:rgba(92,225,230,.08);
-      color:#5CE1E6;
-      transform:scale(1.03);
+      border-color: #5CE1E6;
+      background: rgba(92, 225, 230, .08);
+      color: #5CE1E6;
+      transform: scale(1.03);
     }
 
     body.light .theme-toggle {
-      border-color:#9CB4D8;
-      background:#DCEBFF;
-      color:#162039;
+      border-color: #9CB4D8;
+      background: #DCEBFF;
+      color: #162039;
     }
 
     body.light .theme-toggle:hover {
-      border-color:#5CE1E6;
-      background:#E6F1FF;
-      color:#162039;
+      border-color: #5CE1E6;
+      background: #E6F1FF;
+      color: #162039;
     }
 
     /* Quote card */
-.page-header {
-  width:100%;
-  margin:10px 0 16px;
-  padding:21px;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  box-shadow:none;
-}
+    .page-header {
+      width: 100%;
+      margin: 10px 0 16px;
+      padding: 21px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: none;
+    }
 
-.quote {
-  width:100%;
-  margin:0;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:20px;
-  line-height:1.45;
-  font-weight:500;
-  letter-spacing:-.025em;
-  color:var(--ink);
-  text-align:left;
-}
+    .quote {
+      width: 100%;
+      margin: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      line-height: 1.45;
+      font-weight: 500;
+      letter-spacing: -.025em;
+      color: var(--ink);
+      text-align: left;
+    }
 
-.quote-mark {
-  color:var(--cyan);
-  font-weight:600;
-}
+    .quote-mark {
+      color: var(--cyan);
+      font-weight: 600;
+    }
 
     /* KPI */
     .kpi-grid {
-      display:grid;
-      grid-template-columns: repeat(4,minmax(0,1fr));
-      gap:14px;
-      margin-bottom:16px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
     }
 
     .kpi {
-      min-height:120px;
-      padding:19px;
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:14px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
+      min-height: 120px;
+      padding: 19px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .kpi-label {
-      color:var(--ink-soft);
-      font-size:12px;
-      font-weight:500;
+      color: var(--ink-soft);
+      font-size: 12px;
+      font-weight: 500;
     }
 
     .kpi-value {
-      margin-top:12px;
-      font-family:'Space Grotesk',sans-serif;
-      font-size:25px;
-      font-weight:600;
-      letter-spacing:-.025em;
+      margin-top: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 25px;
+      font-weight: 600;
+      letter-spacing: -.025em;
     }
 
     .kpi-meta {
-      margin-top:5px;
-      color:var(--ink-soft);
-      font-size:11px;
+      margin-top: 5px;
+      color: var(--ink-soft);
+      font-size: 11px;
     }
 
     /* Dashboard grid */
     .dashboard-grid {
-      display:grid;
-      grid-template-columns: minmax(0,2fr) minmax(300px,1fr);
-      gap:16px;
-      margin-bottom:16px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
     }
 
     .panel {
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:21px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 21px;
     }
 
     .panel-header {
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      margin-bottom:18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
     }
 
     .panel-title {
-      margin:0;
-      font-family:'Space Grotesk',sans-serif;
-      font-size:16px;
-      font-weight:600;
+      margin: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
     }
 
     .panel-subtitle {
-      margin-top:4px;
-      color:var(--ink-soft);
-      font-size:11px;
+      margin-top: 4px;
+      color: var(--ink-soft);
+      font-size: 11px;
     }
 
     /* Chart */
     .chart {
-      height:260px;
-      position:relative;
-      border-radius:10px;
-      background: linear-gradient(to bottom, rgba(92,134,255,.035) 1px, transparent 1px);
-      background-size:100% 25%;
+      height: 260px;
+      position: relative;
+      border-radius: 10px;
+      background: linear-gradient(to bottom, rgba(92, 134, 255, .035) 1px, transparent 1px);
+      background-size: 100% 25%;
     }
 
     .chart svg {
-      width:100%;
-      height:100%;
-      overflow:visible;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
     }
 
     .chart-label {
-      fill:#7C8CB3;
-      font-family:'IBM Plex Mono',monospace;
-      font-size:10px;
+      fill: #7C8CB3;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
     }
 
     .chart-line {
-      fill:none;
-      stroke:var(--cyan);
-      stroke-width:3;
-      stroke-linecap:round;
-      stroke-linejoin:round;
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    .chart-area { fill:url(#chartGradient); }
+    .chart-area { fill: url(#chartGradient); }
 
     .chart-point {
-      fill:var(--panel);
-      stroke:var(--cyan);
-      stroke-width:3;
+      fill: var(--panel);
+      stroke: var(--cyan);
+      stroke-width: 3;
     }
 
     /* Summary */
     .summary-list {
-      display:flex;
-      flex-direction:column;
-      gap:0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
     }
 
     .summary-row {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      min-height:52px;
-      border-bottom:1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 52px;
+      border-bottom: 1px solid var(--line);
     }
 
-    .summary-row:last-child { border-bottom:0; }
+    .summary-row:last-child { border-bottom: 0; }
 
     .summary-name {
-      color:var(--ink-soft);
-      font-size:12px;
+      color: var(--ink-soft);
+      font-size: 12px;
     }
 
     .summary-value {
-      color:var(--ink);
-      font-size:13px;
-      font-weight:600;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
     }
 
-    .summary-value.good { color:var(--good); }
-    .summary-value.warn { color:var(--warn); }
+    .summary-value.good { color: var(--good); }
+    .summary-value.warn { color: var(--warn); }
 
     /* Bottom grid */
     .bottom-grid {
-      display:grid;
-      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-      gap:16px;
-      margin-bottom:16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
     }
 
     /* Objective */
     .objective-card {
-      display:block;
-      color:inherit;
-      text-decoration:none;
-      min-height:190px;
-      cursor:pointer;
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      min-height: 190px;
+      cursor: pointer;
       transition: border-color .2s ease, transform .2s ease, background .2s ease;
     }
 
     .objective-card:hover {
-      border-color:#304364;
-      background:#121B30;
-      transform:translateY(-2px);
+      border-color: #304364;
+      background: #121B30;
+      transform: translateY(-2px);
     }
 
     .objective-content {
-      min-height:145px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
+      min-height: 145px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .objective-title {
-      margin-bottom:9px;
-      font-family:'Space Grotesk',sans-serif;
-      font-size:22px;
-      font-weight:600;
+      margin-bottom: 9px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
     }
 
     .objective-description {
-      max-width:500px;
-      color:var(--ink-soft);
-      font-size:12px;
-      line-height:1.6;
+      max-width: 500px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.6;
     }
 
     .objective-action {
-      margin-top:17px;
-      color:var(--cyan);
-      font-family:'IBM Plex Mono',monospace;
-      font-size:10px;
+      margin-top: 17px;
+      color: var(--cyan);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
     }
 
     /* Tasks */
     .tasks-panel {
-      margin-bottom:16px;
-      padding:21px;
+      margin-bottom: 16px;
+      padding: 21px;
     }
 
     .tasks-list {
-      display:grid;
-      grid-template-columns: repeat(3,minmax(0,1fr));
-      gap:12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
     }
 
     .task {
-      min-height:105px;
-      padding:16px;
-      border:1px solid var(--line);
-      background:var(--input);
-      border-radius:11px;
-      display:flex;
-      flex-direction:column;
-      cursor:pointer;
+      min-height: 105px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: var(--input);
+      border-radius: 11px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
       transition: border-color .2s ease, transform .2s ease, background .2s ease;
     }
 
     .task:hover {
-      border-color:#304364;
-      background:#121B30;
-      transform:translateY(-1px);
+      border-color: #304364;
+      background: #121B30;
+      transform: translateY(-1px);
     }
 
     .task-top {
-      display:flex;
-      align-items:center;
-      gap:10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .task-check {
-      width:18px; height:18px;
-      border:1px solid #40516F;
-      border-radius:50%;
-      flex:none;
+      width: 18px;
+      height: 18px;
+      border: 1px solid #40516F;
+      border-radius: 50%;
+      flex: none;
     }
 
     .task-title {
-      font-size:13px;
-      font-weight:600;
+      font-size: 13px;
+      font-weight: 600;
     }
 
     .task-description {
-      margin-top:10px;
-      margin-left:28px;
-      color:var(--ink-soft);
-      font-size:11px;
-      line-height:1.5;
+      margin-top: 10px;
+      margin-left: 28px;
+      color: var(--ink-soft);
+      font-size: 11px;
+      line-height: 1.5;
     }
 
     .task-arrow {
-      margin-top:auto;
-      padding-top:12px;
-      color:var(--cyan);
-      font-family:'IBM Plex Mono',monospace;
-      font-size:10px;
+      margin-top: auto;
+      padding-top: 12px;
+      color: var(--cyan);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
     }
 
     /* Note */
     .dashboard-note {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:15px 18px;
-      border:1px solid var(--line);
-      background:rgba(16,24,43,.55);
-      border-radius:12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      background: rgba(16, 24, 43, .55);
+      border-radius: 12px;
     }
 
     .dashboard-note span {
-      color:var(--ink-soft);
-      font-size:11px;
+      color: var(--ink-soft);
+      font-size: 11px;
     }
 
     .dashboard-note strong {
-      color:var(--ink);
-      font-weight:500;
+      color: var(--ink);
+      font-weight: 500;
     }
 
     /* Donation */
-.donation {
-  margin-top:28px;
-  padding:20px 24px;
-  border:1px solid var(--line);
-  background:var(--panel);
-  border-radius:12px;
-  text-align:center;
-  color:var(--ink-soft);
-  font-size:11px;
-  line-height:1.6;
-}
-
-.donation-title {
-  margin-bottom:7px;
-  font-family:'IBM Plex Mono',monospace;
-  font-size:10px;
-  color:var(--ink-soft);
-  letter-spacing:.04em;
-}
-
-.donation-address {
-  color:var(--ink-soft);
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;
-  word-break:break-all;
-  user-select:all;
-  opacity:.75;
-}
-
-    /* Light mode */
-    body.light {
-      --bg:#EAF4FF;
-      --panel:#DCEBFF;
-      --input:#F4F8FF;
-      --ink:#162039;
-      --ink-soft:#5D7194;
-      --line:#BED1EE;
+    .donation {
+      margin-top: 28px;
+      padding: 20px 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 12px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 11px;
+      line-height: 1.6;
     }
 
-    body.light .main { background:#EAF4FF; }
+    .donation-title {
+      margin-bottom: 7px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-soft);
+      letter-spacing: .04em;
+    }
 
-    body.light .brand-word { color:#EAF2FF; }
-    body.light .brand-word .accent { color:#5CE1E6; }
-    body.light .brand-mark svg { opacity:1; }
+    .donation-address {
+      color: var(--ink-soft);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      word-break: break-all;
+      user-select: all;
+      opacity: .75;
+    }
 
-    body.light .quote { color:#162039; }
+    /* ===== HOME (dashboard) ===== */
+    .hp-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 46px 22px 0;
+    }
+
+    .hp-search {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--ink-soft);
+      width: 260px;
+    }
+
+    .hp-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .hp-note {
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+
+    .hp-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #0A0F1C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .hp-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+
+    .hp-sub {
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      margin: 0 0 20px;
+    }
+
+    .hp-overview {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hp-score {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-right: 26px;
+      border-right: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+
+    .hp-ring-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      fill: var(--ink);
+    }
+
+    .hp-score-label {
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+
+    .hp-score-status {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    .hp-kpis {
+      flex: 1;
+      display: flex;
+    }
+
+    .hp-kpi {
+      flex: 1;
+      padding: 0 22px;
+      border-right: 1px solid var(--line);
+    }
+
+    .hp-kpi:last-child { border-right: none; }
+
+    .hp-kpi-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+    }
+
+    .hp-delta {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .hp-up { color: var(--good); }
+    .hp-down { color: var(--bad); }
+
+    .hp-kpi-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .hp-kpi-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .hp-status {
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    .hp-good { color: var(--good); }
+    .hp-warn { color: var(--warn); }
+    .hp-bad { color: var(--bad); }
+
+    .hp-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .hp-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px 26px;
+    }
+
+    .hp-ptitle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .hp-ptitle h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .hp-ptitle a {
+      font-size: 12px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .hp-divider {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 20px 0;
+    }
+
+    .hp-line {
+      stroke: var(--line);
+      stroke-width: 1;
+    }
+
+    .hp-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .hp-table th {
+      text-align: left;
+      font-size: 11px;
+      color: var(--ink-soft);
+      font-weight: 600;
+      padding-bottom: 8px;
+    }
+
+    .hp-table td {
+      padding: 9px 0;
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .hp-table .num {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .hp-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 7px;
+    }
+
+    .hp-task {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .hp-task:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .hp-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1.5px solid var(--line);
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .hp-check.done {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 8px rgba(92, 225, 230, .6);
+    }
+
+    .hp-ttitle {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .hp-tsub {
+      font-size: 11.5px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .hp-amount {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 21px;
+      font-weight: 600;
+      margin: 4px 0 10px;
+    }
+
+    .hp-track {
+      height: 6px;
+      background: var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .hp-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--warn);
+    }
+
+    .hp-legend {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      padding: 5px 0;
+    }
+
+    .hp-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    @media (max-width: 1100px) {
+      .hp-grid { grid-template-columns: 1fr; }
+      .hp-overview {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+      }
+      .hp-score {
+        border-right: 0;
+        padding-right: 0;
+      }
+      .hp-kpis {
+        flex-wrap: wrap;
+        gap: 16px 0;
+      }
+      .hp-kpi { flex: 1 1 45%; }
+    }
+
+    @media (max-width: 760px) {
+      .hp-search { width: 150px; }
+      .hp-kpi {
+        flex: 1 1 100%;
+        border-right: 0;
+      }
+    }
+
+    .hp-head {
+      margin: 0 0 22px;
+      padding-right: 50px;
+    }
+
+    .hp-head .hp-title { margin: 0 0 12px; }
+
+    .hp-quote {
+      margin: 0;
+      max-width: 900px;
+      padding-left: 14px;
+      border-left: 2px solid var(--cyan);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 500;
+      color: var(--ink-soft);
+    }
+
+    .hp-quote-mark {
+      color: var(--cyan);
+      font-weight: 600;
+    }
+
+    /* ===== HOME v2 ===== */
+    .hp-grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .hp-psub {
+      margin: -10px 0 14px;
+      color: var(--ink-soft);
+      font-size: 11.5px;
+    }
+
+    /* Botones del gráfico */
+    .hp-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hp-tab {
+      padding: 6px 13px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink-soft);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .hp-tab:hover {
+      color: var(--ink);
+      border-color: #304364;
+    }
+
+    .hp-tab.active {
+      background: rgba(92, 225, 230, .10);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .hp-chart-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .hp-chart svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .hp-chart-label {
+      fill: var(--ink-soft);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+    }
+
+    .hp-chart-point {
+      fill: var(--panel);
+      stroke: var(--cyan);
+      stroke-width: 3;
+    }
+
+    /* Filas de resumen / distribución */
+    .hp-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 38px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .hp-row:first-of-type { border-top: 0; }
+
+    .hp-row-name {
+      display: flex;
+      align-items: center;
+      color: var(--ink-soft);
+      font-size: 12.5px;
+    }
+
+    .hp-row-val {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+    }
+
+    .hp-row-pct {
+      margin-left: 12px;
+      min-width: 38px;
+      text-align: right;
+      color: var(--ink-soft);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+    }
+
+    .hp-subtitle-sm {
+      margin: 0 0 6px;
+      color: var(--ink-soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    /* Chips de mejora */
+    .hp-chip {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .hp-chip.good {
+      background: rgba(95, 227, 163, .12);
+      color: var(--good);
+    }
+
+    .hp-chip.warn {
+      background: rgba(255, 193, 99, .12);
+      color: var(--warn);
+    }
+
+    .hp-chip.bad {
+      background: rgba(255, 107, 107, .12);
+      color: var(--bad);
+    }
+
+    /* Próximo objetivo */
+    .hp-goal {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color .2s ease, transform .2s ease;
+    }
+
+    .hp-goal:hover {
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    .hp-goal-title {
+      margin: 4px 0 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .hp-goal-desc {
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.6;
+      max-width: 460px;
+    }
+
+    .hp-goal-cta {
+      margin-top: 14px;
+      color: var(--cyan);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+    }
+
+    /* Tareas pulsables */
+    .hp-act {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 10px;
+      margin: 0 -10px;
+      border-top: 1px solid var(--line);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+
+    .hp-act:first-of-type { border-top: 0; }
+
+    .hp-act:hover { background: rgba(92, 225, 230, .07); }
+
+    .hp-act:hover .hp-check {
+      border-color: var(--cyan);
+      box-shadow: 0 0 8px rgba(92, 225, 230, .45);
+    }
+
+    .hp-act-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hp-act-go {
+      color: var(--cyan);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      white-space: nowrap;
+      opacity: .75;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .hp-act:hover .hp-act-go {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+
+    @media (max-width: 1100px) {
+      .hp-grid2 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .hp-act-go { display: none; }
+    }
+
+    /* ========== LIGHT MODE ========== */
+    body.light {
+      --bg: #EAF4FF;
+      --panel: #DCEBFF;
+      --input: #F4F8FF;
+      --ink: #162039;
+      --ink-soft: #5D7194;
+      --line: #BED1EE;
+    }
+
+    body.light .main { background: #EAF4FF; }
+
+    body.light .brand-word { color: #EAF2FF; }
+    body.light .brand-word .accent { color: #5CE1E6; }
+    body.light .brand-mark svg { opacity: 1; }
+
+    body.light .quote { color: #162039; }
 
     body.light .panel,
     body.light .kpi {
-      box-shadow: 0 10px 30px rgba(38,83,145,.08);
+      box-shadow: 0 10px 30px rgba(38, 83, 145, .08);
     }
 
-    body.light .task {
-  background:#DCEBFF;
-}
+    body.light .task { background: #DCEBFF; }
 
-body.light .task:hover {
-  background:#FFFFFF;
-}
+    body.light .task:hover { background: #FFFFFF; }
 
-body.light .objective-card:hover {
-  background:#FFFFFF;
-}
+    body.light .objective-card:hover { background: #FFFFFF; }
 
-    /* Mobile */
-    @media(max-width:1100px) {
-      .kpi-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-      .dashboard-grid { grid-template-columns:1fr; }
-      .tasks-list { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    /* ========== MOBILE ========== */
+    @media (max-width: 1100px) {
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .tasks-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
-    @media(max-width:760px) {
-      .sidebar { width:var(--sidebar-collapsed); }
+    @media (max-width: 760px) {
+      .sidebar { width: var(--sidebar-collapsed); }
 
       .sidebar .brand-word,
       .sidebar .sidebar-toggle,
       .sidebar .nav-label,
       .sidebar .nav-lock,
       .sidebar .user-info,
-      .sidebar .user-arrow { display:none; }
+      .sidebar .user-arrow { display: none; }
 
       .sidebar .brand-row {
-        justify-content:center;
-        padding:0;
+        justify-content: center;
+        padding: 0;
       }
 
       .sidebar .nav-item {
-        width:48px;
-        height:44px;
-        margin:0 auto;
-        padding:0;
-        justify-content:center;
+        width: 48px;
+        height: 44px;
+        margin: 0 auto;
+        padding: 0;
+        justify-content: center;
       }
 
       .sidebar .nav-icon {
-        width:20px;
-        min-width:20px;
-        margin:0;
+        width: 20px;
+        min-width: 20px;
+        margin: 0;
       }
 
       .sidebar .user-button {
-        justify-content:center;
-        padding:8px 0;
+        justify-content: center;
+        padding: 8px 0;
       }
 
       .main,
       .sidebar.collapsed ~ .main {
-        margin-left:var(--sidebar-collapsed);
-        width:calc(100% - var(--sidebar-collapsed));
-        padding:28px 20px 35px;
+        margin-left: var(--sidebar-collapsed);
+        width: calc(100% - var(--sidebar-collapsed));
+        padding: 28px 20px 35px;
       }
 
-      .theme-toggle { top:15px; right:15px; }
-      .quote { font-size:21px; }
-      .kpi-grid { grid-template-columns:1fr; }
-      .bottom-grid { grid-template-columns:1fr; }
-      .tasks-list { grid-template-columns:1fr; }
+      .theme-toggle {
+        top: 15px;
+        right: 15px;
+      }
+
+      .quote { font-size: 21px; }
+      .kpi-grid { grid-template-columns: 1fr; }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .tasks-list { grid-template-columns: 1fr; }
 
       .dashboard-note {
-        flex-direction:column;
-        align-items:flex-start;
-        gap:7px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 7px;
       }
     }
   </style>
 </head>
 
 <body>
-
   <div class="layout">
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-
       <div class="brand-row">
         <div class="brand" id="brandButton" onclick="handleBrandClick()" aria-label="Nimbo">
           <div class="brand-mark">
@@ -823,8 +1421,10 @@ body.light .objective-card:hover {
         </div>
 
         <button class="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Plegar menú">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M15 18l-6-6 6-6"/>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
         </button>
       </div>
@@ -835,10 +1435,17 @@ body.light .objective-card:hover {
           <span class="nav-label">Inicio</span>
         </div>
 
+        <div class="nav-item" data-tooltip="Mi plan" onclick="goTo('mi_plan.html')">
+          <span class="nav-icon">▣</span>
+          <span class="nav-label">Mi plan</span>
+        </div>
+
         <div class="nav-item" data-tooltip="Registro" onclick="goTo('registro.html')">
           <span class="nav-icon">＋</span>
           <span class="nav-label">Registro</span>
         </div>
+
+        <div class="nav-sep"></div>
 
         <div class="nav-item" data-tooltip="Gastos" onclick="lockedSection('Gastos')">
           <span class="nav-icon">◫</span>
@@ -894,20 +1501,9 @@ body.light .objective-card:hover {
             </svg>
           </span>
         </div>
-
-        <div class="nav-item" data-tooltip="Mi plan" onclick="lockedSection('Mi plan')">
-          <span class="nav-icon">▣</span>
-          <span class="nav-label">Mi plan</span>
-          <span class="nav-lock" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
-              <rect x="4" y="10" width="16" height="10" rx="2"/>
-            </svg>
-          </span>
-        </div>
       </nav>
 
-      <div class="sidebar-bottom">
+      <div class="sidebar-bottom" style="display:none;">
         <button class="user-button" type="button" onclick="openUserSettings()">
           <div class="user-avatar" id="userAvatar">U</div>
           <div class="user-info">
@@ -919,7 +1515,6 @@ body.light .objective-card:hover {
           </svg>
         </button>
       </div>
-
     </aside>
 
     <!-- MAIN -->
@@ -930,206 +1525,255 @@ body.light .objective-card:hover {
           ☀︎
         </button>
 
-        <header class="page-header">
-            <p class="quote">
-              <span class="quote-mark">“</span>
-              El mayor fallo con respecto al dinero es fiarse solamente de la nómina para financiar las necesidades de gasto a corto plazo, sin ahorros para crear un margen entre lo que piensas que son tus gastos y lo que podrían llegar a ser en el futuro.
-              <span class="quote-mark">”</span>
-            </p>
-          </header>
+        <div class="hp-head">
+          <h1 class="hp-title">Hola, Christian</h1>
+          <p class="hp-quote">
+            <span class="hp-quote-mark">“</span>El mayor fallo con respecto al dinero es fiarse solamente de la nómina para financiar las necesidades de gasto a corto plazo, sin ahorros para crear un margen entre lo que piensas que son tus gastos y lo que podrían llegar a ser en el futuro.<span class="hp-quote-mark">”</span>
+          </p>
+        </div>
 
-        <section class="kpi-grid">
-          <div class="kpi">
-            <div class="kpi-label">Patrimonio total</div>
-            <div>
-              <div class="kpi-value">141,12 €</div>
-              <div class="kpi-meta">Último cierre: abr 2026</div>
+        <div class="hp-overview">
+          <div class="hp-score">
+            <svg width="60" height="60" viewBox="0 0 64 64">
+              <defs>
+                <filter id="hpGlow0" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="2.4" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <circle cx="32" cy="32" r="26" fill="none" style="stroke:var(--line)" stroke-width="6"/>
+              <circle cx="32" cy="32" r="26" fill="none" stroke="#5CE1E6" stroke-width="6" filter="url(#hpGlow0)"
+                stroke-dasharray="163" stroke-dashoffset="36" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+              <text x="32" y="37" text-anchor="middle" class="hp-ring-num" font-size="15">78</text>
+            </svg>
+            <div style="margin-left:-4px;">
+              <div class="hp-score-label">Salud financiera</div>
+              <div class="hp-score-status">Buena · +10</div>
             </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Variación mensual</div>
-            <div>
-              <div class="kpi-value">−3,80 €</div>
-              <div class="kpi-meta">mar 2026 → abr 2026</div>
-            </div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpi-label">Ahorro + inversión</div>
-            <div>
-              <div class="kpi-value">141,12 €</div>
-              <div class="kpi-meta">Saldos registrados</div>
-            </div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpi-label">Metas activas</div>
-            <div>
-              <div class="kpi-value">0</div>
-              <div class="kpi-meta">Crea tu primera meta</div>
-            </div>
-          </div>
-        </section>
-
-        <section class="dashboard-grid">
-          <div class="panel">
-            <div class="panel-header">
-              <div>
-                <h2 class="panel-title">Evolución del patrimonio</h2>
-                <div class="panel-subtitle">Saldos totales registrados</div>
+          <div class="hp-kpis">
+            <div class="hp-kpi">
+              <div class="hp-kpi-label">
+                <span>Ingresos</span>
+                <span class="hp-delta hp-up">+3</span>
+              </div>
+              <div class="hp-kpi-row">
+                <span class="hp-kpi-num">85</span>
+                <span class="hp-status hp-good">Excelente</span>
               </div>
             </div>
 
-            <div class="chart">
-              <svg viewBox="0 0 900 260" preserveAspectRatio="none">
+            <div class="hp-kpi">
+              <div class="hp-kpi-label">
+                <span>Gastos</span>
+                <span class="hp-delta hp-up">+2</span>
+              </div>
+              <div class="hp-kpi-row">
+                <span class="hp-kpi-num">68</span>
+                <span class="hp-status hp-warn">Mejorable</span>
+              </div>
+            </div>
+
+            <div class="hp-kpi">
+              <div class="hp-kpi-label">
+                <span>Emergencia</span>
+                <span class="hp-delta hp-down">−4</span>
+              </div>
+              <div class="hp-kpi-row">
+                <span class="hp-kpi-num">55</span>
+                <span class="hp-status hp-bad">Insuficiente</span>
+              </div>
+            </div>
+
+            <div class="hp-kpi">
+              <div class="hp-kpi-label">
+                <span>Inversión</span>
+                <span class="hp-delta hp-up">+5</span>
+              </div>
+              <div class="hp-kpi-row">
+                <span class="hp-kpi-num">64</span>
+                <span class="hp-status hp-warn">Mejorable</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NIVEL 1: gráfico + resumen -->
+        <div class="hp-grid">
+          <div class="hp-panel">
+            <div class="hp-ptitle">
+              <h3>Evolución</h3>
+              <a href="#">Ver historial</a>
+            </div>
+
+            <div class="hp-tabs">
+              <button class="hp-tab active" type="button" onclick="this.parentNode.querySelectorAll('.hp-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Patrimonio total</button>
+              <button class="hp-tab" type="button" onclick="this.parentNode.querySelectorAll('.hp-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Fondo de emergencia</button>
+              <button class="hp-tab" type="button" onclick="this.parentNode.querySelectorAll('.hp-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Inversión</button>
+            </div>
+
+            <div class="hp-chart-head">
+              <div class="hp-amount" style="margin:0;">141,12&nbsp;€</div>
+              <span class="hp-chip bad">−3,80 € vs mar</span>
+            </div>
+
+            <div class="hp-chart">
+              <svg viewBox="0 0 640 230">
                 <defs>
-                  <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#5CE1E6" stop-opacity=".18"/>
+                  <filter id="hpGlow2" x="-20%" y="-60%" width="140%" height="220%">
+                    <feGaussianBlur stdDeviation="2.6" result="blur"/>
+                    <feMerge>
+                      <feMergeNode in="blur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                  <linearGradient id="hpArea2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#5CE1E6" stop-opacity="0.22"/>
                     <stop offset="100%" stop-color="#5CE1E6" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
-
-                <line x1="40" y1="45" x2="860" y2="45" stroke="#1E2B45"/>
-                <line x1="40" y1="105" x2="860" y2="105" stroke="#1E2B45"/>
-                <line x1="40" y1="165" x2="860" y2="165" stroke="#1E2B45"/>
-                <line x1="40" y1="225" x2="860" y2="225" stroke="#1E2B45"/>
-
-                <path class="chart-area" d="M40 195 L300 175 L570 135 L860 155 L860 225 L40 225 Z"/>
-                <path class="chart-line" d="M40 195 L300 175 L570 135 L860 155"/>
-
-                <circle class="chart-point" cx="40" cy="195" r="5"/>
-                <circle class="chart-point" cx="300" cy="175" r="5"/>
-                <circle class="chart-point" cx="570" cy="135" r="5"/>
-                <circle class="chart-point" cx="860" cy="155" r="5"/>
-
-                <text class="chart-label" x="40" y="250">ene</text>
-                <text class="chart-label" x="290" y="250">feb</text>
-                <text class="chart-label" x="560" y="250">mar</text>
-                <text class="chart-label" x="850" y="250">abr</text>
+                <line class="hp-line" x1="0" y1="30" x2="640" y2="30"/>
+                <line class="hp-line" x1="0" y1="80" x2="640" y2="80"/>
+                <line class="hp-line" x1="0" y1="130" x2="640" y2="130"/>
+                <line class="hp-line" x1="0" y1="180" x2="640" y2="180"/>
+                <polygon points="50,160 230,140 410,100 590,120 590,180 50,180" fill="url(#hpArea2)"/>
+                <polyline points="50,160 230,140 410,100 590,120" fill="none" stroke="#5CE1E6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#hpGlow2)"/>
+                <circle class="hp-chart-point" cx="50" cy="160" r="5"/>
+                <circle class="hp-chart-point" cx="230" cy="140" r="5"/>
+                <circle class="hp-chart-point" cx="410" cy="100" r="5"/>
+                <circle class="hp-chart-point" cx="590" cy="120" r="5"/>
+                <text class="hp-chart-label" x="50" y="210" text-anchor="middle">ene</text>
+                <text class="hp-chart-label" x="230" y="210" text-anchor="middle">feb</text>
+                <text class="hp-chart-label" x="410" y="210" text-anchor="middle">mar</text>
+                <text class="hp-chart-label" x="590" y="210" text-anchor="middle">abr</text>
               </svg>
             </div>
           </div>
 
-          <div class="panel">
-            <div class="panel-header">
-              <div>
-                <h2 class="panel-title">Resumen financiero</h2>
-                <div class="panel-subtitle">Tu situación actual</div>
-              </div>
+          <div class="hp-panel">
+            <div class="hp-ptitle">
+              <h3>Resumen financiero</h3>
             </div>
 
-            <div class="summary-list">
-              <div class="summary-row">
-                <span class="summary-name">Ahorro mensual</span>
-                <span class="summary-value good">0 €</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-name">Inversión mensual</span>
-                <span class="summary-value good">0 €</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-name">Fondo de emergencia</span>
-                <span class="summary-value warn">0 meses</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-name">Deuda</span>
-                <span class="summary-value">0 €</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-name">Metas</span>
-                <span class="summary-value">0 activas</span>
-              </div>
+            <div class="hp-row">
+              <span class="hp-row-name">Ahorro mensual</span>
+              <span class="hp-row-val">0 €</span>
+            </div>
+            <div class="hp-row">
+              <span class="hp-row-name">Inversión mensual</span>
+              <span class="hp-row-val">0 €</span>
+            </div>
+            <div class="hp-row">
+              <span class="hp-row-name">Fondo de emergencia</span>
+              <span class="hp-row-val hp-warn">0 meses</span>
+            </div>
+            <div class="hp-row">
+              <span class="hp-row-name">Deuda</span>
+              <span class="hp-row-val hp-good">0 €</span>
+            </div>
+            <div class="hp-row">
+              <span class="hp-row-name">Metas</span>
+              <span class="hp-row-val">0 activas</span>
+            </div>
+
+            <hr class="hp-divider" style="margin:14px 0;">
+
+            <div class="hp-subtitle-sm">Tu mejora</div>
+            <div class="hp-row">
+              <span class="hp-row-name">Tasa de ahorro</span>
+              <span class="hp-chip good">+2 pts</span>
+            </div>
+            <div class="hp-row">
+              <span class="hp-row-name">Racha con margen positivo</span>
+              <span class="hp-chip good">3 meses</span>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section class="bottom-grid">
-          <div class="panel">
-            <div class="panel-header">
-              <div>
-                <h2 class="panel-title">Distribución del patrimonio</h2>
-                <div class="panel-subtitle">Dónde está actualmente tu dinero</div>
-              </div>
+        <!-- NIVEL 2: objetivo + distribución -->
+        <div class="hp-grid2">
+          <a class="hp-panel hp-goal" href="objetivos.html" aria-label="Ir a objetivos">
+            <div class="hp-ptitle">
+              <h3>Próximo objetivo</h3>
             </div>
-
-            <div class="summary-list">
-              <div class="summary-row">
-                <span class="summary-name">Efectivo / cuentas</span>
-                <span class="summary-value">0 €</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-name">Inversiones</span>
-                <span class="summary-value">141,12 €</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-name">Huchas</span>
-                <span class="summary-value">0 €</span>
-              </div>
-            </div>
-          </div>
-
-          <a class="panel objective-card" href="objetivos.html" aria-label="Ir a objetivos">
-            <div class="panel-header">
-              <div>
-                <h2 class="panel-title">Próximo objetivo</h2>
-                <div class="panel-subtitle">El siguiente paso de tu planificación</div>
-              </div>
-            </div>
-
-            <div class="objective-content">
-              <div class="objective-title">Sin objetivo todavía</div>
-              <div class="objective-description">
-                Define una meta financiera para que Nimbo pueda ayudarte a saber cuánto necesitas ahorrar y cuánto tiempo puede llevarte conseguirla.
-              </div>
-              <div class="objective-action">Crear objetivo →</div>
-            </div>
+            <div class="hp-goal-title">Sin objetivo todavía</div>
+            <div class="hp-goal-desc">Define una meta financiera para que Nimbo pueda ayudarte a saber cuánto necesitas ahorrar y cuánto tiempo puede llevarte conseguirla.</div>
+            <div class="hp-goal-cta">Crear objetivo →</div>
           </a>
-        </section>
 
-        <section class="panel tasks-panel">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title">Tareas</h2>
-              <div class="panel-subtitle">Acciones que pueden mejorar tu situación financiera</div>
+          <div class="hp-panel">
+            <div class="hp-ptitle">
+              <h3>Distribución del patrimonio</h3>
+            </div>
+            <div class="hp-row">
+              <span class="hp-row-name">
+                <span class="hp-dot" style="background:#5CE1E6;"></span>Efectivo / cuentas
+              </span>
+              <span>
+                <span class="hp-row-val">0 €</span>
+                <span class="hp-row-pct">0 %</span>
+              </span>
+            </div>
+            <div class="hp-row">
+              <span class="hp-row-name">
+                <span class="hp-dot" style="background:#5C86FF;"></span>Inversiones
+              </span>
+              <span>
+                <span class="hp-row-val">141,12 €</span>
+                <span class="hp-row-pct">100 %</span>
+              </span>
+            </div>
+            <div class="hp-row">
+              <span class="hp-row-name">
+                <span class="hp-dot" style="background:#7C8CB3;"></span>Huchas
+              </span>
+              <span>
+                <span class="hp-row-val">0 €</span>
+                <span class="hp-row-pct">0 %</span>
+              </span>
             </div>
           </div>
+        </div>
 
-          <div class="tasks-list">
-            <div class="task">
-              <div class="task-top">
-                <div class="task-check"></div>
-                <div class="task-title">Registra tu primer mes</div>
-              </div>
-              <div class="task-description">
-                Añade tus ingresos, gastos, ahorro e inversión para que Nimbo pueda empezar a analizar tu evolución.
-              </div>
-              <div class="task-arrow">Ir al registro →</div>
-            </div>
-
-            <div class="task">
-              <div class="task-top">
-                <div class="task-check"></div>
-                <div class="task-title">Crea un fondo de emergencia</div>
-              </div>
-              <div class="task-description">
-                Define cuánto necesitas mantener reservado para cubrir varios meses de gastos.
-              </div>
-              <div class="task-arrow">Configurar →</div>
-            </div>
-
-            <div class="task">
-              <div class="task-top">
-                <div class="task-check"></div>
-                <div class="task-title">Define una meta financiera</div>
-              </div>
-              <div class="task-description">
-                Establece qué quieres conseguir y deja que Nimbo te ayude a convertirlo en un objetivo concreto.
-              </div>
-              <div class="task-arrow">Crear objetivo →</div>
-            </div>
+        <!-- NIVEL 3: tareas -->
+        <div class="hp-panel" style="margin-bottom:16px;">
+          <div class="hp-ptitle">
+            <h3>Tareas</h3>
+            <a href="#">Ver todas</a>
           </div>
-        </section>
+          <div class="hp-psub">Acciones que pueden mejorar tu situación financiera</div>
+
+          <div class="hp-act" onclick="goTo('registro.html')">
+            <div class="hp-check"></div>
+            <div class="hp-act-text">
+              <div class="hp-ttitle">Registra tu primer mes</div>
+              <div class="hp-tsub">Añade ingresos, gastos, ahorro e inversión para que Nimbo analice tu evolución</div>
+            </div>
+            <span class="hp-act-go">Ir al registro →</span>
+          </div>
+
+          <div class="hp-act" onclick="lockedSection('Ahorro / Huchas')">
+            <div class="hp-check"></div>
+            <div class="hp-act-text">
+              <div class="hp-ttitle">Crea un fondo de emergencia</div>
+              <div class="hp-tsub">Define cuánto necesitas reservar para cubrir varios meses de gastos</div>
+            </div>
+            <span class="hp-act-go">Configurar →</span>
+          </div>
+
+          <div class="hp-act" onclick="lockedSection('Objetivos')">
+            <div class="hp-check"></div>
+            <div class="hp-act-text">
+              <div class="hp-ttitle">Define una meta financiera</div>
+              <div class="hp-tsub">Establece qué quieres conseguir y conviértelo en un objetivo concreto</div>
+            </div>
+            <span class="hp-act-go">Crear objetivo →</span>
+          </div>
+        </div>
 
         <div class="donation">
           <div class="donation-title">Apoya Nimbo · Donaciones BTC</div>
@@ -1138,7 +1782,6 @@ body.light .objective-card:hover {
 
       </div>
     </main>
-
   </div>
 
   <script src="config.js"></script>
@@ -1173,7 +1816,7 @@ body.light .objective-card:hover {
         document.getElementById('userAvatar').textContent = (user.name || 'U').charAt(0).toUpperCase();
       }
     } else {
-      const user = { name:'Usuario', plan:'Plan gratuito' };
+      const user = { name: 'Usuario', plan: 'Plan gratuito' };
       document.getElementById('userName').textContent = user.name;
       document.getElementById('userPlan').textContent = user.plan;
       document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
@@ -1206,12 +1849,7 @@ body.light .objective-card:hover {
 
     /* LOGO / SIDEBAR */
     function handleBrandClick() {
-      const sidebar = document.getElementById('sidebar');
-      if (sidebar.classList.contains('collapsed')) {
-        sidebar.classList.remove('collapsed');
-        return;
-      }
-      window.location.href = 'index.html';
+      document.getElementById('sidebar').classList.toggle('collapsed');
     }
 
     function toggleSidebar() {
@@ -1234,6 +1872,5 @@ body.light .objective-card:hover {
     /* INIT */
     applyTheme();
   </script>
-
 </body>
 </html>
