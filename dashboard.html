@@ -5,6 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nimbo · Inicio</title>
 
+  <script>
+    //region Initial sidebar state
+    
+    (function () {
+    
+      const sidebarState =
+        localStorage.getItem('nimboSidebarCollapsed');
+    
+      if (sidebarState === 'true') {
+        document.documentElement.classList.add('sidebar-initial-collapsed');
+      }
+    
+    })();
+    
+    //endregion
+    </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -44,6 +61,13 @@
       min-height: 100vh;
       display: flex;
     }
+
+    /* //region INITIAL SIDEBAR STATE */
+    html.sidebar-initial-collapsed .main {
+      margin-left: var(--sidebar-collapsed);
+      width: calc(100% - var(--sidebar-collapsed));
+    }
+    /* //endregion */
 
     /* ========== SIDEBAR ========== */
     .sidebar {
@@ -1710,52 +1734,123 @@
       }
     }
 
-    function handleBrandClick() {
-      const sidebar = document.getElementById('sidebar');
-      if (sidebar) sidebar.classList.toggle('collapsed');
-    }
+    //region Sidebar functions
 
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      if (sidebar) sidebar.classList.toggle('collapsed');
-    }
+function setSidebarCollapsed(collapsed) {
+  const sidebar = document.getElementById('sidebar');
 
-    function goTo(page) {
-      window.location.href = page;
-    }
+  if (!sidebar) {
+    return;
+  }
 
-    function lockedSection(section) {
-      alert(section + ' estará disponible próximamente.');
-    }
+  sidebar.classList.toggle('collapsed', collapsed);
 
-    function openUserSettings() {
-      alert('Aquí irá la configuración de tu cuenta.');
-    }
+  localStorage.setItem(
+    'nimboSidebarCollapsed',
+    collapsed
+  );
+}
 
-    applyTheme();
+function handleBrandClick() {
+  const sidebar = document.getElementById('sidebar');
 
-    // Cargar sidebar
-    //region Sidebar loading and active page
+  if (!sidebar) {
+    return;
+  }
+
+  setSidebarCollapsed(
+    !sidebar.classList.contains('collapsed')
+  );
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+
+  if (!sidebar) {
+    return;
+  }
+
+  setSidebarCollapsed(
+    !sidebar.classList.contains('collapsed')
+  );
+}
+
+function goTo(page) {
+  window.location.href = page;
+}
+
+function lockedSection(section) {
+  alert(section + ' estará disponible próximamente.');
+}
+
+function openUserSettings() {
+  alert('Aquí irá la configuración de tu cuenta.');
+}
+
+//endregion
+
+
+//region Sidebar loading and active page
 
 fetch('sidebar.txt')
   .then(response => {
-    if (!response.ok) throw new Error('No se pudo cargar el sidebar');
+
+    if (!response.ok) {
+      throw new Error('No se pudo cargar el sidebar');
+    }
+
     return response.text();
+
   })
   .then(html => {
+
     document.getElementById('sidebar-container').innerHTML = html;
 
-    // Mark current page as active
-    const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
 
-    document.querySelectorAll('.nav-item[data-page]').forEach(item => {
-      item.classList.toggle('active', item.dataset.page === currentPage);
-    });
+    // Restore sidebar state
+
+    const sidebar =
+      document.getElementById('sidebar');
+
+    const sidebarState =
+      localStorage.getItem('nimboSidebarCollapsed');
+
+      if (sidebarState === 'true') {
+        sidebar.classList.add('collapsed');
+      } else {
+        sidebar.classList.remove('collapsed');
+      }
+
+      document.documentElement.classList.remove(
+        'sidebar-initial-collapsed'
+      );
+
+
+    // Mark current page as active
+
+    const currentPage =
+      window.location.pathname.split('/').pop()
+      || 'dashboard.html';
+
+    document
+      .querySelectorAll('.nav-item[data-page]')
+      .forEach(item => {
+
+        item.classList.toggle(
+          'active',
+          item.dataset.page === currentPage
+        );
+
+      });
+
   })
   .catch(err => {
+
     console.error(err);
+
     document.getElementById('sidebar-container').innerHTML =
       '<p style="color:#FF6B6B;padding:20px;">Error al cargar el menú</p>';
+
   });
 
 //endregion

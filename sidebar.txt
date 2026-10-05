@@ -1,4 +1,17 @@
 <!-- SIDEBAR -->
+<style>
+  /* //region Sidebar separator */
+
+  .nav-sep {
+    height: 1px;
+    margin: 8px 6px;
+    background: #1E2B45;
+  }
+
+  /* //endregion */
+</style>
+
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
     <div class="brand-row">
       <div class="brand" id="brandButton" onclick="handleBrandClick()" aria-label="Nimbo">
@@ -41,7 +54,7 @@
         <span class="nav-label">Mi plan</span>
       </div>
   
-      <div class="nav-item" data-page="registro.html" data-tooltip="Registro" onclick="goTo('registro.html')">
+      <div class="nav-item" data-page="registro.html" data-tooltip="Registro" onclick="goTo('records.html')">
         <span class="nav-icon">＋</span>
         <span class="nav-label">Registro</span>
       </div>

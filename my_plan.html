@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nimbo · Mi Plan</title>
+<script>
+  //region Initial sidebar state
+  
+  (function () {
+  
+    const sidebarState =
+      localStorage.getItem('nimboSidebarCollapsed');
+  
+    if (sidebarState === 'true') {
+      document.documentElement.classList.add('sidebar-initial-collapsed');
+    }
+  
+  })();
+  
+  //endregion
+  </script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -15,6 +31,13 @@
 *{box-sizing:border-box}html{min-height:100%}
 body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;transition:background .25s ease,color .25s ease}
 button{font:inherit}.layout{min-height:100vh;display:flex}
+
+/* //region INITIAL SIDEBAR STATE */
+html.sidebar-initial-collapsed .main {
+  margin-left: var(--sidebar-collapsed);
+  width: calc(100% - var(--sidebar-collapsed));
+}
+/* //endregion */
 
 /* //region SIDEBAR */
 
@@ -624,29 +647,47 @@ function toggleTheme(){
 
 /* //region SIDEBAR */
 
-function handleBrandClick(){
-  const sidebar=document.getElementById('sidebar');
+function setSidebarCollapsed(collapsed) {
+  const sidebar = document.getElementById('sidebar');
 
-  if(!sidebar){
+  if (!sidebar) {
     return;
   }
 
-  if(sidebar.classList.contains('collapsed')){
-    sidebar.classList.remove('collapsed');
+  sidebar.classList.toggle('collapsed', collapsed);
+
+  localStorage.setItem(
+    'nimboSidebarCollapsed',
+    collapsed
+  );
+}
+
+function handleBrandClick() {
+  const sidebar = document.getElementById('sidebar');
+
+  if (!sidebar) {
     return;
   }
 
-  window.location.href='index.html';
-}
-
-function toggleSidebar(){
-  const sidebar=document.getElementById('sidebar');
-
-  if(sidebar){
-    sidebar.classList.toggle('collapsed');
+  if (sidebar.classList.contains('collapsed')) {
+    setSidebarCollapsed(false);
+    return;
   }
+
+  window.location.href = 'index.html';
 }
 
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+
+  if (!sidebar) {
+    return;
+  }
+
+  setSidebarCollapsed(
+    !sidebar.classList.contains('collapsed')
+  );
+}
 /* //endregion */
 
 /* //region NAVIGATION */
@@ -681,33 +722,70 @@ function restoreTasks(){
 applyTheme();
 restoreTasks();
 
+//region Sidebar loading and active page
+
 fetch('sidebar.txt')
   .then(response => {
-    if(!response.ok){
+
+    if (!response.ok) {
       throw new Error('No se pudo cargar el sidebar');
     }
 
     return response.text();
+
   })
   .then(html => {
+
     document.getElementById('sidebar-container').innerHTML = html;
 
-const currentPage =
-  window.location.pathname.split('/').pop() || 'dashboard.html';
 
-document.querySelectorAll('.nav-item[data-page]').forEach(item => {
-  item.classList.toggle(
-    'active',
-    item.dataset.page === currentPage
-  );
-});
+    // Restore sidebar state
+
+    const sidebar =
+      document.getElementById('sidebar');
+
+    const sidebarState =
+      localStorage.getItem('nimboSidebarCollapsed');
+
+      if (sidebarState === 'true') {
+        sidebar.classList.add('collapsed');
+      } else {
+        sidebar.classList.remove('collapsed');
+      }
+
+      document.documentElement.classList.remove(
+        'sidebar-initial-collapsed'
+      );
+
+
+    // Mark current page as active
+
+    const currentPage =
+      window.location.pathname.split('/').pop()
+      || 'my_plan.html';
+
+    document
+      .querySelectorAll('.nav-item[data-page]')
+      .forEach(item => {
+
+        item.classList.toggle(
+          'active',
+          item.dataset.page === currentPage
+        );
+
+      });
+
   })
   .catch(error => {
+
     console.error(error);
 
     document.getElementById('sidebar-container').innerHTML =
       '<p style="color:#FF6B6B;padding:20px;">Error al cargar el menú</p>';
+
   });
+
+//endregion
 
 /* //endregion */
 </script>
