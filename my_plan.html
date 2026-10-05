@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nimbo · Mi Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0F1C;--panel:#10182B;--input:#0F1526;--ink:#EAF2FF;
+  --ink-soft:#7C8CB3;--line:#1E2B45;--cyan:#5CE1E6;--blue:#5C86FF;
+  --good:#5FE3A3;--warn:#FFC163;--bad:#FF6B6B;
+  --sidebar-width:230px;--sidebar-collapsed:72px;
+}
+*{box-sizing:border-box}html{min-height:100%}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;transition:background .25s ease,color .25s ease}
+button{font:inherit}.layout{min-height:100vh;display:flex}
+
+/* //region SIDEBAR */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: #10182B;
+  border-right: 1px solid #1E2B45;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 12px 16px;
+  z-index: 20;
+  transition: width .25s ease;
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed);
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 42px;
+  margin-bottom: 30px;
+  padding: 0 6px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-mark svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.brand-word {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: .1em;
+  color: #EAF2FF;
+}
+
+.brand-word .accent {
+  color: #5CE1E6;
+}
+
+.sidebar-toggle {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: rgba(92, 134, 255, .14);
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(92, 225, 230, .18);
+  transition: box-shadow .2s ease, background .2s ease;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(92, 134, 255, .22);
+  box-shadow: 0 0 12px rgba(92, 225, 230, .35);
+}
+
+/* Logo illuminated when the sidebar is collapsed */
+.sidebar.collapsed .brand-mark svg {
+  filter: drop-shadow(0 0 5px rgba(92, 225, 230, .45));
+  transition: filter .2s ease;
+}
+
+.sidebar.collapsed .brand:hover .brand-mark svg {
+  filter: drop-shadow(0 0 9px rgba(92, 225, 230, .75));
+}
+
+/* NAV */
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nav-item {
+  position: relative;
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 10px;
+  color: #7C8CB3;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  user-select: none;
+  transition: background .2s ease, color .2s ease;
+}
+
+.nav-item:hover {
+  background: rgba(92, 225, 230, .06);
+  color: #EAF2FF;
+}
+
+.nav-item.active {
+  background: rgba(92, 225, 230, .10);
+  color: #EAF2FF;
+}
+
+.nav-icon {
+  width: 20px;
+  min-width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.nav-label {
+  margin-left: 12px;
+  white-space: nowrap;
+}
+
+.nav-lock {
+  margin-left: auto;
+  color: #5CE1E6;
+  opacity: .85;
+  filter:
+    drop-shadow(0 0 3px rgba(92, 225, 230, .6))
+    drop-shadow(0 0 9px rgba(92, 134, 255, .35));
+}
+
+.nav-lock svg {
+  display: block;
+}
+
+/* Logo and name illuminate on hover */
+
+.brand .brand-mark svg,
+.brand .brand-word {
+  transition: filter .2s ease, text-shadow .2s ease;
+}
+
+.sidebar:not(.collapsed) .brand:hover .brand-mark svg {
+  filter: drop-shadow(0 0 7px rgba(92, 225, 230, .6));
+}
+
+.sidebar:not(.collapsed) .brand:hover .brand-word {
+  text-shadow:
+    0 0 6px rgba(92, 225, 230, .55),
+    0 0 16px rgba(92, 134, 255, .3);
+}
+
+/* Tooltips when collapsed */
+
+.nav-item[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 62px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  padding: 8px 11px;
+  border: 1px solid #263754;
+  border-radius: 8px;
+  background: #10182B;
+  color: #EAF2FF;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 100;
+  transition:
+    opacity .15s ease,
+    transform .15s ease,
+    visibility .15s ease;
+}
+
+.sidebar.collapsed .nav-item[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Sidebar collapsed */
+
+.sidebar.collapsed .brand-row {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar.collapsed .brand-word {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  display: none;
+}
+
+.sidebar.collapsed .nav-item {
+  width: 48px;
+  height: 44px;
+  margin: 0 auto;
+  padding: 0;
+  justify-content: center;
+}
+
+.sidebar.collapsed .nav-icon {
+  width: 20px;
+  min-width: 20px;
+  margin: 0;
+}
+
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .nav-lock {
+  display: none;
+}
+
+/* User */
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #1E2B45;
+}
+
+.user-button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #EAF2FF;
+  display: flex;
+  align-items: center;
+  padding: 8px 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: background .2s ease;
+}
+
+.user-button:hover {
+  background: rgba(92, 225, 230, .06);
+}
+
+.user-avatar {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5CE1E6, #5C86FF);
+  color: #08101E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.user-info {
+  min-width: 0;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-plan {
+  font-size: 11px;
+  color: #7C8CB3;
+  white-space: nowrap;
+}
+
+.user-arrow {
+  margin-left: auto;
+  color: #7C8CB3;
+  flex: none;
+}
+
+.sidebar.collapsed .user-button {
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.sidebar.collapsed .user-info,
+.sidebar.collapsed .user-arrow {
+  display: none;
+}
+
+/* //endregion */
+
+/* //region MAIN */
+.main{margin-left:var(--sidebar-width);width:calc(100% - var(--sidebar-width));min-height:100vh;padding:30px 42px 35px;transition:margin-left .25s ease,width .25s ease}
+
+/* //region SIDEBAR LAYOUT */
+.layout:has(.sidebar.collapsed) .main {
+  margin-left: var(--sidebar-collapsed);
+  width: calc(100% - var(--sidebar-collapsed));
+}
+/* //endregion */
+
+.content {
+  width: 100%;
+  max-width: none;
+}
+.theme-toggle{position:fixed;top:20px;right:22px;width:34px;height:34px;padding:0;border:1px solid rgba(234,242,255,.18);border-radius:9px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#EAF2FF;font-size:17px;line-height:1;z-index:50;transition:border-color .2s ease,background .2s ease,color .2s ease,transform .2s ease}
+.theme-toggle:hover{border-color:#5CE1E6;background:rgba(92,225,230,.08);color:#5CE1E6;transform:scale(1.03)}
+/* //endregion */
+
+/* //region PAGE HEADER */
+.plan-head{margin:0 0 22px;padding-right:55px}
+.eyebrow{margin-bottom:7px;color:var(--cyan);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.page-title{margin:0 0 7px;font-family:'Space Grotesk',sans-serif;font-size:27px;line-height:1.15;font-weight:600;letter-spacing:-.025em}
+.page-subtitle{margin:0;max-width:760px;color:var(--ink-soft);font-size:13px;line-height:1.6}
+.identity-card{margin-top:18px;padding:20px 22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;gap:18px}
+.identity-mark{width:52px;height:52px;border-radius:12px;background:rgba(92,225,230,.08);border:1px solid rgba(92,225,230,.18);display:flex;align-items:center;justify-content:center;color:var(--cyan);font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;flex-shrink:0}
+.identity-copy{min-width:0;flex:1}.identity-label{color:var(--ink-soft);font-size:11px;margin-bottom:4px}
+.identity-title{margin:0;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600}
+.identity-text{margin:5px 0 0;color:var(--ink-soft);font-size:12px;line-height:1.55}
+.identity-badge{padding:7px 10px;border:1px solid rgba(92,225,230,.2);border-radius:999px;color:var(--cyan);background:rgba(92,225,230,.06);font-family:'IBM Plex Mono',monospace;font-size:10px;white-space:nowrap}
+/* //endregion */
+
+/* //region PLAN MAP */
+.section{margin-bottom:16px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-bottom:11px}
+.section-title{margin:0;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600}
+.section-subtitle{margin:4px 0 0;color:var(--ink-soft);font-size:11px}
+.map-card{padding:24px 22px 21px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.map-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:24px}
+.map-intro-title{margin:0;font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600}
+.map-intro-text{max-width:650px;margin:6px 0 0;color:var(--ink-soft);font-size:12px;line-height:1.6}
+.map-status{min-width:145px;text-align:right}.map-status-label{color:var(--ink-soft);font-size:10px;margin-bottom:4px}
+.map-status-value{color:var(--cyan);font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600}
+.roadmap{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.roadmap:before{content:"";position:absolute;left:8%;right:8%;top:23px;height:2px;background:var(--line);z-index:0}
+.roadmap-progress{position:absolute;left:8%;top:23px;width:29%;height:2px;background:var(--cyan);box-shadow:0 0 9px rgba(92,225,230,.25);z-index:1}
+.stage{position:relative;z-index:2;text-align:center;padding:0 8px}
+.stage-node{width:46px;height:46px;margin:0 auto 12px;border-radius:50%;background:var(--panel);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600}
+.stage.completed .stage-node{border-color:var(--good);color:var(--good);background:rgba(95,227,163,.06)}
+.stage.current .stage-node{border-color:var(--cyan);color:var(--cyan);background:rgba(92,225,230,.08);box-shadow:0 0 12px rgba(92,225,230,.15)}
+.stage-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600}
+.stage-status{margin-top:4px;color:var(--ink-soft);font-size:10px}.stage.current .stage-status{color:var(--cyan)}.stage.completed .stage-status{color:var(--good)}
+/* //endregion */
+
+/* //region PRIORITY */
+.priority-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:21px 22px}
+.priority-panel{min-height:205px}.panel-kicker{color:var(--ink-soft);font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.priority-title{margin:8px 0 7px;font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;letter-spacing:-.02em}
+.priority-text{max-width:650px;margin:0;color:var(--ink-soft);font-size:12px;line-height:1.65}
+.priority-action{display:inline-flex;margin-top:17px;padding:8px 12px;border:1px solid rgba(92,225,230,.22);border-radius:8px;background:rgba(92,225,230,.06);color:var(--cyan);font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;transition:background .2s ease,border-color .2s ease}
+.priority-action:hover{background:rgba(92,225,230,.11);border-color:rgba(92,225,230,.4)}
+.priority-side{display:flex;flex-direction:column;justify-content:center}
+.mini-row{display:flex;align-items:center;justify-content:space-between;min-height:43px;border-top:1px solid var(--line)}
+.mini-row:first-of-type{border-top:0}.mini-name{color:var(--ink-soft);font-size:12px}.mini-value{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600}
+.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}.cyan{color:var(--cyan)}
+/* //endregion */
+
+/* //region TASKS */
+.task-list{display:flex;flex-direction:column}.task-row{display:flex;align-items:center;gap:13px;min-height:68px;padding:8px 4px;border-top:1px solid var(--line);cursor:pointer;border-radius:9px;transition:background .2s ease}
+.task-row:first-child{border-top:0}.task-row:hover{background:rgba(92,225,230,.05)}
+.task-check{width:19px;height:19px;border:1.5px solid #40516F;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#08101E;font-size:10px;transition:background .2s ease,border-color .2s ease}
+.task-row.done .task-check{background:var(--cyan);border-color:var(--cyan)}.task-row.done .task-check:after{content:"✓"}
+.task-copy{min-width:0;flex:1}.task-title{font-size:13px;font-weight:600}.task-row.done .task-title{text-decoration:line-through;color:var(--ink-soft)}
+.task-description{margin-top:3px;color:var(--ink-soft);font-size:11px;line-height:1.45}.task-arrow{color:var(--cyan);font-family:'IBM Plex Mono',monospace;font-size:10px;white-space:nowrap}
+/* //endregion */
+
+/* //region PROGRESS */
+.progress-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.progress-stat{display:flex;align-items:center;gap:16px;margin-bottom:18px}.progress-number{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600}
+.progress-label{color:var(--ink-soft);font-size:11px;line-height:1.45}.progress-track{width:100%;height:7px;border-radius:999px;background:var(--line);overflow:hidden}.progress-fill{height:100%;border-radius:999px;background:var(--cyan)}
+.progress-note{margin-top:9px;color:var(--ink-soft);font-size:11px;line-height:1.5}
+.history-list{display:flex;flex-direction:column}.history-row{display:flex;align-items:center;gap:12px;min-height:46px;border-top:1px solid var(--line)}
+.history-row:first-child{border-top:0}.history-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);flex-shrink:0}
+.history-copy{flex:1;min-width:0}.history-title{font-size:12px;font-weight:600}.history-date{margin-top:2px;color:var(--ink-soft);font-size:10px}
+.history-value{color:var(--good);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600}
+/* //endregion */
+
+/* //region FOOTER */
+.plan-note{padding:15px 18px;border:1px solid var(--line);background:rgba(16,24,43,.55);border-radius:12px;color:var(--ink-soft);font-size:11px;line-height:1.55}
+.plan-note strong{color:var(--ink);font-weight:500}.donation{margin-top:28px;padding:20px 24px;border:1px solid var(--line);background:var(--panel);border-radius:12px;text-align:center;color:var(--ink-soft);font-size:11px;line-height:1.6}
+.donation-title{margin-bottom:7px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-soft);letter-spacing:.04em}.donation-address{color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;font-size:9px;word-break:break-all;user-select:all;opacity:.75}
+/* //endregion */
+
+/* //region LIGHT MODE */
+body.light{--bg:#EAF4FF;--panel:#DCEBFF;--input:#F4F8FF;--ink:#162039;--ink-soft:#5D7194;--line:#BED1EE}
+body.light .main{background:#EAF4FF}
+body.light .panel,body.light .identity-card,body.light .map-card,body.light .donation{box-shadow:0 10px 30px rgba(38,83,145,.08)}
+body.light .task-row:hover{background:rgba(255,255,255,.6)}
+body.light .plan-note{background:rgba(220,235,255,.65)}
+/* //endregion */
+
+/* //region RESPONSIVE */
+@media(max-width:1000px){.priority-grid,.progress-grid{grid-template-columns:1fr}.roadmap{grid-template-columns:repeat(2,1fr);row-gap:25px}.roadmap:before,.roadmap-progress{display:none}}
+@media(max-width:760px){
+  .sidebar{width:var(--sidebar-collapsed)}.sidebar .brand-word,.sidebar .sidebar-toggle,.sidebar .nav-label{display:none}
+  .sidebar .brand-row{justify-content:center;padding:0}.sidebar .nav-item{width:48px;height:44px;margin:0 auto;padding:0;justify-content:center}.sidebar .nav-icon{width:20px;min-width:20px;margin:0}
+  .main{
+  margin-left:var(--sidebar-collapsed);
+  width:calc(100% - var(--sidebar-collapsed));
+  padding:28px 18px 35px
+}
+  .theme-toggle{top:15px;right:15px}.page-title{font-size:23px}.identity-card{align-items:flex-start}.identity-badge{display:none}
+  .map-intro{flex-direction:column}.map-status{text-align:left}.roadmap{grid-template-columns:1fr 1fr}.task-arrow{display:none}
+}
+@media(max-width:500px){
+  .roadmap{grid-template-columns:1fr}.stage{display:grid;grid-template-columns:46px 1fr;grid-template-rows:auto auto;column-gap:12px;text-align:left;align-items:center}
+  .stage-node{grid-row:1/3;margin:0}
+}
+/* //endregion */
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<!-- //region SIDEBAR -->
+<div id="sidebar-container"></div>
+<!-- //endregion -->
+
+<main class="main">
+<div class="content">
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema" onclick="toggleTheme()">☀︎</button>
+
+<!-- //region PLAN HEADER -->
+<header class="plan-head">
+  <div class="eyebrow">MI PLAN</div>
+  <h1 class="page-title">Tu camino financiero</h1>
+  <p class="page-subtitle">Mi Plan reúne tu situación, tu dirección y los pasos que Nimbo considera más importantes para ti. No es otra pantalla de números: es el mapa que conecta dónde estás con dónde quieres llegar.</p>
+
+  <div class="identity-card">
+    <div class="identity-mark" id="identityMark">U</div>
+    <div class="identity-copy">
+      <div class="identity-label">Tu punto de partida</div>
+      <h2 class="identity-title">Constructor de patrimonio</h2>
+      <p class="identity-text">Tienes una base sobre la que construir. El objetivo ahora es convertir tus buenas decisiones en un sistema financiero que puedas mantener en el tiempo.</p>
+    </div>
+    <div class="identity-badge">ETAPA 2 / 4</div>
+  </div>
+</header>
+<!-- //endregion -->
+
+<!-- //region ROADMAP -->
+<section class="section">
+  <div class="section-head"><div><h2 class="section-title">Tu mapa</h2><p class="section-subtitle">Las grandes etapas de tu recorrido con Nimbo.</p></div></div>
+  <div class="map-card">
+    <div class="map-intro">
+      <div>
+        <h3 class="map-intro-title">Construir una situación financiera sólida</h3>
+        <p class="map-intro-text">No tienes que completar todo a la vez. Nimbo irá desplazando tu prioridad a medida que consolides cada etapa.</p>
+      </div>
+      <div class="map-status"><div class="map-status-label">Situación actual</div><div class="map-status-value">CONSTRUCCIÓN</div></div>
+    </div>
+
+    <div class="roadmap">
+      <div class="roadmap-progress"></div>
+      <div class="stage completed"><div class="stage-node">✓</div><div class="stage-title">Control</div><div class="stage-status">Completado</div></div>
+      <div class="stage current"><div class="stage-node">02</div><div class="stage-title">Protección</div><div class="stage-status">En progreso</div></div>
+      <div class="stage"><div class="stage-node">03</div><div class="stage-title">Crecimiento</div><div class="stage-status">Siguiente etapa</div></div>
+      <div class="stage"><div class="stage-node">04</div><div class="stage-title">Patrimonio</div><div class="stage-status">Más adelante</div></div>
+    </div>
+  </div>
+</section>
+<!-- //endregion -->
+
+<!-- //region PRIORITY -->
+<section class="section">
+  <div class="section-head"><div><h2 class="section-title">Tu prioridad</h2><p class="section-subtitle">Lo que Nimbo considera más importante trabajar ahora.</p></div></div>
+  <div class="priority-grid">
+    <div class="panel priority-panel">
+      <div class="panel-kicker">Ahora mismo</div>
+      <h3 class="priority-title">Fortalecer tu fondo de emergencia</h3>
+      <p class="priority-text">Antes de aumentar el ritmo de crecimiento, necesitas una base que te permita afrontar imprevistos sin tener que recurrir a tus inversiones. Tu siguiente avance consiste en aumentar progresivamente el dinero reservado para emergencias.</p>
+      <button class="priority-action" type="button" onclick="goTo('registro.html')">Trabajar en esto →</button>
+    </div>
+    <div class="panel priority-side">
+      <div class="mini-row"><span class="mini-name">Fondo actual</span><span class="mini-value warn">0 meses</span></div>
+      <div class="mini-row"><span class="mini-name">Objetivo inicial</span><span class="mini-value">3 meses</span></div>
+      <div class="mini-row"><span class="mini-name">Siguiente revisión</span><span class="mini-value cyan">1 mes</span></div>
+      <div class="mini-row"><span class="mini-name">Etapa posterior</span><span class="mini-value good">Crecimiento</span></div>
+    </div>
+  </div>
+</section>
+<!-- //endregion -->
+
+<!-- //region TASKS -->
+<section class="section">
+  <div class="section-head"><div><h2 class="section-title">Próximas tareas</h2><p class="section-subtitle">Acciones concretas para avanzar en tu prioridad actual.</p></div></div>
+  <div class="panel">
+    <div class="task-list" id="taskList">
+      <div class="task-row" data-task-id="register" onclick="toggleTask(this)">
+        <div class="task-check"></div><div class="task-copy"><div class="task-title">Registra tu primer mes</div><div class="task-description">Necesitamos una primera referencia para poder medir tu evolución.</div></div><span class="task-arrow">Registro →</span>
+      </div>
+      <div class="task-row" data-task-id="emergency" onclick="toggleTask(this)">
+        <div class="task-check"></div><div class="task-copy"><div class="task-title">Define tu objetivo de fondo de emergencia</div><div class="task-description">Establece cuánto necesitas tener reservado antes de pasar a la siguiente etapa.</div></div><span class="task-arrow">Definir →</span>
+      </div>
+      <div class="task-row" data-task-id="monthly" onclick="toggleTask(this)">
+        <div class="task-check"></div><div class="task-copy"><div class="task-title">Mantén una aportación mensual</div><div class="task-description">La constancia convierte una buena intención en una reserva real.</div></div><span class="task-arrow">Continuar →</span>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- //endregion -->
+
+<!-- //region PROGRESS -->
+<section class="section">
+  <div class="section-head"><div><h2 class="section-title">Tu evolución</h2><p class="section-subtitle">El progreso que has construido desde que empezaste.</p></div></div>
+  <div class="progress-grid">
+    <div class="panel">
+      <div class="progress-stat"><div class="progress-number">25%</div><div class="progress-label">Del camino completado<br><span class="cyan">1 de 4 etapas</span></div></div>
+      <div class="progress-track"><div class="progress-fill" style="width:25%;"></div></div>
+      <p class="progress-note">El porcentaje representa etapas consolidadas, no una puntuación financiera.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-kicker" style="margin-bottom:8px;">Últimos avances</div>
+      <div class="history-list">
+        <div class="history-row"><span class="history-dot"></span><div class="history-copy"><div class="history-title">Has comenzado tu recorrido</div><div class="history-date">Diagnóstico inicial</div></div><span class="history-value">+1</span></div>
+        <div class="history-row"><span class="history-dot"></span><div class="history-copy"><div class="history-title">Primera etapa identificada</div><div class="history-date">Control financiero</div></div><span class="history-value">✓</span></div>
+        <div class="history-row"><span class="history-dot" style="background:var(--warn);"></span><div class="history-copy"><div class="history-title">Protección como siguiente prioridad</div><div class="history-date">Situación actual</div></div><span class="history-value" style="color:var(--warn);">→</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- //endregion -->
+
+<div class="plan-note"><strong>Cómo funciona Nimbo:</strong> tu plan no es fijo. Cuando tus hábitos, ahorro, protección, inversión u objetivos cambien, Nimbo podrá cambiar también tu prioridad y el siguiente tramo de tu camino.</div>
+
+<div class="donation"><div class="donation-title">Apoya Nimbo · Donaciones BTC</div><div class="donation-address">PON_AQUI_TU_DIRECCION_BTC</div></div>
+
+</div>
+</main>
+</div>
+
+<script src="config.js"></script>
+<script>
+/* //region DEV MODE */
+const DEV_MODE=true;
+if(!DEV_MODE){
+  const storedUser=localStorage.getItem('nimboUser');
+  if(!storedUser){window.location.href='login.html';}
+  try{
+    const user=JSON.parse(storedUser);
+    setUserInitial(user.name||'Usuario');
+  }catch(error){
+    localStorage.removeItem('nimboUser');
+    window.location.href='login.html';
+  }
+}else{
+  setUserInitial('Usuario');
+}
+function setUserInitial(name){
+  const mark=document.getElementById('identityMark');
+  if(mark) mark.textContent=(name||'U').charAt(0).toUpperCase();
+}
+/* //endregion */
+
+/* //region THEME */
+function applyTheme(){
+  const isLight=localStorage.getItem('nimboTheme')==='light';
+  document.body.classList.toggle('light',isLight);
+  const button=document.getElementById('themeToggle');
+  if(button) button.innerHTML=isLight?'☾':'☀︎';
+}
+function toggleTheme(){
+  const isLight=document.body.classList.contains('light');
+  const newTheme=isLight?'dark':'light';
+  document.body.classList.toggle('light',newTheme==='light');
+  localStorage.setItem('nimboTheme',newTheme);
+  const button=document.getElementById('themeToggle');
+  if(button) button.innerHTML=newTheme==='light'?'☾':'☀︎';
+}
+/* //endregion */
+
+/* //region SIDEBAR */
+
+function handleBrandClick(){
+  const sidebar=document.getElementById('sidebar');
+
+  if(!sidebar){
+    return;
+  }
+
+  if(sidebar.classList.contains('collapsed')){
+    sidebar.classList.remove('collapsed');
+    return;
+  }
+
+  window.location.href='index.html';
+}
+
+function toggleSidebar(){
+  const sidebar=document.getElementById('sidebar');
+
+  if(sidebar){
+    sidebar.classList.toggle('collapsed');
+  }
+}
+
+/* //endregion */
+
+/* //region NAVIGATION */
+
+function goTo(page) {
+  window.location.href = page;
+}
+
+function lockedSection(section) {
+  alert(section + ' estará disponible próximamente.');
+}
+
+/* //endregion */
+
+/* //region TASKS */
+function toggleTask(taskElement){
+  const taskId=taskElement.dataset.taskId;
+  const isDone=taskElement.classList.toggle('done');
+  localStorage.setItem('nimboPlanTask_'+taskId,isDone?'done':'pending');
+}
+function restoreTasks(){
+  document.querySelectorAll('.task-row[data-task-id]').forEach(task=>{
+    if(localStorage.getItem('nimboPlanTask_'+task.dataset.taskId)==='done'){
+      task.classList.add('done');
+    }
+  });
+}
+/* //endregion */
+
+/* //region INIT */
+
+applyTheme();
+restoreTasks();
+
+fetch('sidebar.txt')
+  .then(response => {
+    if(!response.ok){
+      throw new Error('No se pudo cargar el sidebar');
+    }
+
+    return response.text();
+  })
+  .then(html => {
+    document.getElementById('sidebar-container').innerHTML = html;
+
+const currentPage =
+  window.location.pathname.split('/').pop() || 'dashboard.html';
+
+document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+  item.classList.toggle(
+    'active',
+    item.dataset.page === currentPage
+  );
+});
+  })
+  .catch(error => {
+    console.error(error);
+
+    document.getElementById('sidebar-container').innerHTML =
+      '<p style="color:#FF6B6B;padding:20px;">Error al cargar el menú</p>';
+  });
+
+/* //endregion */
+</script>
+</body>
+</html>

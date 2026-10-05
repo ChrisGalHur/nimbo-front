@@ -1,0 +1,119 @@
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="brand-row">
+      <div class="brand" id="brandButton" onclick="handleBrandClick()" aria-label="Nimbo">
+        <div class="brand-mark">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <defs>
+              <filter id="logoGlow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="1.4" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <circle cx="32" cy="32" r="10" fill="none" stroke="#5CE1E6" stroke-width="2.6" filter="url(#logoGlow)"/>
+            <circle cx="32" cy="32" r="18" fill="none" stroke="#5C86FF" stroke-width="2" filter="url(#logoGlow)" opacity=".85"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#5C86FF" stroke-width="1.4" filter="url(#logoGlow)" opacity=".45"/>
+          </svg>
+        </div>
+        <span class="brand-word">NIM<span class="accent">B</span>O</span>
+      </div>
+  
+      <button class="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Plegar menú">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  
+    <nav class="nav">
+      <div class="nav-item" data-page="dashboard.html" data-tooltip="Inicio" onclick="goTo('dashboard.html')">
+        <span class="nav-icon">⌂</span>
+        <span class="nav-label">Inicio</span>
+      </div>
+  
+      <div class="nav-item" data-page="my_plan.html" data-tooltip="Mi plan" onclick="goTo('my_plan.html')">
+        <span class="nav-icon">▣</span>
+        <span class="nav-label">Mi plan</span>
+      </div>
+  
+      <div class="nav-item" data-page="registro.html" data-tooltip="Registro" onclick="goTo('registro.html')">
+        <span class="nav-icon">＋</span>
+        <span class="nav-label">Registro</span>
+      </div>
+  
+      <div class="nav-sep"></div>
+  
+      <div class="nav-item" data-tooltip="Gastos" onclick="lockedSection('Gastos')">
+        <span class="nav-icon">◫</span>
+        <span class="nav-label">Gastos</span>
+        <span class="nav-lock" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+            <rect x="4" y="10" width="16" height="10" rx="2"/>
+          </svg>
+        </span>
+      </div>
+  
+      <div class="nav-item" data-tooltip="Ahorro / Huchas" onclick="lockedSection('Ahorro / Huchas')">
+        <span class="nav-icon">◌</span>
+        <span class="nav-label">Ahorro / Huchas</span>
+        <span class="nav-lock" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+            <rect x="4" y="10" width="16" height="10" rx="2"/>
+          </svg>
+        </span>
+      </div>
+  
+      <div class="nav-item" data-tooltip="Inversión" onclick="lockedSection('Inversión')">
+        <span class="nav-icon">↗</span>
+        <span class="nav-label">Inversión</span>
+        <span class="nav-lock" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+            <rect x="4" y="10" width="16" height="10" rx="2"/>
+          </svg>
+        </span>
+      </div>
+  
+      <div class="nav-item" data-tooltip="Objetivos" onclick="lockedSection('Objetivos')">
+        <span class="nav-icon">◎</span>
+        <span class="nav-label">Objetivos</span>
+        <span class="nav-lock" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+            <rect x="4" y="10" width="16" height="10" rx="2"/>
+          </svg>
+        </span>
+      </div>
+  
+      <div class="nav-item" data-tooltip="Tareas" onclick="lockedSection('Tareas')">
+        <span class="nav-icon">✓</span>
+        <span class="nav-label">Tareas</span>
+        <span class="nav-lock" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
+            <rect x="4" y="10" width="16" height="10" rx="2"/>
+          </svg>
+        </span>
+      </div>
+    </nav>
+  
+    <div class="sidebar-bottom" style="display:none;">
+      <button class="user-button" type="button" onclick="openUserSettings()">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-info">
+          <span class="user-name" id="userName">Usuario</span>
+          <span class="user-plan" id="userPlan">Plan gratuito</span>
+        </div>
+        <svg class="user-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
