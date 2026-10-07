@@ -1433,7 +1433,7 @@
         </button>
 
         <div class="hp-head">
-          <h1 class="hp-title">Hola, Christian</h1>
+          <h1 class="hp-title" id="userGreeting">Hola</h1>
           <p class="hp-quote">
             <span class="hp-quote-mark">“</span>El mayor fallo con respecto al dinero es fiarse solamente de la nómina para financiar las necesidades de gasto a corto plazo, sin ahorros para crear un margen entre lo que piensas que son tus gastos y lo que podrían llegar a ser en el futuro.<span class="hp-quote-mark">”</span>
           </p>
@@ -1713,6 +1713,46 @@
       }
     }
 
+    //region User greeting
+
+    function loadUserGreeting() {
+
+    const storedUser =
+      localStorage.getItem('nimboUser');
+
+    if (!storedUser) {
+      return;
+  }
+
+  try {
+
+    const user =
+      JSON.parse(storedUser);
+
+      const userName =
+      user.user_metadata?.name ||
+      user.name ||
+      'Usuario';
+
+    const greeting =
+      document.getElementById('userGreeting');
+
+    if (greeting) {
+      greeting.textContent =
+        'Hola, ' + userName;
+    }
+
+  } catch (error) {
+
+    console.error(
+      'Failed to load user greeting.',
+      error
+    );
+  }
+}
+
+//endregion
+
     function applyTheme() {
       const savedTheme = localStorage.getItem('nimboTheme');
       const isLight = savedTheme === 'light';
@@ -1854,6 +1894,8 @@ fetch('sidebar.txt')
   });
 
 //endregion
+
+  loadUserGreeting();
   </script>
 </body>
 </html>

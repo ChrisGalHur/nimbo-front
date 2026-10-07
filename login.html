@@ -797,10 +797,24 @@ document
       }
 
 
+      //region Store session
+
+      localStorage.setItem(
+        'nimboSession',
+        JSON.stringify({
+          user: result.user,
+          access_token: result.access_token,
+          refresh_token: result.refresh_token,
+          expires_in: result.expires_in
+        })
+      );
+
       localStorage.setItem(
         'nimboUser',
         JSON.stringify(result.user)
       );
+
+      //endregion
 
 
       window.location.href =
