@@ -69,14 +69,14 @@ body {
 ========================================================= */
 
 .wrap {
-  width:100%;
-  max-width:420px;
+            max-width:600px;
 
-  margin:0 auto;
+            min-height:100vh;
 
-  position:relative;
-}
+            margin:0 auto;
 
+            position:relative;
+        }
 
 /*
   Dark upper area.
@@ -735,106 +735,144 @@ function toggleTheme() {
 }
 
 
-/* =========================================================
-   LOGIN
-========================================================= */
+//region Login
 
 document
   .getElementById('loginForm')
-  .addEventListener('submit', async function(event) {
+  .addEventListener(
+    'submit',
+    async function(event) {
 
-    event.preventDefault();
+      event.preventDefault();
 
-    const email =
-      document.getElementById('email').value.trim();
+      const email =
+        document
+          .getElementById('email')
+          .value
+          .trim();
 
-    const password =
-      document.getElementById('password').value;
+      const password =
+        document
+          .getElementById('password')
+          .value;
 
-    const button =
-      document.getElementById('loginButton');
-
-    const errorMessage =
-      document.getElementById('errorMessage');
-
-
-    errorMessage.style.display = 'none';
-    errorMessage.textContent = '';
-
-    button.disabled = true;
-    button.textContent = 'Iniciando sesión...';
-
-
-    try {
-
-      const response = await fetch(
-        `${NIMBO_API_URL}/api/auth/login`,
-        {
-          method:'POST',
-
-          headers:{
-            'Content-Type':'application/json'
-          },
-
-          body:JSON.stringify({
-            email,
-            password
-          })
-        }
-      );
-
-
-      const result =
-        await response.json();
-
-
-      if (!response.ok || !result.ok) {
-
-        throw new Error(
-          result.message ||
-          'No se ha podido iniciar sesión.'
+      const button =
+        document.getElementById(
+          'loginButton'
         );
-      }
+
+      const errorMessage =
+        document.getElementById(
+          'errorMessage'
+        );
 
 
-      //region Store session
-
-      localStorage.setItem(
-        'nimboSession',
-        JSON.stringify({
-          user: result.user,
-          access_token: result.access_token,
-          refresh_token: result.refresh_token,
-          expires_in: result.expires_in
-        })
-      );
-
-      localStorage.setItem(
-        'nimboUser',
-        JSON.stringify(result.user)
-      );
-
-      //endregion
-
-
-      window.location.href =
-        'dashboard.html';
-
-
-    } catch (error) {
+      errorMessage.style.display =
+        'none';
 
       errorMessage.textContent =
-        error.message ||
-        'Ha ocurrido un error. Inténtalo de nuevo.';
+        '';
 
-      errorMessage.style.display = 'block';
 
-      button.disabled = false;
-      button.textContent = 'Iniciar sesión';
+      button.disabled = true;
+
+      button.textContent =
+        'Iniciando sesión...';
+
+
+      try {
+
+        const response =
+          await fetch(
+            `${NIMBO_API_URL}/api/auth/login`,
+            {
+              method:'POST',
+
+              headers:{
+                'Content-Type':
+                  'application/json'
+              },
+
+              body:
+                JSON.stringify({
+                  email,
+                  password
+                })
+            }
+          );
+
+
+        const result =
+          await response.json();
+
+
+        if (
+          !response.ok ||
+          !result.ok
+        ) {
+
+          throw new Error(
+            result.error ||
+            result.message ||
+            'No se ha podido iniciar sesión.'
+          );
+        }
+
+
+        //region Store session
+
+        localStorage.setItem(
+          'nimboSession',
+          JSON.stringify({
+            user:
+              result.user,
+
+            access_token:
+              result.access_token,
+
+            refresh_token:
+              result.refresh_token,
+
+            expires_in:
+              result.expires_in
+          })
+        );
+
+
+        localStorage.setItem(
+          'nimboUser',
+          JSON.stringify(
+            result.user
+          )
+        );
+
+        //endregion
+
+
+        window.location.href =
+          'dashboard.html';
+
+      } catch (error) {
+
+        errorMessage.textContent =
+          error.message ||
+          'Ha ocurrido un error. Inténtalo de nuevo.';
+
+        errorMessage.style.display =
+          'block';
+
+
+        button.disabled = false;
+
+        button.textContent =
+          'Iniciar sesión';
+
+      }
 
     }
+  );
 
-  });
+//endregion
 
 
 /* =========================================================

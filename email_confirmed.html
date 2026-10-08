@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Nimbo · Email confirmado</title>
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+            rel="stylesheet"
+    >
+
+    <style>
+
+        /* =========================================================
+           VARIABLES
+        ========================================================= */
+
+        :root {
+            --bg:#0A0F1C;
+            --panel:#10182B;
+            --input:#0F1526;
+
+            --ink:#EAF2FF;
+            --ink-soft:#7C8CB3;
+            --line:#1E2B45;
+
+            --cyan:#5CE1E6;
+            --blue:#5C86FF;
+
+            --good:#5FE3A3;
+            --bad:#FF6B6B;
+
+            --brand-ink:#EAF2FF;
+        }
+
+
+        /* =========================================================
+           BASE
+        ========================================================= */
+
+        * {
+            box-sizing:border-box;
+        }
+
+
+        html {
+            min-height:100%;
+        }
+
+
+        body {
+            margin:0;
+
+            min-height:100vh;
+
+            background:var(--bg);
+            color:var(--ink);
+
+            font-family:'Inter',sans-serif;
+            font-size:14px;
+
+            padding:32px;
+
+            transition:
+                background .25s ease,
+                color .25s ease;
+        }
+
+
+        /* =========================================================
+           WRAPPER
+        ========================================================= */
+
+        .wrap {
+            max-width:600px;
+
+            min-height:100vh;
+
+            margin:0 auto;
+
+            position:relative;
+        }
+
+
+        .wrap::before {
+            content:"";
+
+            position:absolute;
+
+            z-index:-1;
+
+            top:-32px;
+
+            left:50%;
+
+            transform:translateX(-50%);
+
+            width:100vw;
+
+            height:140px;
+
+            background:#0A0F1C;
+
+            pointer-events:none;
+        }
+
+
+        /* =========================================================
+           TOP BAR
+        ========================================================= */
+
+        .topbar {
+            display:flex;
+
+            justify-content:space-between;
+            align-items:center;
+
+            margin-bottom:32px;
+        }
+
+
+        /* =========================================================
+           BRAND
+        ========================================================= */
+
+        .brand {
+            display:flex;
+
+            align-items:center;
+
+            gap:9px;
+
+            padding:0;
+
+            text-decoration:none;
+        }
+
+
+        .brand-mark {
+            width:28px;
+            height:28px;
+
+            display:flex;
+
+            align-items:center;
+            justify-content:center;
+
+            flex-shrink:0;
+        }
+
+
+        .brand-mark svg {
+            display:block;
+
+            width:28px;
+            height:28px;
+        }
+
+
+        .brand-word {
+            font-family:'Space Grotesk',sans-serif;
+
+            font-weight:700;
+
+            font-size:16px;
+
+            letter-spacing:.1em;
+
+            color:var(--brand-ink);
+        }
+
+
+        .brand-word .accent {
+            color:#5CE1E6;
+        }
+
+
+        /* =========================================================
+           THEME TOGGLE
+        ========================================================= */
+
+        .theme-toggle {
+            width:34px;
+            height:34px;
+
+            padding:0;
+
+            border:1px solid rgba(234,242,255,.18);
+
+            border-radius:9px;
+
+            background:rgba(255,255,255,.04);
+
+            display:flex;
+
+            align-items:center;
+            justify-content:center;
+
+            cursor:pointer;
+
+            color:#EAF2FF;
+
+            font-size:17px;
+
+            line-height:1;
+
+            transition:
+                border-color .2s ease,
+                background .2s ease,
+                color .2s ease,
+                transform .2s ease;
+        }
+
+
+        .theme-toggle:hover {
+            border-color:#5CE1E6;
+
+            background:rgba(92,225,230,.08);
+
+            color:#5CE1E6;
+
+            transform:scale(1.03);
+        }
+
+
+        /* =========================================================
+           PANEL
+        ========================================================= */
+
+        .panel {
+            width:100%;
+
+            background:var(--panel);
+
+            border:1px solid var(--line);
+
+            border-radius:14px;
+
+            padding:28px;
+
+            text-align:center;
+
+            box-shadow:
+                0 12px 36px rgba(0,0,0,.08);
+
+            transition:
+                background .25s ease,
+                border-color .25s ease,
+                box-shadow .25s ease;
+        }
+
+
+        /* =========================================================
+           STATUS ICON
+        ========================================================= */
+
+        .status-icon {
+            width:58px;
+            height:58px;
+
+            margin:0 auto 22px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            border-radius:50%;
+
+            border:1px solid rgba(92,225,230,.45);
+
+            background:rgba(92,225,230,.10);
+
+            color:#5CE1E6;
+
+            font-size:28px;
+            font-weight:700;
+            line-height:1;
+
+            box-shadow:0 0 18px rgba(92,225,230,.25);
+        }
+        
+        /* =========================================================
+           HEADINGS
+        ========================================================= */
+
+        h1 {
+            font-family:'Space Grotesk',sans-serif;
+
+            font-size:25px;
+
+            line-height:1.15;
+
+            letter-spacing:-.02em;
+
+            margin:0 0 9px;
+        }
+
+
+        .message {
+            color:var(--ink-soft);
+
+            font-size:13px;
+
+            line-height:1.55;
+
+            margin:0 0 26px;
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .cta {
+            width:100%;
+
+            border:0;
+
+            border-radius:11px;
+
+            padding:13px 16px;
+
+            background:var(--cyan);
+
+            color:#0A0F1C;
+
+            font-family:'Inter',sans-serif;
+
+            font-size:14px;
+
+            font-weight:700;
+
+            cursor:pointer;
+
+            transition:
+                background .2s ease,
+                transform .2s ease,
+                opacity .2s ease;
+        }
+
+
+        .cta:hover {
+            background:#72E8EC;
+
+            transform:translateY(-1px);
+        }
+
+
+        .secondary {
+            display:block;
+
+            margin-top:16px;
+
+            color:var(--cyan);
+
+            font-size:13px;
+
+            font-weight:600;
+
+            text-decoration:none;
+        }
+
+
+        .secondary:hover {
+            text-decoration:underline;
+        }
+
+
+        /* =========================================================
+           ERROR
+        ========================================================= */
+
+        .error {
+            color:#FF8D8D;
+        }
+
+
+        /* =========================================================
+           LIGHT MODE
+        ========================================================= */
+
+        body.light {
+            --bg:#EAF4FF;
+
+            --panel:#DCEBFF;
+
+            --input:#F4F8FF;
+
+            --ink:#162039;
+
+            --ink-soft:#5D7194;
+
+            --line:#BED1EE;
+
+            --brand-ink:#EAF2FF;
+        }
+
+
+        body.light .wrap::before {
+            background:#0A0F1C;
+        }
+
+
+        body.light .brand-word {
+            color:#EAF2FF;
+        }
+
+
+        body.light .brand-word .accent {
+            color:#5CE1E6;
+        }
+
+
+        body.light .theme-toggle {
+            border-color:rgba(234,242,255,.18);
+
+            background:rgba(255,255,255,.04);
+
+            color:#EAF2FF;
+        }
+
+
+        body.light .panel {
+            box-shadow:
+                0 14px 36px rgba(38,83,145,.10);
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media(max-width:600px) {
+
+body {
+    padding:20px;
+}
+
+
+.wrap::before {
+    top:-20px;
+
+    height:140px;
+}
+
+
+.topbar {
+    margin-bottom:20px;
+}
+
+
+.panel {
+    padding:24px 20px;
+}
+
+
+h1 {
+    font-size:23px;
+}
+
+}
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="wrap">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <a
+                class="brand"
+                href="index.html"
+                aria-label="Nimbo"
+        >
+
+            <div class="brand-mark">
+
+                <svg
+                        viewBox="0 0 64 64"
+                        aria-hidden="true"
+                >
+
+                    <defs>
+
+                        <filter
+                                id="logoGlow"
+                                x="-60%"
+                                y="-60%"
+                                width="220%"
+                                height="220%"
+                        >
+
+                            <feGaussianBlur
+                                    stdDeviation="1.4"
+                                    result="blur"
+                            />
+
+                            <feMerge>
+
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+
+                            </feMerge>
+
+                        </filter>
+
+                    </defs>
+
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="10"
+                            fill="none"
+                            stroke="#5CE1E6"
+                            stroke-width="2.6"
+                            filter="url(#logoGlow)"
+                    />
+
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="18"
+                            fill="none"
+                            stroke="#5C86FF"
+                            stroke-width="2"
+                            filter="url(#logoGlow)"
+                            opacity=".85"
+                    />
+
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="26"
+                            fill="none"
+                            stroke="#5C86FF"
+                            stroke-width="1.4"
+                            filter="url(#logoGlow)"
+                            opacity=".45"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <span class="brand-word">
+                NIM<span class="accent">B</span>O
+            </span>
+
+        </a>
+
+
+        <button
+                class="theme-toggle"
+                id="themeToggle"
+                type="button"
+                aria-label="Cambiar tema"
+                onclick="toggleTheme()"
+        >
+            ☀︎
+        </button>
+
+    </header>
+
+ <!-- =====================================================
+     CONFIRMATION PANEL
+====================================================== -->
+
+<main class="panel" id="confirmationPanel">
+
+    <div
+            class="status-icon"
+            id="statusIcon"
+    >
+        ✓
+    </div>
+
+
+    <h1 id="title">
+        Email confirmado
+    </h1>
+
+
+    <p
+            class="message"
+            id="message"
+    >
+        Tu cuenta ha sido confirmada correctamente.
+    </p>
+
+
+    <button
+            class="cta"
+            id="dashboardButton"
+            type="button"
+            onclick="goToDashboard()"
+    >
+        Entrar en Nimbo
+    </button>
+
+
+    <a
+            class="secondary"
+            id="loginLink"
+            href="login.html"
+            style="display:none;"
+    >
+        Iniciar sesión
+    </a>
+
+</main>
+
+</div>
+
+
+<script src="config.js"></script>
+
+<script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<script>
+
+//region Theme
+
+function applyTheme() {
+
+    const savedTheme =
+        localStorage.getItem('nimboTheme');
+
+    const isLight =
+        savedTheme === 'light';
+
+
+    document.body.classList.toggle(
+        'light',
+        isLight
+    );
+
+
+    const button =
+        document.getElementById(
+            'themeToggle'
+        );
+
+
+    if (button) {
+
+        button.innerHTML =
+            isLight
+                ? '☾'
+                : '☀︎';
+
+    }
+
+}
+
+
+function toggleTheme() {
+
+    const isLight =
+        document.body.classList.contains(
+            'light'
+        );
+
+
+    const newTheme =
+        isLight
+            ? 'dark'
+            : 'light';
+
+
+    document.body.classList.toggle(
+        'light',
+        newTheme === 'light'
+    );
+
+
+    localStorage.setItem(
+        'nimboTheme',
+        newTheme
+    );
+
+
+    const button =
+        document.getElementById(
+            'themeToggle'
+        );
+
+
+    if (button) {
+
+        button.innerHTML =
+            newTheme === 'light'
+                ? '☾'
+                : '☀︎';
+
+    }
+
+}
+
+
+applyTheme();
+
+//endregion
+
+
+//region Supabase Email Confirmation
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
+        {
+            auth:{
+                autoRefreshToken:true,
+                persistSession:true,
+                detectSessionInUrl:true
+            }
+        }
+    );
+
+
+async function initializeConfirmation() {
+
+    const title =
+        document.getElementById(
+            'title'
+        );
+
+    const message =
+        document.getElementById(
+            'message'
+        );
+
+    const dashboardButton =
+        document.getElementById(
+            'dashboardButton'
+        );
+
+    const loginLink =
+        document.getElementById(
+            'loginLink'
+        );
+
+    const statusIcon =
+        document.getElementById(
+            'statusIcon'
+        );
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        const session =
+            data.session;
+
+
+        if (session) {
+
+            localStorage.setItem(
+                'nimboSession',
+                JSON.stringify({
+                    user:
+                        session.user,
+
+                    access_token:
+                        session.access_token,
+
+                    refresh_token:
+                        session.refresh_token,
+
+                    expires_in:
+                        session.expires_in
+                })
+            );
+
+
+            localStorage.setItem(
+                'nimboUser',
+                JSON.stringify(
+                    session.user
+                )
+            );
+
+
+            title.textContent =
+                'Email confirmado';
+
+
+            message.textContent =
+                'Tu cuenta ha sido confirmada correctamente.';
+
+
+            dashboardButton.style.display =
+                'block';
+
+
+            loginLink.style.display =
+                'none';
+
+
+            return;
+        }
+
+
+        title.textContent =
+    'Email confirmado';
+
+
+message.textContent =
+    'Tu email ha sido confirmado correctamente. Ya puedes acceder a Nimbo.';
+
+
+        dashboardButton.style.display =
+            'none';
+
+
+        loginLink.style.display =
+            'block';
+
+    } catch (error) {
+
+        console.error(error);
+
+        title.textContent =
+            'No se ha podido confirmar el email';
+
+
+        message.textContent =
+            'El enlace de confirmación no es válido o ha caducado. Solicita un nuevo enlace de confirmación.';
+
+
+        dashboardButton.style.display =
+            'none';
+
+
+        loginLink.style.display =
+            'block';
+
+    }
+
+}
+
+
+function goToDashboard() {
+
+    window.location.href =
+        'dashboard.html';
+
+}
+
+
+initializeConfirmation();
+
+//endregion
+
+</script>
+
+</body>
+
+</html>
