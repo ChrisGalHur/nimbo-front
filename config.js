@@ -18,3 +18,12 @@ const SUPABASE_ANON_KEY =
     'sb_publishable_MtCMPr-mtLzuVUPJmNBGYQ_i4--oypq';
 
 //endregion
+
+console.log(
+    'NIMBO_API_URL:',
+    NIMBO_API_URL
+);
+console.log(
+    'hostname:',
+    window.location.hostname
+);
