@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Nimbo · Recuperar contraseña</title>
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+            rel="stylesheet"
+    >
+
+    <style>
+
+        /* =========================================================
+           VARIABLES
+        ========================================================= */
+
+        :root {
+            --bg:#0A0F1C;
+            --panel:#10182B;
+            --input:#0F1526;
+
+            --ink:#EAF2FF;
+            --ink-soft:#7C8CB3;
+            --line:#1E2B45;
+
+            --cyan:#5CE1E6;
+            --blue:#5C86FF;
+
+            --good:#5FE3A3;
+            --bad:#FF6B6B;
+
+            --brand-ink:#EAF2FF;
+        }
+
+
+        /* =========================================================
+           BASE
+        ========================================================= */
+
+        * {
+            box-sizing:border-box;
+        }
+
+        html {
+            min-height:100%;
+        }
+
+        body {
+            margin:0;
+
+            min-height:100vh;
+
+            background:var(--bg);
+            color:var(--ink);
+
+            font-family:'Inter',sans-serif;
+            font-size:14px;
+
+            padding:32px;
+
+            transition:
+                background .25s ease,
+                color .25s ease;
+        }
+
+
+        /* =========================================================
+           WRAPPER
+        ========================================================= */
+
+        .wrap {
+            max-width:600px;
+
+            margin:0 auto;
+
+            position:relative;
+        }
+
+        .wrap::before {
+            content:"";
+
+            position:absolute;
+
+            z-index:-1;
+
+            top:-32px;
+
+            left:50%;
+
+            transform:translateX(-50%);
+
+            width:100vw;
+
+            height:140px;
+
+            background:#0A0F1C;
+
+            pointer-events:none;
+
+            transition:background .25s ease;
+        }
+
+
+        /* =========================================================
+           TOP BAR
+        ========================================================= */
+
+        .topbar {
+            display:flex;
+
+            justify-content:space-between;
+            align-items:center;
+
+            margin-bottom:32px;
+        }
+
+
+        /* =========================================================
+           BRAND
+        ========================================================= */
+
+        .brand {
+            display:flex;
+
+            align-items:center;
+
+            gap:9px;
+
+            padding:0;
+
+            text-decoration:none;
+        }
+
+        .brand-mark {
+            width:28px;
+            height:28px;
+
+            display:flex;
+
+            align-items:center;
+            justify-content:center;
+
+            flex-shrink:0;
+        }
+
+        .brand-mark svg {
+            display:block;
+
+            width:28px;
+            height:28px;
+        }
+
+        .brand-word {
+            font-family:'Space Grotesk',sans-serif;
+
+            font-weight:700;
+
+            font-size:16px;
+
+            letter-spacing:.1em;
+
+            color:var(--brand-ink);
+        }
+
+        .brand-word .accent {
+            color:#5CE1E6;
+        }
+
+
+        /* =========================================================
+           THEME TOGGLE
+        ========================================================= */
+
+        .theme-toggle {
+            width:34px;
+            height:34px;
+
+            padding:0;
+
+            border:1px solid rgba(234,242,255,.18);
+
+            border-radius:9px;
+
+            background:rgba(255,255,255,.04);
+
+            display:flex;
+
+            align-items:center;
+            justify-content:center;
+
+            cursor:pointer;
+
+            color:#EAF2FF;
+
+            font-size:17px;
+
+            line-height:1;
+
+            transition:
+                border-color .2s ease,
+                background .2s ease,
+                color .2s ease,
+                transform .2s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color:#5CE1E6;
+
+            background:rgba(92,225,230,.08);
+
+            color:#5CE1E6;
+
+            transform:scale(1.03);
+        }
+
+
+        /* =========================================================
+           PANEL
+        ========================================================= */
+
+        .panel {
+            width:100%;
+
+            background:var(--panel);
+
+            border:1px solid var(--line);
+
+            border-radius:14px;
+
+            padding:28px;
+
+            box-shadow:
+                0 12px 36px rgba(0,0,0,.08);
+
+            transition:
+                background .25s ease,
+                border-color .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .panel-header {
+            margin-bottom:28px;
+        }
+
+        h1 {
+            font-family:'Space Grotesk',sans-serif;
+
+            font-size:25px;
+
+            line-height:1.15;
+
+            letter-spacing:-.02em;
+
+            margin:0 0 9px;
+        }
+
+        .intro {
+            color:var(--ink-soft);
+
+            line-height:1.55;
+
+            margin:0;
+
+            font-size:14px;
+        }
+
+
+        /* =========================================================
+           FORM
+        ========================================================= */
+
+        form {
+            margin:0;
+        }
+
+        label {
+            display:block;
+
+            margin-bottom:18px;
+
+            color:var(--ink-soft);
+
+            font-size:13px;
+
+            font-weight:500;
+        }
+
+        input {
+            display:block;
+
+            width:100%;
+
+            margin-top:8px;
+
+            padding:12px 14px;
+
+            border-radius:10px;
+
+            border:1px solid var(--line);
+
+            background:var(--input);
+
+            color:var(--ink);
+
+            font-family:'Inter',sans-serif;
+
+            font-size:14px;
+
+            outline:none;
+
+            transition:
+                border-color .2s ease,
+                background .2s ease,
+                box-shadow .2s ease;
+        }
+
+        input::placeholder {
+            color:#4F5E80;
+        }
+
+        input:focus {
+            border-color:var(--cyan);
+
+            background:var(--panel);
+
+            box-shadow:
+                0 0 0 3px rgba(92,225,230,.08);
+        }
+
+
+        /* =========================================================
+           SUBMIT BUTTON
+        ========================================================= */
+
+        button[type="submit"],
+        .cta {
+            display:block;
+
+            width:100%;
+
+            border:0;
+
+            border-radius:12px;
+
+            padding:15px;
+
+            margin-top:3px;
+
+            background:var(--cyan);
+
+            color:#0A0F1C;
+
+            font-family:'Inter',sans-serif;
+
+            font-weight:700;
+
+            font-size:15px;
+
+            text-align:center;
+
+            text-decoration:none;
+
+            cursor:pointer;
+
+            box-shadow:
+                0 0 24px rgba(92,225,230,.20);
+
+            transition:
+                transform .15s ease,
+                box-shadow .15s ease,
+                filter .15s ease;
+        }
+
+        button[type="submit"]:hover,
+        .cta:hover {
+            transform:translateY(-1px);
+
+            box-shadow:
+                0 0 30px rgba(92,225,230,.32);
+
+            filter:brightness(1.04);
+
+            color:#0A0F1C;
+        }
+
+        button[type="submit"]:active {
+            transform:translateY(0);
+        }
+
+        button[type="submit"]:disabled {
+            opacity:.7;
+
+            cursor:wait;
+
+            transform:none;
+        }
+
+
+        /* =========================================================
+           MESSAGE
+        ========================================================= */
+
+        .message {
+            min-height:20px;
+
+            margin-top:16px;
+
+            text-align:center;
+
+            font-size:13px;
+
+            line-height:1.45;
+        }
+
+        .error {
+            color:var(--bad);
+        }
+
+        .success {
+            color:var(--good);
+        }
+
+
+        /* =========================================================
+           STATUS ICON
+        ========================================================= */
+
+        .status-icon {
+            width:58px;
+            height:58px;
+
+            margin:0 auto 22px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            border-radius:50%;
+
+            border:1px solid rgba(92,225,230,.45);
+
+            background:rgba(92,225,230,.10);
+
+            color:#5CE1E6;
+
+            font-size:28px;
+            font-weight:700;
+            line-height:1;
+
+            box-shadow:0 0 18px rgba(92,225,230,.25);
+        }
+
+        .status-icon.bad {
+            border-color:rgba(255,107,107,.45);
+
+            background:rgba(255,107,107,.10);
+
+            color:#FF6B6B;
+
+            box-shadow:0 0 18px rgba(255,107,107,.20);
+        }
+
+        .center {
+            text-align:center;
+        }
+
+
+        /* =========================================================
+           LINKS
+        ========================================================= */
+
+        .links {
+            margin-top:22px;
+
+            text-align:center;
+
+            color:var(--ink-soft);
+
+            font-size:13px;
+        }
+
+        a {
+            color:var(--cyan);
+
+            text-decoration:none;
+
+            transition:color .2s ease;
+        }
+
+        a:hover {
+            color:#72E8EC;
+        }
+
+
+        /* =========================================================
+           LIGHT MODE
+        ========================================================= */
+
+        body.light {
+            --bg:#EAF4FF;
+
+            --panel:#DCEBFF;
+
+            --input:#F4F8FF;
+
+            --ink:#162039;
+
+            --ink-soft:#5D7194;
+
+            --line:#BED1EE;
+
+            --brand-ink:#EAF2FF;
+        }
+
+        body.light .wrap::before {
+            background:#0A0F1C;
+        }
+
+        body.light .brand-word {
+            color:#EAF2FF;
+        }
+
+        body.light .brand-word .accent {
+            color:#5CE1E6;
+        }
+
+        body.light .theme-toggle {
+            border-color:rgba(234,242,255,.18);
+
+            background:rgba(255,255,255,.04);
+
+            color:#EAF2FF;
+        }
+
+        body.light .panel {
+            box-shadow:
+                0 14px 36px rgba(38,83,145,.10);
+        }
+
+        body.light input:focus {
+            background:#FFFFFF;
+        }
+
+        body.light .success {
+            color:#1E9E66;
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media(max-width:600px) {
+
+            body {
+                padding:20px;
+            }
+
+            .wrap::before {
+                top:-20px;
+
+                height:140px;
+            }
+
+            .topbar {
+                margin-bottom:20px;
+            }
+
+            .panel {
+                padding:24px 20px;
+            }
+
+            h1 {
+                font-size:23px;
+            }
+
+            .intro {
+                font-size:13.5px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="wrap">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <a
+                class="brand"
+                href="index.html"
+                aria-label="Nimbo"
+        >
+
+            <div class="brand-mark">
+
+                <svg
+                        viewBox="0 0 64 64"
+                        aria-hidden="true"
+                >
+
+                    <defs>
+
+                        <filter
+                                id="logoGlow"
+                                x="-60%"
+                                y="-60%"
+                                width="220%"
+                                height="220%"
+                        >
+
+                            <feGaussianBlur
+                                    stdDeviation="1.4"
+                                    result="blur"
+                            />
+
+                            <feMerge>
+
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+
+                            </feMerge>
+
+                        </filter>
+
+                    </defs>
+
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="10"
+                            fill="none"
+                            stroke="#5CE1E6"
+                            stroke-width="2.6"
+                            filter="url(#logoGlow)"
+                    />
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="18"
+                            fill="none"
+                            stroke="#5C86FF"
+                            stroke-width="2"
+                            filter="url(#logoGlow)"
+                            opacity=".85"
+                    />
+
+                    <circle
+                            cx="32"
+                            cy="32"
+                            r="26"
+                            fill="none"
+                            stroke="#5C86FF"
+                            stroke-width="1.4"
+                            filter="url(#logoGlow)"
+                            opacity=".45"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <span class="brand-word">
+                NIM<span class="accent">B</span>O
+            </span>
+
+        </a>
+
+
+        <button
+                class="theme-toggle"
+                id="themeToggle"
+                type="button"
+                title="Cambiar tema"
+                aria-label="Cambiar tema"
+                onclick="toggleTheme()"
+        >
+            ☀︎
+        </button>
+
+    </header>
+
+
+    <!-- =====================================================
+         FORGOT PASSWORD PANEL
+    ====================================================== -->
+
+    <main class="panel">
+
+
+        <div class="panel-header">
+
+            <h1>
+                Recuperar contraseña
+            </h1>
+
+            <p class="intro">
+                Escribe el email de tu cuenta y te enviaremos un enlace para crear una contraseña nueva.
+            </p>
+
+        </div>
+
+
+        <form id="forgotForm">
+
+            <label>
+
+                Email
+
+                <input
+                        id="email"
+                        type="email"
+                        placeholder="tu@email.com"
+                        autocomplete="email"
+                        required
+                >
+
+            </label>
+
+
+            <button
+                    id="submitButton"
+                    type="submit"
+            >
+                Enviar enlace
+            </button>
+
+        </form>
+
+
+        <div
+                id="message"
+                class="message"
+        ></div>
+
+
+        <div class="links">
+
+            ¿Ya la recuerdas?
+
+            <a href="login.html">
+                Iniciar sesión
+            </a>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="config.js"></script>
+
+<script>
+
+    /* =========================================================
+       THEME
+    ========================================================= */
+
+    function applyTheme() {
+
+        const savedTheme =
+            localStorage.getItem('nimboTheme');
+
+        const isLight =
+            savedTheme === 'light';
+
+        document.body.classList.toggle(
+            'light',
+            isLight
+        );
+
+        const button =
+            document.getElementById('themeToggle');
+
+        if (button) {
+            button.innerHTML =
+                isLight ? '☾' : '☀︎';
+        }
+
+    }
+
+
+    function toggleTheme() {
+
+        const isLight =
+            document.body.classList.contains('light');
+
+        const newTheme =
+            isLight ? 'dark' : 'light';
+
+        document.body.classList.toggle(
+            'light',
+            newTheme === 'light'
+        );
+
+        localStorage.setItem(
+            'nimboTheme',
+            newTheme
+        );
+
+        const button =
+            document.getElementById('themeToggle');
+
+        if (button) {
+            button.innerHTML =
+                newTheme === 'light' ? '☾' : '☀︎';
+        }
+
+    }
+
+
+    applyTheme();
+
+
+        //region Forgot password
+
+        document
+        .getElementById('forgotForm')
+        .addEventListener(
+            'submit',
+            async function(event) {
+
+                event.preventDefault();
+
+                const email =
+                    document
+                        .getElementById('email')
+                        .value
+                        .trim();
+
+                const message =
+                    document.getElementById('message');
+
+                const button =
+                    document.getElementById('submitButton');
+
+                // Reset the message before starting a new request.
+                message.className = 'message';
+                message.textContent = '';
+
+                button.disabled = true;
+                button.textContent = 'Enviando...';
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `${NIMBO_API_URL}/api/auth/forgot-password`,
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    email
+                                })
+                            }
+                        );
+
+                    const result =
+                        await response.json();
+
+                    if (!response.ok || !result.ok) {
+                        throw new Error(
+                            result.error ||
+                            result.message ||
+                            'No se ha podido enviar el enlace.'
+                        );
+                    }
+
+                    // Show success only after the backend confirms success.
+                    message.className = 'message success';
+                    message.textContent =
+                        'Si ese email tiene una cuenta, recibirás un enlace para restablecer la contraseña. Revisa también la carpeta de spam.';
+
+                    button.textContent = 'Enlace enviado';
+
+                    //region Resend cooldown
+
+                    setTimeout(function() {
+                        button.disabled = false;
+                        button.textContent = 'Enviar de nuevo';
+                    }, 30000);
+
+                    //endregion
+
+                } catch (error) {
+
+                    console.error(
+                        'Password recovery request failed:',
+                        error
+                    );
+
+                    message.className = 'message error';
+                    message.textContent =
+                        'No se ha podido enviar el enlace. Inténtalo de nuevo en unos minutos.';
+
+                    button.disabled = false;
+                    button.textContent = 'Enviar enlace';
+
+                }
+
+            }
+        );
+
+    //endregion
+
+</script>
+
+</body>
+
+</html>

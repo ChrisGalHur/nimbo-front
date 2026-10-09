@@ -384,24 +384,36 @@ input:focus {
 
 
 /* =========================================================
-   FOOTER LINK
+   PASSWORD RECOVERY AND FOOTER LINKS
 ========================================================= */
+
+.forgot-password {
+  text-align:center;
+  margin-top:14px;
+  font-size:12px;
+}
+
+.forgot-password a {
+  color:var(--ink-soft);
+  text-decoration:none;
+  font-weight:500;
+}
+
+.forgot-password a:hover {
+  color:var(--cyan);
+  text-decoration:underline;
+}
 
 .register {
   text-align:center;
-
   margin-top:20px;
-
   color:var(--ink-soft);
-
   font-size:13px;
 }
 
 .register a {
   color:var(--cyan);
-
   text-decoration:none;
-
   font-weight:600;
 }
 
@@ -643,23 +655,24 @@ body.light input:focus {
 
       </div>
 
+  <button
+    type="submit"
+    class="cta"
+    id="loginButton"
+  >
+    Iniciar sesión
+  </button>
 
-      <button
-        type="submit"
-        class="cta"
-        id="loginButton"
-      >
-        Iniciar sesión
-      </button>
+  <div class="forgot-password">
+    <a href="forgot_pass.html">
+      ¿Has olvidado tu contraseña?
+    </a>
+  </div>
 
-
-      <div
-        class="error"
-        id="errorMessage"
-      ></div>
-
-    </form>
-
+  <div
+    class="error"
+    id="errorMessage"
+  ></div>
 
     <div class="register">
 
