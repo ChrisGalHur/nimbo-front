@@ -628,19 +628,21 @@ function categoryMovementsTotal(category) {
     );
   }
 
+  
+  //region Handle API response errors
   if (!response.ok) {
     const message =
-      typeof responseData === 'object' && responseData !== null
-        ? responseData.message ||
-          responseData.detail ||
-          responseData.error
-        : null;
+      responseData?.message ||
+      responseData?.detail ||
+      responseData?.error ||
+      `Error HTTP ${response.status}`;
 
-    throw new Error(
-      message ||
-      `Error del servidor (${response.status}) al consultar ${path}.`
-    );
+    const error = new Error(message);
+    error.status = response.status;
+
+    throw error;
   }
+  //endregion
 
   return responseData;
 }
@@ -859,46 +861,53 @@ function donutPath(startAngle, endAngle, outerRadius = 82, innerRadius = 57) {
   ].join(' ');
 }
 
+//region Render expense categories chart
 function renderCategories() {
   const container = document.getElementById('categoriesList');
 
   if (!state.categories.length) {
-    
-  container.innerHTML = `
-    <div class="category-chart-layout">
-      <svg class="category-donut" viewBox="0 0 220 220" role="group" aria-label="Reparto de gastos por categoría">
-        ${paths}
-        <text x="110" y="104" class="donut-center-label">${escapeHtml(selected.label)}</text>
-        <text x="110" y="126" class="donut-center-value">${formatMoney(selected.total)}</text>
-      </svg>
-      <div class="category-legend" aria-label="Seleccionar categoría">
-        ${rows.map(row => `
-          <button type="button" class="category-legend-item ${row.id === selected.id ? 'active' : ''}" data-chart-category="${escapeHtml(row.id)}">
-            <span class="category-color-dot" style="background:${row.color}"></span>
-            <span class="name">${escapeHtml(row.label)}</span>
-            <span class="amount">${formatMoney(row.total)}</span>
-            <span class="pct">${percent(row.total)}</span>
-          </button>`).join('')}
-      </div>
-    </div>`;
+    container.innerHTML = `
+      <div class="chart-empty">
+        No hay categorías disponibles.
+      </div>`;
     return;
   }
 
   const rows = expenseBreakdown();
 
   if (!rows.length) {
-    container.innerHTML = `<div class="chart-empty">Aún no hay gastos registrados este mes.</div>`;
+    container.innerHTML = `
+      <div class="chart-empty">
+        Aún no hay gastos registrados este mes.
+      </div>`;
     return;
   }
 
   const total = rows.reduce((sum, row) => sum + row.total, 0);
-  const selected = rows.find(row => row.id === String(selectedChartCategoryId)) || rows[0];
+  const selected =
+    rows.find(row => row.id === String(selectedChartCategoryId)) ||
+    rows[0];
+
   selectedChartCategoryId = selected.id;
 
   let angle = 0;
+
   const paths = rows.map(row => {
     const slice = row.total / total * 360;
-    const path = `<path class="category-slice ${row.id === selected.id ? 'selected' : ''}" data-chart-category="${escapeHtml(row.id)}" d="${donutPath(angle, angle + slice)}" fill="${row.color}" tabindex="0" role="button" aria-label="${escapeHtml(row.label)}: ${formatMoney(row.total)}"><title>${escapeHtml(row.label)}: ${formatMoney(row.total)}</title></path>`;
+
+    const path = `
+      <path
+        class="category-slice ${row.id === selected.id ? 'selected' : ''}"
+        data-chart-category="${escapeHtml(row.id)}"
+        d="${donutPath(angle, angle + slice)}"
+        fill="${row.color}"
+        tabindex="0"
+        role="button"
+        aria-label="${escapeHtml(row.label)}: ${formatMoney(row.total)}"
+      >
+        <title>${escapeHtml(row.label)}: ${formatMoney(row.total)}</title>
+      </path>`;
+
     angle += slice;
     return path;
   }).join('');
@@ -907,37 +916,58 @@ function renderCategories() {
 
   container.innerHTML = `
     <div class="category-chart-layout">
-      <svg class="category-donut" viewBox="0 0 220 220" role="group" aria-label="Reparto de gastos por categoría">
+      <svg
+        class="category-donut"
+        viewBox="0 0 220 220"
+        role="group"
+        aria-label="Reparto de gastos por categoría"
+      >
         ${paths}
         <text x="110" y="104" class="donut-center-label">${escapeHtml(selected.label)}</text>
         <text x="110" y="126" class="donut-center-value">${formatMoney(selected.total)}</text>
       </svg>
+
       <div class="category-legend" aria-label="Seleccionar categoría">
         ${rows.map(row => `
-          <button type="button" class="category-legend-item ${row.id === selected.id ? 'active' : ''}" data-chart-category="${escapeHtml(row.id)}">
+          <button
+            type="button"
+            class="category-legend-item ${row.id === selected.id ? 'active' : ''}"
+            data-chart-category="${escapeHtml(row.id)}"
+          >
             <span class="category-color-dot" style="background:${row.color}"></span>
             <span class="name">${escapeHtml(row.label)}</span>
             <span class="amount">${formatMoney(row.total)}</span>
             <span class="pct">${percent(row.total)}</span>
-          </button>`).join('')}
+          </button>
+        `).join('')}
       </div>
     </div>
-    ${state.totals?.expense?.manual > 0 ? '<p class="category-chart-note">“General sin detallar” es el importe escrito en la tarjeta de gastos sin asignarlo a una categoría.</p>' : ''}`;
+
+    ${state.totals?.expense?.manual > 0
+      ? '<p class="category-chart-note">El importe general de gastos no está asignado a una categoría y no aparece en el gráfico.</p>'
+      : ''}
+  `;
 
   container.querySelectorAll('[data-chart-category]').forEach(element => {
     const select = () => {
       selectedChartCategoryId = element.dataset.chartCategory;
       renderCategories();
     };
+
     element.addEventListener('click', select);
+
     element.addEventListener('keydown', event => {
-      if (element.tagName.toLowerCase() === 'path' && (event.key === 'Enter' || event.key === ' ')) {
+      if (
+        element.tagName.toLowerCase() === 'path' &&
+        (event.key === 'Enter' || event.key === ' ')
+      ) {
         event.preventDefault();
         select();
       }
     });
   });
 }
+//endregion
 
 //endregion
 
@@ -1095,30 +1125,36 @@ function renderCategoriesSelect() {
 
 //endregion
 
-//region Monthly snapshot creation
-
-// Si el mes no existe todavía, se crea vacío justo antes de guardar algo.
+//region Ensure monthly snapshot
 async function ensureMonthlySnapshot() {
   const existingId = snapshotIdOf(state.snapshot);
-  if (existingId) return existingId;
 
-  const createResult = await recordsApi.createMonth({ month: monthDate(state.month) });
-
-  let snapshot = createResult.snapshot || createResult;
-  let snapshotId = snapshotIdOf(snapshot);
-
-  if (!snapshotId) {
-    const monthResult = await recordsApi.getMonth(state.month);
-    snapshot = monthResult.snapshot || monthResult;
-    snapshotId = snapshotIdOf(snapshot);
+  if (existingId) {
+    return existingId;
   }
 
-  if (!snapshotId) throw new Error('El backend no ha devuelto el registro mensual creado.');
+  const payload = {
+    month: monthDate(state.month),
+    income: manualValue('manualIncome'),
+    expenses: manualValue('manualExpenses'),
+    monthlySavings: manualValue('manualSaving'),
+    monthlyInvestment: manualValue('manualInvestment')
+  };
+
+  const createResult = await recordsApi.createMonth(payload);
+  const snapshot = createResult.snapshot || createResult;
+  const snapshotId = snapshotIdOf(snapshot);
+
+  if (!snapshotId) {
+    throw new Error(
+      'El backend no ha devuelto el registro mensual creado.'
+    );
+  }
 
   state.snapshot = snapshot;
+
   return snapshotId;
 }
-
 //endregion
 
 //region Monthly data loading
@@ -1130,85 +1166,78 @@ function renderAll() {
 
 
  
-    //region Load Monthly Records
-    async function loadMonth() {
-      state.month =
-        document.getElementById('monthPicker').value || currentMonth();
+    
+ //region Load monthly records
+async function loadMonth() {
+  state.month =
+    document.getElementById('monthPicker').value || currentMonth();
 
-      state.loading = true;
-      selectedChartCategoryId = null;
-      hideBanner();
+  state.loading = true;
+  selectedChartCategoryId = null;
+  hideBanner();
 
-      document.getElementById('transactionsList').innerHTML =
-        '<div class="loading">Cargando movimientos…</div>';
+  document.getElementById('transactionsList').innerHTML =
+    '<div class="loading">Cargando movimientos…</div>';
 
-      document.getElementById('categoriesList').innerHTML =
-        '<div class="loading">Cargando categorías…</div>';
+  document.getElementById('categoriesList').innerHTML =
+    '<div class="loading">Cargando categorías…</div>';
 
-      try {
-        // Load the monthly snapshot.
-        const monthResult = await recordsApi.getMonth(state.month);
-        const returned = monthResult.snapshot || monthResult;
+  state.snapshot = null;
+  state.transactions = [];
+  state.categories = [];
 
-        const hasSnapshot =
-          monthResult.exists !== false &&
-          returned !== null &&
-          snapshotIdOf(returned);
+  try {
+    // Load the monthly snapshot independently.
+    try {
+      const monthResult = await recordsApi.getMonth(state.month);
+      const returned = monthResult.snapshot || monthResult;
 
-        state.snapshot = hasSnapshot ? returned : null;
-        state.transactions = [];
-        state.categories = [];
+      if (
+        monthResult.exists !== false &&
+        returned !== null &&
+        snapshotIdOf(returned)
+      ) {
+        state.snapshot = returned;
 
-        // Load active categories independently.
-        try {
-          const categoriesResult = await recordsApi.getCategories('all');
+        const transactionsResult =
+          await recordsApi.getTransactions(snapshotIdOf(returned));
 
-          state.categories = Array.isArray(categoriesResult)
-            ? categoriesResult
-            : categoriesResult.categories || [];
-        } catch (error) {
-          showBanner(
-            `No se pudieron cargar las categorías: ${error.message}`,
-            'error'
-          );
-        }
-
-        // Detailed transactions require an existing monthly snapshot.
-        if (hasSnapshot) {
-          try {
-            const snapshotId = snapshotIdOf(returned);
-            const transactionsResult =
-              await recordsApi.getTransactions(snapshotId);
-
-            state.transactions = Array.isArray(transactionsResult)
-              ? transactionsResult
-              : transactionsResult.transactions || [];
-          } catch (error) {
-            showBanner(
-              `No se pudieron cargar los movimientos: ${error.message}`,
-              'error'
-            );
-          }
-        }
-
-        renderAll();
-      } catch (error) {
-        state.snapshot = null;
-        state.transactions = [];
-        state.categories = [];
-
-        renderAll();
-        showBanner(error.message, 'error');
-      } finally {
-        state.loading = false;
+        state.transactions = Array.isArray(transactionsResult)
+          ? transactionsResult
+          : transactionsResult.transactions || [];
       }
+    } catch (error) {
+      if (error.status !== 404) {
+        showBanner(
+          `No se pudo cargar el mes: ${error.message}`,
+          'error'
+        );
+      }
+      // A 404 means this user has no snapshot for this month yet.
     }
-    //endregion
 
+    // Categories must load even when no monthly snapshot exists.
+    try {
+      const categoriesResult =
+        await recordsApi.getCategories('all');
+
+      state.categories = Array.isArray(categoriesResult)
+        ? categoriesResult
+        : categoriesResult.categories || [];
+    } catch (error) {
+      showBanner(
+        `No se pudieron cargar las categorías: ${error.message}`,
+        'error'
+      );
+    }
+
+    renderAll();
+  } finally {
+    state.loading = false;
+  }
+}
 //endregion
-
 //region Transaction form
-
 function setType(type) {
   state.type = type;
 
@@ -1312,16 +1341,43 @@ async function deleteTransaction(id) {
 
 //region Importes generales
 
-['manualIncome', 'manualExpenses', 'manualSaving', 'manualInvestment'].forEach(inputId => {
-  document.getElementById(inputId).addEventListener('input', () => {
-    renderSummary(state.snapshot, false);
-    hideBanner();
+
+//region General amounts live preview
+['manualIncome', 'manualExpenses', 'manualSaving', 'manualInvestment']
+  .forEach(inputId => {
+    document.getElementById(inputId).addEventListener('input', () => {
+      const fields = [
+        { id: 'manualIncome', total: 'totalIncome', type: 'income' },
+        { id: 'manualExpenses', total: 'totalExpenses', type: 'expense' },
+        { id: 'manualSaving', total: 'totalSaving', type: 'saving' },
+        {
+          id: 'manualInvestment',
+          total: 'totalInvestment',
+          type: 'investment'
+        }
+      ];
+
+      fields.forEach(field => {
+        const manualAmount = manualValue(field.id);
+
+        const movementAmount = state.transactions.reduce(
+          (sum, transaction) =>
+            getTransactionType(transaction) === field.type
+              ? sum + Number(transaction.amount || 0)
+              : sum,
+          0
+        );
+
+        document.getElementById(field.total).textContent =
+          formatMoney(manualAmount + movementAmount);
+      });
+
+      hideBanner();
+    });
   });
-});
+//endregion
 
 //region Save monthly totals
-
-
 
  //region Save Monthly Contributions
 
