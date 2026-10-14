@@ -2,18 +2,18 @@
 <html lang="es">
 <head>
 
-  
     <!-- region Sentry Monitoring -->
     <script
     src="https://js-de.sentry-cdn.com/491425df15db081f6c2c3e564ca18082.min.js"
     crossorigin="anonymous"
     ></script>
     <!-- endregion -->
-
     
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Records</title>
+<script src="config.js"></script>
+<script src="auth.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -444,7 +444,6 @@ h1 { font: 600 clamp(28px, 3vw, 36px) "Space Grotesk", sans-serif; letter-spacin
   </main>
 </div>
 
-<script src="config.js"></script>
 <script>
 //region Configuration
 
@@ -631,6 +630,7 @@ function categoryMovementsTotal(category) {
   }
 
   if (response.status === 401) {
+    window.logout();
     localStorage.removeItem('nimboSession');
 
     throw new Error(
@@ -1178,7 +1178,7 @@ function renderAll() {
  
     
  //region Load monthly records
-async function loadMonth() {
+ async function loadMonth() {
   state.month =
     document.getElementById('monthPicker').value || currentMonth();
 
@@ -1186,9 +1186,14 @@ async function loadMonth() {
   selectedChartCategoryId = null;
   hideBanner();
 
+  // Mientras carga se ve "—" en lugar de ceros
+  ['totalIncome', 'totalExpenses', 'totalSaving', 'totalInvestment',
+   'savingsBalance', 'investmentBalance', 'emergencyFund', 'debtBalance']
+    .forEach(id => { document.getElementById(id).textContent = '—'; });
+  document.getElementById('flowBox').innerHTML = '';
+
   document.getElementById('transactionsList').innerHTML =
     '<div class="loading">Cargando movimientos…</div>';
-
   document.getElementById('categoriesList').innerHTML =
     '<div class="loading">Cargando categorías…</div>';
 
@@ -1196,8 +1201,8 @@ async function loadMonth() {
   state.transactions = [];
   state.categories = [];
 
-  try {
-    // Load the monthly snapshot independently.
+  // Cadena 1: mes y, si existe, sus movimientos
+  const loadSnapshotAndTransactions = async () => {
     try {
       const monthResult = await recordsApi.getMonth(state.month);
       const returned = monthResult.snapshot || monthResult;
@@ -1217,19 +1222,17 @@ async function loadMonth() {
           : transactionsResult.transactions || [];
       }
     } catch (error) {
+      // 404 = este mes todavía no tiene registro
       if (error.status !== 404) {
-        showBanner(
-          `No se pudo cargar el mes: ${error.message}`,
-          'error'
-        );
+        showBanner(`No se pudo cargar el mes: ${error.message}`, 'error');
       }
-      // A 404 means this user has no snapshot for this month yet.
     }
+  };
 
-    // Categories must load even when no monthly snapshot exists.
+  // Cadena 2: categorías (en paralelo con la anterior)
+  const loadCategories = async () => {
     try {
-      const categoriesResult =
-        await recordsApi.getCategories('all');
+      const categoriesResult = await recordsApi.getCategories('all');
 
       state.categories = Array.isArray(categoriesResult)
         ? categoriesResult
@@ -1240,13 +1243,17 @@ async function loadMonth() {
         'error'
       );
     }
+  };
 
+  try {
+    await Promise.all([loadSnapshotAndTransactions(), loadCategories()]);
     renderAll();
   } finally {
     state.loading = false;
   }
 }
 //endregion
+
 //region Transaction form
 function setType(type) {
   state.type = type;

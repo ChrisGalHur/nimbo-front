@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nimbo · Mi Plan</title>
+<script src="config.js"></script>
+<script src="auth.js"></script>
+
 <script>
   //region Initial sidebar state
   
@@ -605,29 +608,7 @@ body.light .plan-note{background:rgba(220,235,255,.65)}
 </main>
 </div>
 
-<script src="config.js"></script>
 <script>
-/* //region DEV MODE */
-const DEV_MODE=true;
-if(!DEV_MODE){
-  const storedUser=localStorage.getItem('nimboUser');
-  if(!storedUser){window.location.href='login.html';}
-  try{
-    const user=JSON.parse(storedUser);
-    setUserInitial(user.name||'Usuario');
-  }catch(error){
-    localStorage.removeItem('nimboUser');
-    window.location.href='login.html';
-  }
-}else{
-  setUserInitial('Usuario');
-}
-function setUserInitial(name){
-  const mark=document.getElementById('identityMark');
-  if(mark) mark.textContent=(name||'U').charAt(0).toUpperCase();
-}
-/* //endregion */
-
 /* //region THEME */
 function applyTheme(){
   const isLight=localStorage.getItem('nimboTheme')==='light';

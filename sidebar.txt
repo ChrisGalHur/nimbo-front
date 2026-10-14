@@ -9,7 +9,79 @@
   }
 
   /* //endregion */
+
+  /* //region Logout navigation item */
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .sidebar .brand-row {
+    flex-shrink: 0;
+  }
+
+  .sidebar .nav {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .nav-logout {
+    margin-top: auto;
+    flex-shrink: 0;
+    color: #7C8CB3;
+    font-size: 11px;
+    opacity: 0.75;
+    min-height: 34px;
+    transition: color .2s ease, opacity .2s ease;
+  }
+
+  .nav-logout .nav-icon {
+    color: inherit;
+    font-size: 14px;
+  }
+
+  .nav-logout .nav-label {
+    font-size: 11px;
+  }
+
+  .nav-logout:hover {
+    color: #A8B4CC;
+    opacity: 1;
+  }
+
+  .sidebar.collapsed .nav-logout {
+    display: none !important;
+  }
+
+  /* //endregion */
+
+  /* //region Sidebar overflow */
+
+  .sidebar,
+  .sidebar .nav {
+    overflow-x: hidden;
+  }
+
+  .sidebar.collapsed,
+  .sidebar.collapsed .nav {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .sidebar.collapsed::-webkit-scrollbar,
+  .sidebar.collapsed .nav::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* //endregion */
 </style>
+
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
@@ -54,7 +126,7 @@
         <span class="nav-label">Mi plan</span>
       </div>
   
-      <div class="nav-item" data-page="registro.html" data-tooltip="Registro" onclick="goTo('records.html')">
+      <div class="nav-item" data-page="records.html" data-tooltip="Registro" onclick="goTo('records.html')">
         <span class="nav-icon">＋</span>
         <span class="nav-label">Registro</span>
       </div>
@@ -115,18 +187,29 @@
           </svg>
         </span>
       </div>
-    </nav>
-  
-    <div class="sidebar-bottom" style="display:none;">
-      <button class="user-button" type="button" onclick="openUserSettings()">
-        <div class="user-avatar" id="userAvatar">U</div>
-        <div class="user-info">
-          <span class="user-name" id="userName">Usuario</span>
-          <span class="user-plan" id="userPlan">Plan gratuito</span>
-        </div>
-        <svg class="user-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M9 18l6-6-6-6"/>
-        </svg>
-      </button>
-    </div>
-  </aside>
+
+      <!-- //region Logout navigation item -->
+
+      <div class="nav-item nav-logout"
+           data-tooltip="Cerrar sesión"
+           onclick="logout()">
+
+        <span class="nav-icon">
+          <svg width="15" height="15"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.8"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M10 17l5-5-5-5"/>
+            <path d="M15 12H3"/>
+            <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>
+          </svg>
+        </span>
+
+        <span class="nav-label">Cerrar sesión</span>
+      </div>
+</nav>
+</aside>

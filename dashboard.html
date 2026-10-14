@@ -14,6 +14,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nimbo · Inicio</title>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
 
   <script>
     //region Initial sidebar state
@@ -1701,27 +1703,7 @@
     </main>
   </div>
 
-  <script src="config.js"></script>
-
   <script>
-    const DEV_MODE = true;
-
-    if (!DEV_MODE) {
-      const storedUser = localStorage.getItem('nimboUser');
-      if (!storedUser) {
-        window.location.href = 'login.html';
-      }
-      let user = null;
-      try {
-        user = JSON.parse(storedUser);
-      } catch (error) {
-        localStorage.removeItem('nimboUser');
-        window.location.href = 'login.html';
-      }
-      if (user) {
-        // Se actualizará cuando cargue el sidebar
-      }
-    }
 
     //region User greeting
 
